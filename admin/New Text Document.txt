@@ -1,0 +1,6 @@
+fungsi s.a
+bisa banned
+bisa hapus akun
+bisa reset pasword
+monitoring data user dan mitra (liat brp aktifitas peruser dan mitra)
+kalo ada org mau daftar jadi mitra, s.a harus acc dlu baru bisa tampil merchentnya di pencarian user

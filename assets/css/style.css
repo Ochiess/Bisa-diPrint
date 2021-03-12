@@ -640,6 +640,22 @@ section {
   margin: 15px auto 15px auto;
 }
 
+.button-section li {
+  display: inline;
+}
+
+.button-section li:last-child {
+  margin-left: 50px;
+}
+
+.btn-primary{
+  background: #5777ba !important;
+  color: #fff;
+  border-radius: 50px !important;
+  margin: 0 15px;
+  padding: 10px 25px;
+  border : none;
+}
 
 /*--------------------------------------------------------------
 # Pricing
