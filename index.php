@@ -16,23 +16,14 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/icofont/icofont.min.css" rel="stylesheet">
   <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
   <link href="assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
   <link href="assets/vendor/venobox/venobox.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: Appland - v2.3.0
-  * Template URL: https://bootstrapmade.com/free-bootstrap-app-landing-page-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body>
@@ -42,26 +33,28 @@
     <div class="container d-flex align-items-center">
 
       <div class="logo mr-auto">
-        <h1 class="text-light"><a href="index.html">diPrint</a></h1>
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+        <h1 class="text-light"><a href="index.php">diPrint.com</a></h1>
       </div>
-
       <nav class="nav-menu d-none d-lg-block">
         <ul>
           <li class="active"><a href="index.php">Beranda</a></li>
-          <li><a href="#features">Pelayanan</a></li>
-          <li><a href="#testimonials">Jadi Mitra</a></li>
+          <li><a href="#features">Layanan</a></li>
+          <li><a href="#pricing">Fasilitas</a></li>
           <li><a href="#contact">Tentang</a></li>
-          <li class="get-started"><a href="login.php">Masuk</a></li>
-
-
+          <li class="get-started">
+            <div class="dropdown d-inline-block">
+              <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="dropdown-toggle-split  btn btn-primary">Masuk </button>
+              <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
+                  <h6 tabindex="-1" class="dropdown-header p-2">Masuk Sebagai :</h6>
+                  <a type="button" tabindex="0" href="user/login.php"  class="btn btn-link mb-2">Pemesan</a>
+                  <a type="button" tabindex="0" href="mitra/login.php" class="btn btn-link mb-2">Pebisnis</a>
+              </div>
+            </div>
+          </li>
         </ul>
-      </nav><!-- .nav-menu -->
-
+      </nav>
     </div>
-  </header><!-- End Header -->
-
+  </header>
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="d-flex align-items-center">
 
@@ -70,7 +63,7 @@
         <div class="col-lg-6 d-lg-flex flex-lg-column justify-content-center align-items-stretch pt-5 pt-lg-0 order-2 order-lg-1" data-aos="fade-up">
           <div>
             <h1>Selamat Datang...</h1>
-            <h2>diPrint adalah situs yang menawarkan jasa cetak online dengan mudah, cepat, murah, bisa dilakukan
+            <h2>diPrint.com adalah situs yang menawarkan jasa cetak online dengan mudah, cepat, murah, bisa dilakukan
               dimana saja dan kapan saja</h2>
             <a href="#" class="download-btn"><i class="bx bxl-play-store"></i> Google Play</a>
             <a href="#" class="download-btn"><i class="bx bxl-apple"></i> App Store</a>
@@ -81,11 +74,9 @@
         </div>
       </div>
     </div>
-
   </section><!-- End Hero -->
 
   <main id="main">
-
     <!-- ======= App Features Section ======= -->
     <section id="features" class="features">
       <div class="container">
@@ -93,7 +84,6 @@
           <h2>Pelayanan</h2>
           <p>Berikut beberapa pelayanan bersama mitra kami</p>
         </div>
-
         <div class="row no-gutters">
           <div class="col-xl-7 d-flex align-items-stretch order-2 order-lg-1">
             <div class="content d-flex flex-column justify-content-center">
@@ -129,50 +119,57 @@
       </div>
     </section><!-- End App Features Section -->
 
-    <!-- ======= Jadi mitra Section ======= -->
-    <section id="testimonials" class="testimonials section-bg">
-      <div class="container1">
-        <div class="section-title">
-          <h2>Daftarkan Percetakanmu</h2>
-          <p>Untuk bergabung menjadi mitra kami silahkan lengkapi form dibawah</p>
-        </div>
-      </div>
+    <!-- ======= Pricing Section ======= -->
+    <section id="pricing" class="pricing">
       <div class="container">
-        <form action="">
-          <div class="row">
-            <div class="form-group col-md-6">
-              <label for="nama_mitra">Nama Lengkap :</label>
-              <input type="text" class="form-control" id="nama_mitra">
-            </div><br>
-            <div class="form-group col-md-6">
-              <label for="nama_mitra">Nomor Telepon :</label>
-              <input type="number" class="form-control" id="notelp_mitra">
-            </div><br>
-            <div class="form-group col-md-6">
-              <label for="nama_mitra">Alamat Email :</label>
-              <input type="email" class="form-control" id="email_mitra">
-            </div><br>
-            <div class="form-group col-md-6">
-              <label for="nama_mitra">Alamat Percetakan :</label>
-              <input type="text" class="form-control" id="alamat_mitra">
-            </div><br>
-            <div class="form-group col-md-6">
-              <label for="exampleFile" class="">Foto Percetakan</label>
-              <input name="file" id="exampleFile" type="file" class="form-control-file">
-              <small class="form-text text-muted">Harap masukkan foto yang sesuai
-              </small>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="nama_mitra">Informasi Tambahan / Deskripsi :</label>
-              <textarea name="keterangan" id="" cols="30" rows="5" class="form-control"></textarea>
-            </div><br>
-            <div style="width: 100%; text-align: right;">
-              <button type="button" class="btn-primary">Daftar Jadi Mitra</button>
-            </div>
+        <div class="section-title">
+          <h2>Kenapa Harus diPrint.com?</h2>
+          <p>Berikut adalah alasan kenapa anda harus memilih diPrint.com</p>
+        </div>
+        <div class="row no-gutters">
+          <div class="col-lg-4 box" data-aos="fade-right">
+            <h3>Pengguna</h3>
+            <h4>~~~<span>Fasilitas yang ditawarkan</span></h4>
+            <ul>
+              <li><i class="bx bx-check"></i> Mudah diakses</li>
+              <li><i class="bx bx-check"></i> Fitur Lengkap</li>
+              <li><i class="bx bx-check"></i> Pelayanan Cepat</li>
+              <li class="na"><i class="bx bx-x"></i> <span>Harus Bolak-Balik Ketempat Print</span></li>
+              <li class="na"><i class="bx bx-x"></i> <span>Antri Kelamaan</span></li>
+            </ul>
+            <a href="user/register.php" class="get-started-btn">Daftar</a>
           </div>
-        </form>
+
+          <div class="col-lg-4 box featured" data-aos="fade-up">
+            <h3>Pebisnis</h3>
+            <h4>~~~<span>Fasilitas yang ditawarkan</span></h4>
+            <ul>
+              <li><i class="bx bx-check"></i> Mudah dikelola</li>
+              <li><i class="bx bx-check"></i> Manajemen Kegiatan Lebih Efisien</li>
+              <li><i class="bx bx-check"></i> Pencatatan lebih terstruktur</li>
+              <li><i class="bx bx-check"></i> Meningkatkan Penjualan</li>
+              <li><i class="bx bx-check"></i> Mengalihkan Kegiatan Manual Menjadi terkomputerisasi</li>
+            </ul>
+            <a href="mitra/register.php" class="get-started-btn">Daftar</a>
+          </div>
+
+          <div class="col-lg-4 box" data-aos="fade-left">
+            <h3>Developer</h3>
+            <h4>~~~<span>Fasilitas yang ditawarkan</span></h4>
+            <ul>
+              <li><i class="bx bx-check"></i> Rekan Tim Bersahabat</li>
+              <li><i class="bx bx-check"></i> Mudah Dalam Pemeliharaan</li>
+              <li><i class="bx bx-check"></i> Jam Kerja Fleksibel</li>
+              <li><i class="bx bx-check"></i> ~~~</li>
+              <li><i class="bx bx-check"></i> ~~~</li>
+            </ul>
+            <a href="register.php" class="get-started-btn">Daftar</a>
+          </div>
+
+        </div>
+
       </div>
-    </section><!-- End jadi mitra Section -->
+    </section><!-- End Pricing Section -->
 
     <!-- ======= Contact Section ======= -->
     <section id="contact" class="contact">
@@ -202,7 +199,7 @@
               <div class="col-lg-6 info" data-aos="fade-up" data-aos-delay="300">
                 <i class="bx bx-time-five"></i>
                 <h4>Jam Kerja</h4>
-                <p>Senin - Jumat: 9AM to 5PM<br>Akhir Pekan: 9AM to 1PM</p>
+                <p>Senin - Jumat: 9.00 - 5.00<br>Akhir Pekan: 09.00 - 03.00</p>
               </div>
             </div>
           </div>
@@ -219,14 +216,14 @@
   <footer id="footer">
     <div class="container py-4">
       <div class="copyright">
-        &copy; Copyright <strong><span>Bisa diPrint</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span>diPrint.com</span></strong>. All Rights Reserved
       </div>
       <div class="credits">
         <!-- All the links in the footer should remain intact. -->
         <!-- You can delete the links only if you purchased the pro version. -->
         <!-- Licensing information: https://bootstrapmade.com/license/ -->
         <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/free-bootstrap-app-landing-page-template/ -->
-        Designed by <a href="https://bootstrapmade.com/">SriAsriani 60900116068</a>
+        Designed by <a href="index.php">diPrint.com</a>
       </div>
     </div>
   </footer><!-- End Footer -->

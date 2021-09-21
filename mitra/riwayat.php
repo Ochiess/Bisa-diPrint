@@ -1,70 +1,102 @@
 <?php
 require('template/header.php');
 ?>
-
-                <div class="app-main__outer">
-                    <div class="">
+<!--main content-->
+<div class="app-main__outer">
+    <div class="app-main__inner">
+        <div class="app-page-title">
+            <div class="page-title-wrapper">
+                <div class="page-title-heading">
+                    <div>Riwayat dan Daftar Pengguna</div>
+                </div>
+            </div>
+        </div>
+        <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
+            <li class="nav-item">
+                <a role="tab" class="nav-link active" id="tab-0" data-toggle="tab" href="#tab-content-0">
+                    <span>Riwayat</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a role="tab" class="nav-link" id="tab-1" data-toggle="tab" href="#tab-content-1">
+                    <span>Daftar Pengguna</span>
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-12">
                         <div class="main-card mb-3 card">
-                            <div class="card-body"><h5 class="card-title">Daftar Pesanan</h5>
+                            <div class="card-body">
                                 <table class="mb-0 table table-bordered">
                                     <thead>
-                                    <tr>
-                                        <th>No.</th>
-                                        <th>Nama user</th>
-                                        <th>Tanggal</th>
-                                        <th>Jenis Kertas</th>
-                                        <th>Jumlah Rangkap</th>
-                                        <th>Warna</th>
-                                        <th>Halaman</th>
-                                        <th>Jumlah Halaman</th>
-                                        <th>Waktu Pengambilan</th>
-                                        <th>Catatan</th>
-                                        <th>Harga</th>
-                                        <th>Status</th>
-                                        <th>Keterangan</th>
-                                    </tr>
+                                        <tr class="text-center">
+                                            <th>No.</th>
+                                            <th>Nama</th>
+                                            <th>No. Telp</th>
+                                            <th>E-mail</th>
+                                            <th>Alamat Percetakan</th>
+                                            <th>Keterangan</th>
+                                            <th>Status</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark suckeberg</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
+                                        <tr class="text-center">
+                                            <th scope="row">1</th>
+                                            <td>Mark</td>
+                                            <td>Otto</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>dhgsdffs</td>
+                                            <td>
+                                                <button class="mb-2 mr-2 btn btn-danger">Banned</button>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-    
-                <!--footer-->
+                </div>
+            </div>
+            <div class="tab-pane tabs-animation fade" id="tab-content-1" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="main-card mb-3 card">
+                            <div class="card-body">
+                                <table class="mb-0 table table-bordered">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th>No.</th>
+                                            <th>Nama Lengkap</th>
+                                            <th>Nama Akun</th>
+                                            <th>Email</th>
+                                            <th>Password</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="text-center">
+                                            <th scope="row">1</th>
+                                            <td>Mark</td>
+                                            <td>Otto</td>
+                                            <td>@mdo</td>
+                                            <td>dhgsdffs</td>
+                                            <td>
+                                                <button class="mb-2 mr-2 btn btn-primary">Reset Password</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                
-<?php
-require('template/footer.php');
-?>
+    <?php
+    require('template/footer.php');
+    ?>

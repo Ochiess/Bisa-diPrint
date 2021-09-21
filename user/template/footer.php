@@ -15,10 +15,10 @@
     </div>
 </footer>
 
-<script src="http://maps.google.com/maps/api/js?sensor=true"></script>
-</div>
+
 </div>
 <script type="text/javascript" src="./assets/scripts/main.js"></script>
+<script src="../user/assets/sweetalert2/sweetalert2.min.js"></script>
 </body>
 
 </html>

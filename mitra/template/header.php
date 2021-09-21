@@ -1,6 +1,20 @@
+<?php
+
+session_start();
+
+if(isset($_SESSION["masuk"]) ) {
+    $id = $_SESSION["id"];
+    $poto = $_SESSION["poto"];
+    $nama_percetakan = $_SESSION["nama_percetakan"];
+    $alamat = $_SESSION["alamat"];
+  } else {
+    header("Location: login.php");
+    exit;
+  }
+?>
+
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,24 +25,13 @@
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
-    <!--
-    =========================================================
-    * ArchitectUI HTML Theme Dashboard - v1.0.0
-    =========================================================
-    * Product Page: https://dashboardpack.com
-    * Copyright 2019 DashboardPack (https://dashboardpack.com)
-    * Licensed under MIT (https://github.com/DashboardPack/architectui-html-theme-free/blob/master/LICENSE)
-    =========================================================
-    * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-    -->
     <link href="./main.css" rel="stylesheet">
 </head>
-
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
         <div class="app-header header-shadow">
             <div class="app-header__logo">
-                <div class="logo-src"></div>
+                <h3 class="header-logo">diPrint.com</h3>
                 <div class="header__pane ml-auto">
                     <div>
                         <button type="button" class="hamburger close-sidebar-btn hamburger--elastic"
@@ -68,29 +71,24 @@
                                     <div class="btn-group">
                                         <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                             class="p-0 btn">
-                                            <img width="42" class="rounded-circle" src="assets/images/avatars/1.jpg"
+                                            <img width="42" height="41" class="rounded-circle" src="../mitra/img/daftar<?php echo $poto?>"
                                                 alt="">
                                             <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                         </a>
                                         <div tabindex="-1" role="menu" aria-hidden="true"
                                             class="dropdown-menu dropdown-menu-right">
-                                            <button type="button" tabindex="0" class="dropdown-item">Edit
-                                                Profil</button>
-                                            <button type="button" tabindex="0" class="dropdown-item">Ubah
-                                                Kontak</button>
-                                            <button type="button" tabindex="0" class="dropdown-item">Ubah
-                                                Alamat</button>
+                                            <a type="button" href="profil.php" tabindex="0" class="dropdown-item">Lihat Profil</a>
                                             <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Keluar</button>
+                                            <a type="button" tabindex="0" href="logout.php" class="dropdown-item">Keluar</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="widget-content-left  ml-3 header-user-info">
                                     <div class="widget-heading">
-                                        Alina Mclourd
+                                        <?php echo $nama_percetakan?>
                                     </div>
                                     <div class="widget-subheading">
-                                        VP People Manager
+                                    <?php echo $alamat?>
                                     </div>
                                 </div>
                             </div>
@@ -369,7 +367,6 @@
                 </div>
             </div>
         </div>
-
         <div class="app-main">
             <div class="app-sidebar sidebar-shadow">
                 <div class="app-header__logo">
@@ -410,16 +407,14 @@
                             <li class="app-sidebar__heading">Menu</li>
                             <li>
                                 <a href="index.php">
-                                    <i class="metismenu-icon pe-7s-culture"></i>
+                                    <i class="metismenu-icon pe-7s-home"></i>
                                     Beranda
-                                    <i class="metismenu-state-icon"></i>
                                 </a>
                             </li>
                             <li>
                                 <a href="pesanan.php">
-                                    <i class="metismenu-icon pe-7s-mail"></i>
-                                    Pesanan
-                                    <i class="metismenu-state-icon"></i>
+                                    <i class="metismenu-icon pe-7s-users"></i>
+                                    Antrian
                                 </a>
                             </li>
                             <li>
@@ -429,9 +424,9 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="tunggu.php">
-                                    <i class="metismenu-icon pe-7s-more"></i>
-                                    Katalog
+                                <a href="pengaturan.php">
+                                    <i class="metismenu-icon pe-7s-config"></i>
+                                    Pengaturan
                                 </a>
                             </li>
                         </ul>

@@ -11,50 +11,46 @@ require('template/header.php');
                 </div>
             </div>
         </div>
-        <div class="">
-            <div class="row">
-                <div class="col-lg-6 col-xl-4">
-                    <div class="card mb-3 widget-content">
-                        <div class="widget-content-wrapper">
-                            <div class="widget-content-left">
-                                <div class="widget-heading">Total Orders</div>
-                                <div class="widget-subheading">Last year expenses</div>
-                            </div>
-                            <div class="widget-content-right">
-                                <div class="widget-numbers text-success"><span>Selesai</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xl-4">
-                    <div class="card mb-3 widget-content">
-                        <div class="widget-content-wrapper">
-                            <div class="widget-content-left">
-                                <div class="widget-heading">Clients</div>
-                                <div class="widget-subheading">Total Clients Profit</div>
-                            </div>
-                            <div class="widget-content-right">
-                                <div class="widget-numbers text-primary"><span>Diproses</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xl-4">
-                    <div class="card mb-3 widget-content">
-                        <div class="widget-content-wrapper">
-                            <div class="widget-content-left">
-                                <div class="widget-heading">Followers</div>
-                                <div class="widget-subheading">People Interested</div>
-                            </div>
-                            <div class="widget-content-right">
-                                <div class="widget-numbers text-danger"><span>Batal</span></div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="col-lg-12">
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <h5 class="card-title">Simple table</h5>
+                    <table class="mb-0 table">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Judul File</th>
+                                <th>Waktu Pesan</th>
+                                <th>Merchant</th>
+                                <th>Waktu Pengambilan</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Larry</td>
+                                <td>the Bird</td>
+                                <td>@twitter</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
-<?php
-require('template/footer.php');
-?>
+        <?php
+        require('template/footer.php');
+        ?>

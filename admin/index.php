@@ -19,6 +19,21 @@ require('template/header.php');
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script>
+
+        const session = Cookies.get("session");
+
+        if (session) {
+            const user = JSON.parse(session);
+
+        document.querySelector("#widget-name").textContent = user.displayName || "Anonimous";
+        document.querySelector("#widget-email").textContent = user.email;
+        } else {
+            window.location.href = "/diprint/login.php"
+        }
+
+    </script>
     <?php
     require('template/footer.php');
     ?>

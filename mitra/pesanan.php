@@ -6,11 +6,12 @@ require('template/header.php');
     <div class="">
         <div class="main-card mb-3 card">
             <div class="card-body">
-                <h5 class="card-title">Daftar Pesanan</h5>
+                <h5 class="card-title">Daftar Antrian</h5>
                 <table class="mb-0 table table-bordered">
                     <thead>
                         <tr>
                             <th>No.</th>
+                            <th>Id user</th>
                             <th>Nama user</th>
                             <th>Jenis Kertas</th>
                             <th>Jumlah Rangkap</th>
@@ -27,6 +28,7 @@ require('template/header.php');
                         <tr>
                             <th scope="row">1</th>
                             <td>Mark</td>
+                            <td>Mark</td>
                             <td>Otto</td>
                             <td>@mdo</td>
                             <td>@mdo</td>
@@ -36,7 +38,7 @@ require('template/header.php');
                             <td>@mdo</td>
                             <td>@mdo</td>
                             <td>
-                                <button class="mb-2 mr-2 btn btn-primary active">Primary
+                                <button type="button" class="mb-2 mr-2 btn btn-primary active">Primary
                                 </button>
                                 <!-- paska nnnti klik button langsung masuk ke daftar tunggu, nnti di daftar tunggu kalo slsai mi org na ambil barangnya bary klik buttonnya turs masuk otomatis ke history-->
                             </td>

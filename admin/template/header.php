@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>diPrint-user</title>
+    <title>diPrint-Super Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
@@ -89,10 +89,10 @@
                                     </div>
                                 </div>
                                 <div class="widget-content-left  ml-3 header-user-info">
-                                    <div class="widget-heading">
+                                    <div id="widget-name" class="widget-heading">
                                         Alina Mclourd
                                     </div>
-                                    <div class="widget-subheading">
+                                    <div id="widget-email" class="widget-subheading">
                                         VP People Manager
                                     </div>
                                 </div>
@@ -351,4 +351,5 @@
                     </div>
                 </div>
             </div>
+        
             <!--end header-->

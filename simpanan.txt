@@ -1,0 +1,118 @@
+// form registrasi
+$(document).ready(function() {
+            
+            $('#daftar').click( async function(e) {
+
+                e.preventDefault();
+
+                var nama_depan = $('#nama_lengkap').val();
+                var nama_belakang = $('#nama_akun').val();
+                var hp = $('#hp').val();
+                var email = $('#email').val();
+                var password = $('#password').val();
+                var ulang_password = $('#ulang_password').val();
+
+                if (password != ulang_password) {
+
+                    alert('Password tidak sesuai');
+
+                } else {
+                    
+                    const user = firebase.auth().createUserWithEmailAndPassword(email, password);
+                    
+
+                }
+            });
+        });
+
+// login page
+<script>
+        const session = Cookies.get("session");
+
+        if (session !== undefined) {
+
+            if (JSON.parse(session).email === "sriasriani135@gmail.com") {
+
+                window.location.href = "/diPrint/admin/index.php";
+
+            }
+
+        } else {
+
+            const form = document.querySelector("form");
+
+            form.addEventListener("submit", async e => {
+
+                try {
+
+                    e.preventDefault();
+
+                    const {
+                        email,
+                        password
+                    } = e.target;
+
+                    const result = await firebase.auth().signInWithEmailAndPassword(email.value, password.value);
+
+                    const user = result.user;
+
+                    Cookies.set("session", JSON.stringify(user), {
+                       expires: 7
+                    });
+
+                    if (user.email === "sriasriani135@gmail.com") {
+
+                        window.location.href = "/diPrint/admin/index.php";
+
+                    }
+
+                } catch (error) {
+
+                    window.alert(error.message);
+                }
+            })
+        }
+    </script>
+
+// login page pake php tapi belum jadi ini mah
+<?php
+require 'function.php';
+
+if(isset($_POST["login"]) ) {
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+
+    $result = mysqli_query($conn, "SELECT * FROM user and agen WHERE email = '$email'");
+
+    // cek email
+    if(mysqli_num_rows($result)===1 ) {
+        // cek password
+        $row = mysqli_fetch_assoc($result);
+        if(password_verify($password, $row["password"]) ) {
+            
+        }
+    }
+}
+
+?>
+//login
+<?php
+require 'function.php';
+
+if(isset($_POST["login"]) ) {
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+
+    $result = mysqli_query($conn, "SELECT * FROM user and agen WHERE email = '$email'");
+
+    // cek email
+    if(mysqli_num_rows($result)===1 ) {
+        // cek password
+        $row = mysqli_fetch_assoc($result);
+        if(password_verify($password, $row["password"]) ) {
+            
+        }
+    }
+}
+
+?>

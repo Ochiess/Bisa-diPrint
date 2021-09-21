@@ -1,33 +1,42 @@
-<!doctype html>
-<html lang="en">
+<?php
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Language" content="en">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>diPrint-user</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-    <meta name="description" content="This is an example dashboard created using build-in elements and components.">
-    <meta name="msapplication-tap-highlight" content="no">
-    <!--
-    =========================================================
-    * ArchitectUI HTML Theme Dashboard - v1.0.0
-    =========================================================
-    * Product Page: https://dashboardpack.com
-    * Copyright 2019 DashboardPack (https://dashboardpack.com)
-    * Licensed under MIT (https://github.com/DashboardPack/architectui-html-theme-free/blob/master/LICENSE)
-    =========================================================
-    * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-    -->
-    <link href="./main.css" rel="stylesheet">
+session_start();
+if(isset($_SESSION["masuk"]) ) {
+    $id = $_SESSION['key'];
+    $photo = $_SESSION['photo'];
+    $nama_akun = $_SESSION['nama_akun'];
+    $hp = $_SESSION['hp'];
+} else {
+    header("Location: login.php");
+    exit;
+}
+?>
+<!doctype html>
+    <html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="Content-Language" content="en">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>diPrint-user</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
+        <meta name="description" content="This is an example dashboard created using build-in elements and components.">
+        <meta name="msapplication-tap-highlight" content="no">
+        <link href="./main.css" rel="stylesheet">
+        <link rel="stylesheet" href="../user/assets/sweetalert2/sweetalert2.min.css">
+        <style>
+        .swal2-popup {
+            font-size: 1.6rem !important;
+        }
+    </style>
 </head>
 
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
         <div class="app-header header-shadow">
             <div class="app-header__logo">
-                <div class="logo-src"></div>
+                <h3>diPrint.com</h3>
                 <div class="header__pane ml-auto">
                     <div>
                         <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
@@ -60,11 +69,18 @@
                 <div class="app-header-left">
                     <div class="search-wrapper">
                         <div class="input-holder">
-                            <input type="text" class="search-input" placeholder="Cari Tempat Percetakan disini">
-                            <button class="search-icon"><span></span></button>
+                            <input type="text" name="keywoard" class="search-input" placeholder="Cari Tempat Percetakan disini">
+                            <button class="search-icon" type="submit" name="cari"><span></span></button>
                         </div>
                         <button class="close"></button>
                     </div>
+                    <ul class="header-menu nav">
+                        <li class="nav-item">
+                            <a href="notifikasi.php" class="nav-link">
+                                <i class="metismenu-icon fa fa-bell"></i>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
                 <div class="app-header-right">
                     <div class="header-btn-lg pr-0">
@@ -73,27 +89,27 @@
                                 <div class="widget-content-left">
                                     <div class="btn-group">
                                         <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
-                                            <img width="42" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">
+                                            <?php if ($photo) { ?>
+                                                <img width="42" class="rounded-circle" src="../user/img/<?php echo $photo ?>" alt="" height="41">
+                                            <?php } else { ?>
+                                                <img width="42" class="rounded-circle" src="../user/img/default.png" alt="" height="41">
+                                            <?php } ?>
                                             <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                         </a>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                                            <button type="button" tabindex="0" class="dropdown-item">Edit
-                                                Profil</button>
-                                            <button type="button" tabindex="0" class="dropdown-item">Ubah
-                                                Kontak</button>
-                                            <button type="button" tabindex="0" class="dropdown-item">Ubah
-                                                Alamat</button>
+                                            <a type="button" href="profil.php" tabindex="0" class="dropdown-item">Profil Saya
+                                            </a>
                                             <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Keluar</button>
+                                            <a type="button" name="logout" href="logout.php" tabindex="0" class="dropdown-item">Keluar</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="widget-content-left  ml-3 header-user-info">
                                     <div class="widget-heading">
-                                        Alina Mclourd
+                                        <?php echo $nama_akun?>
                                     </div>
                                     <div class="widget-subheading">
-                                        VP People Manager
+                                        <?php echo $hp?>
                                     </div>
                                 </div>
                             </div>
@@ -335,20 +351,13 @@
                             <li class="app-sidebar__heading">Menu</li>
                             <li>
                                 <a href="index.php">
-                                    <i class="metismenu-icon pe-7s-culture"></i>
+                                    <i class="metismenu-icon pe-7s-home"></i>
                                     Beranda
                                     <i class="metismenu-state-icon"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="cetak.php">
-                                    <i class="metismenu-icon pe-7s-print"></i>
-                                    Cetak Dokumen
-                                    <i class="metismenu-state-icon"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="mitra.php">
+                                <a href="marchent.php">
                                     <i class="metismenu-icon pe-7s-search"></i>
                                     Percetakan
                                 </a>
@@ -357,12 +366,6 @@
                                 <a href="history.php">
                                     <i class="metismenu-icon pe-7s-cart"></i>
                                     Riwayat Pesanan
-                                </a>
-                            </li>
-                            <li>
-                                <a href="notifikasi.php">
-                                    <i class="metismenu-icon pe-7s-bell"></i>
-                                    Notifikasi <span class="badge badge-pill badge-primary">7</span>
                                 </a>
                             </li>
                         </ul>
