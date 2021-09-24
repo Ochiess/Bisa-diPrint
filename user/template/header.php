@@ -1,11 +1,13 @@
 <?php
-
+require ('../function.php');
 session_start();
 if(isset($_SESSION["masuk"]) ) {
     $id = $_SESSION['key'];
-    $photo = $_SESSION['photo'];
-    $nama_akun = $_SESSION['nama_akun'];
-    $hp = $_SESSION['hp'];
+    $getProfile = mysqli_query($conn, "SELECT * FROM user WHERE id = '$id'");
+    $usr = mysqli_fetch_assoc($getProfile);
+    $photo = $usr['photo'];
+    $nama_akun = $usr['nama_akun'];
+    $hp = $usr['hp'];
 } else {
     header("Location: login.php");
     exit;
@@ -76,8 +78,9 @@ if(isset($_SESSION["masuk"]) ) {
                     </div>
                     <ul class="header-menu nav">
                         <li class="nav-item">
-                            <a href="notifikasi.php" class="nav-link">
-                                <i class="metismenu-icon fa fa-bell"></i>
+                            <a href="javascript:void(0);" class="nav-link">
+                                <i class="nav-link-icon fa fa-bell"> </i>
+                                Notifikasi
                             </a>
                         </li>
                     </ul>
@@ -359,12 +362,18 @@ if(isset($_SESSION["masuk"]) ) {
                             <li>
                                 <a href="marchent.php">
                                     <i class="metismenu-icon pe-7s-search"></i>
-                                    Percetakan
+                                    Temukan Percetakan
+                                </a>
+                            </li>
+                            <li>
+                                <a href="marchent.php">
+                                    <i class="metismenu-icon pe-7s-paperclip"></i>
+                                    Pesanan Saya
                                 </a>
                             </li>
                             <li>
                                 <a href="history.php">
-                                    <i class="metismenu-icon pe-7s-cart"></i>
+                                    <i class="metismenu-icon pe-7s-clock"></i>
                                     Riwayat Pesanan
                                 </a>
                             </li>

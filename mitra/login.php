@@ -14,12 +14,12 @@ if( isset($_COOKIE['key']) && isset($_COOKIE['oci']) ) {
 
    //cek cookie dan username
     if( $oci === hash('sha256', $row['email']) ) {
-        $_SESSION['masuk'] = true;
+        $_SESSION['masuk_mitra'] = true;
     }
 
 }
 
-if( isset($_SESSION["masuk"]) ) {
+if( isset($_SESSION["masuk_mitra"]) ) {
     header("Location: index.php");
     exit;
   }
@@ -40,8 +40,8 @@ if(isset($_POST["login"]) ) {
         if(password_verify($password, $row["password"]) ) {
             
             // set session
-            $_SESSION["masuk"] = true;
-            $_SESSION["id"] = $row['id'];
+            $_SESSION["masuk_mitra"] = true;
+            $_SESSION["id_mitra"] = $row['id'];
             $_SESSION["poto"] = $row['poto'];
             $_SESSION["nama_percetakan"] = $row['nama_percetakan'];
             $_SESSION["alamat"] = $row['alamat'];

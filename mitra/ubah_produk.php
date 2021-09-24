@@ -1,7 +1,5 @@
 <?php
 
-require '../function.php';
-
 $id=$_GET["id"];
 
 $ubah = query("SELECT * FROM produk WHERE id = $id") [0];

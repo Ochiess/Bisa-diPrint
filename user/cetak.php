@@ -1,7 +1,6 @@
 <?php
 
 require ('template/header.php');
-require ('../function.php');
 
 //$cetak = query("SELECT * FROM cetak WHERE id='$id'") [0];
 

@@ -1,6 +1,5 @@
 <?php
 require ('template/header.php');
-require ('../function.php');
 
 $result = marchent();
 ?>
@@ -25,9 +24,18 @@ $result = marchent();
                             <img class="card-img-top d-block w-100" height="250" src="../mitra/img/daftar<?= $row["poto"] ?>" alt="Card image cap">
                             <div class="card-body">
                                 <h5 class="card-title"><?= $row["nama_percetakan"] ?></h5>
-                                <div class="mb-2"><i class="fa fa-info-circle text-info"></i> <?= $row["keterangan"] ?></div>
-                                <a href="" class="card-text"><i class="fa fa-map-marker text-danger"></i> <?= $row["alamat"] ?></a>
-                                <a href="cek_antrian.php?id=<?= $row['id'] ?>" class="mt-2 btn btn-primary btn-block" style="margin-bottom: -10px;">Kunjungi</a>
+                                <div style="font-size: 12.5px;">
+                                    <div class="mb-2">
+                                        <i class="metismenu-icon pe-7s-info text-info"></i> <?= $row["keterangan"] ?>
+                                    </div>
+                                    <div class="card-text text-primary">
+                                        <i class="metismenu-icon pe-7s-map-marker text-danger"></i> <?= $row["alamat"] ?>
+                                    </div>
+                                </div>
+                                <div class="row mt-2" style="margin-bottom: -10px;">
+                                    <a href="cek_antrian.php?id=<?= $row['id'] ?>" class="col-sm-9 mx-2 btn btn-primary btn-block">Kunjungi</a>
+                                    <button class="btn btn-success col-sm-2"><i class="fa fa-comment"></i></button>
+                                </div>
                             </div>
                             <div class="card-footer pr-0">
                                 <div class="row w-100">

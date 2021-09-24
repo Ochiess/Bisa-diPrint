@@ -1,9 +1,8 @@
 <?php
 
 require('template/header.php');
-require '../function.php';
 
-$id = $_SESSION["id"];
+$id = $_SESSION["id_mitra"];
 
 if (isset($_POST["tambah"])) {
 

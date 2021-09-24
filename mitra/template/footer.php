@@ -1,5 +1,5 @@
                 <div class="app-wrapper-footer">
-                    <div class="app-footer fixed-bottom">
+                    <div class="app-footer">
                         <div class="app-footer__inner">
                             <div class="app-footer-right">
                             <span>Copyright &copy; diPrint Allright Reserved</span>
@@ -11,7 +11,8 @@
                 <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
             </div>
         </div>
-        <script type="text/javascript" src="./assets/scripts/main.js"></script>
-        <script src="../assets/dist/sweetalert2.all.min.js"></script>
+        <script src="./../layout/vendor/jquery/jquery.min.js"></script>
+        <script src="./assets/scripts/main.js"></script>
+        <script src="./assets/sweetalert2.all.min.js"></script>
     </body>
 </html>

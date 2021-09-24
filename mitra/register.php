@@ -1,16 +1,16 @@
 <?php
 require '../function.php';
-    if (isset($_POST["daftar"])) {
+if (isset($_POST["daftar"])) {
 
-        if (registrasi_agen($_POST) > 0) {
-            echo "<script> 
-                 alert ('Berhasil mendaftar');
-                 document.location.href = 'login.php';
-             </script>";
-        } else {
+    if (registrasi_agen($_POST) > 0) {
+        echo "<script> 
+        alert ('Berhasil mendaftar');
+        document.location.href = 'login.php';
+        </script>";
+    } else {
         echo mysqli_error($conn);
-        };
-    }
+    };
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,22 +49,19 @@ require '../function.php';
                                 <h1 class="h4 text-gray-900 mb-4">Buat Akun!</h1>
                             </div>
                             <form class="user" action="" method="POST" enctype="multipart/form-data">
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="nama_percetakan" name="nama_percetakan" placeholder="Nama Percetakan">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="number" class="form-control form-control-user" id="telpon" name="telpon" placeholder="Nomor Telepon">
-                                    </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="nama_percetakan" name="nama_percetakan" placeholder="Nama Percetakan">
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="alamat" name="alamat" placeholder="Alamat Percetakan">
+                                        <input type="text" class="form-control form-control-user" id="nama_pemilik" name="nama_pemilik" placeholder="Nama Pemilik">
                                     </div>
                                     <div class="col-sm-6">
-                                        <small class="form-text text-muted">Upload Foto Percetakan</small>
-                                        <input type="file" class="" id="poto" name="poto">
-                                    </div>
+                                        <input type="number" class="form-control form-control-user" id="telpon" name="telpon" placeholder="Nomor Telepon">
+                                    </div>                                    
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="alamat" name="alamat" placeholder="Alamat Percetakan">
                                 </div>
                                 <div class="form-group">
                                     <input type="email" class="form-control form-control-user" id="email" name="email" placeholder="Alamat Email">
@@ -79,6 +76,18 @@ require '../function.php';
                                 </div>
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-user" id="keterangan" name="keterangan" placeholder="Keterangan Tambahan">
+                                </div>
+                                <div class="form-group">
+                                    <small class="form-text text-muted ml-2">Upload Foto Percetakan</small>
+                                    <div class="text-center ml-2">
+                                        <div style="width: 100%; height: 7cm; border: dashed 2px grey; border-radius: 4px; margin: auto; overflow: hidden;">
+                                            <img src="assets/images/placeholder.jpg" style="height: 100%; width: 100%;" id="thumb-poto">
+                                        </div>
+                                        <div style="margin-top: 5px; margin-bottom: 10px;">
+                                            <label class="btn btn-sm btn-secondary" for="btn-poto"><i class="fa fa-upload"></i> Upload Foto</label>
+                                            <input type="file" name="poto" id="btn-poto" style="display: none;" required="">
+                                        </div>
+                                    </div>
                                 </div>
                                 <button id="daftar" class="btn btn-primary btn-user btn-block" name="daftar" type="submit">
                                     Buat Akun
@@ -105,6 +114,41 @@ require '../function.php';
 
     <!-- Custom scripts for all pages-->
     <script src="../layout/js/sb-admin-2.min.js"></script>
+    <script>
+        $('#btn-poto').change(function(e) {
+            var foto_add = $(this).prop('files')[0];
+            validasi_foto(foto_add, '#thumb-poto', '#btn-poto', 2048000, '2 MB')
+        });
+
+        function validasi_foto(foto, thumb, btn, size, ket) {
+            var check = 0;
+
+            var ext = ['image/jpeg', 'image/png', 'image/bmp'];
+
+            $.each(ext, function(key, val) {
+                if (foto.type == val) check = check + 1;
+            });
+
+            if (check == 1) {
+                if (foto.size > size) {
+                    alert('Ukuran file terlalu besar. File harus maksimal '+ket);
+                    $(btn).val('');
+                    return;
+                }
+
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $(thumb).attr('src', e.target.result);
+                }
+                reader.readAsDataURL(foto);
+            } else {
+                alert('Format file tidak dibolehkan, pilih file lain');
+                $(btn).val('');
+                return;
+            }
+            return true;
+        }
+    </script>
 </body>
 
 </html>

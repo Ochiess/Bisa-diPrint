@@ -1,7 +1,6 @@
 <?php
 
 require('template/header.php');
-require('../function.php');
 $id_agen = $_GET['id'];
 $result = panggil_produk($id_agen);
 

@@ -1,7 +1,6 @@
 <?php
 
 require('template/header.php');
-require('../function.php');
 
 $id = $_SESSION['key'];
 
@@ -72,8 +71,10 @@ if (isset($_POST["submit"])) {
                             <input name="email" id="email" type="email" value="<?= $update["email"]; ?>" class="form-control">
                         </div>
                     </div>
-                    <div class="position-relative row form-check">
-                        <div class="col-sm-10 offset-sm-2">
+                    <div class="row">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-10">
+                            <a href="profil.php" class="btn btn-secondary">Batal</a>
                             <button class="btn btn-primary" type="submit" name="submit">Update</button>
                         </div>
                     </div>

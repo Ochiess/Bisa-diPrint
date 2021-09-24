@@ -1,8 +1,7 @@
 <?php
 require('template/header.php');
-require('../function.php');
 
-$id = $_SESSION['id'];
+$id = $_SESSION['id_mitra'];
 
 $edit = query("SELECT * FROM agen WHERE id='$id'") [0];
 
@@ -12,13 +11,13 @@ if (isset($_POST["submit"])) {
 
     if(ubah_profil($_POST)) {
         echo "<script>
-            alert ('Profil diPerbaharui!!!');
-            
+        alert ('Profil diPerbaharui!!!');
+
         </script>";
     } else {
         echo "<script>
-            alert ('Gagal Memperbaharui Profil!!!');
-            document.location.href = 'profil.php';
+        alert ('Gagal Memperbaharui Profil!!!');
+        document.location.href = 'profil.php';
         </script>";
     }
 }
@@ -54,6 +53,12 @@ if (isset($_POST["submit"])) {
                         </div>
                     </div>
                     <div class="position-relative row form-group">
+                        <label for="exampleEmail" class="col-sm-2 col-form-label">Nama Pemilik</label>
+                        <div class="col-sm-10">
+                            <input name="nama_pemilik" id="nama_pemilik" type="text" value="<?= $edit["nama_pemilik"]; ?>" class="form-control">
+                        </div>
+                    </div>
+                    <div class="position-relative row form-group">
                         <label for="exampleEmail" class="col-sm-2 col-form-label">Nomor Telepon</label>
                         <div class="col-sm-10">
                             <input name="telpon" id="telpon" type="number" value="<?= $edit["telpon"]; ?>" class="form-control">
@@ -71,8 +76,10 @@ if (isset($_POST["submit"])) {
                             <input name="alamat" id="alamat" type="text" value="<?= $edit["alamat"]; ?>" class="form-control">
                         </div>
                     </div>
-                    <div class="position-relative row form-check">
-                        <div class="col-sm-10 offset-sm-2">
+                    <div class="row">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-10">
+                            <a href="profil.php" class="btn btn-secondary">Batal</a>
                             <button class="btn btn-primary" type="submit" name="submit">Update</button>
                         </div>
                     </div>
@@ -81,6 +88,6 @@ if (isset($_POST["submit"])) {
         </div>
     </div>
 
-    <?php
-    require('template/footer.php');
-    ?>
+<?php
+require('template/footer.php');
+?>

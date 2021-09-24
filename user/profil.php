@@ -1,9 +1,6 @@
 <?php
 
 require('template/header.php');
-require('../function.php');
-
-
 
 $id = $_SESSION['key'];
 

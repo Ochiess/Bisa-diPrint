@@ -53,6 +53,7 @@ require 'koneksi.php';
         global $conn;
         
         $nama_percetakan = $data["nama_percetakan"];
+        $nama_pemilik = $data["nama_pemilik"];
         $telpon = $data["telpon"];
         $email = $data["email"];
         $alamat = $data["alamat"];
@@ -89,7 +90,7 @@ require 'koneksi.php';
         // enkripsi password
         $password = password_hash($password, PASSWORD_DEFAULT);
         // menambahkan user baru kedatabase
-        mysqli_query($conn, "INSERT INTO agen VALUES(NULL,'$nama_percetakan', '$telpon', '$email', '$alamat', '$password', '$poto', '$keterangan')");
+        mysqli_query($conn, "INSERT INTO agen VALUES(NULL, '$nama_percetakan', '$nama_pemilik', '$telpon', '$email', '$alamat', '$password', '$poto', '$keterangan', 'new')");
         return 1;
     }
 
@@ -306,6 +307,7 @@ require 'koneksi.php';
 
        $id = $data["id"];
        $nama_percetakan = $data["nama_percetakan"];
+       $nama_pemilik = $data["nama_pemilik"];
        $telpon = $data["telpon"];
        $email = $data["email"];
        $alamat = $data["alamat"];
@@ -315,7 +317,7 @@ require 'koneksi.php';
             return false;
         }
 
-       $query = "UPDATE agen SET nama_percetakan='$nama_percetakan', telpon='$telpon', email='$email', alamat='$alamat', poto='$poto' WHERE id=$id";
+       $query = "UPDATE agen SET nama_percetakan='$nama_percetakan', nama_pemilik='$nama_pemilik', telpon='$telpon', email='$email', alamat='$alamat', poto='$poto' WHERE id=$id";
 
        mysqli_query($conn, $query);
 
