@@ -14,6 +14,8 @@ if(isset($_SESSION["masuk_mitra"]) ) {
     header("Location: login.php");
     exit;
 }
+
+$layanan = mysqli_query($conn, "SELECT * FROM layanan WHERE agen_id='$id'");
 ?>
 
 <!doctype html>
@@ -29,6 +31,8 @@ if(isset($_SESSION["masuk_mitra"]) ) {
         <meta name="description" content="This is an example dashboard created using build-in elements and components.">
         <meta name="msapplication-tap-highlight" content="no">
         <link href="./main.css" rel="stylesheet">
+        <link href="./../layout/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+        <link href="./assets/sweetalert2/sweetalert2.min.css" rel="stylesheet">
     </head>
     <body>
         <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
@@ -404,7 +408,7 @@ data-class="bg-happy-green sidebar-text-light">
         <ul class="vertical-nav-menu">
             <li class="app-sidebar__heading">Menu</li>
             <li>
-                <a href="index.php" class="">
+                <a href="index.php" id="nv-beranda">
                     <i class="metismenu-icon pe-7s-home"></i>
                     Beranda
                 </a>
@@ -422,24 +426,20 @@ data-class="bg-happy-green sidebar-text-light">
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="#" id="nv-layanan">
                     <i class="metismenu-icon pe-7s-note2"></i>
-                    Pengaturan Layanan
+                    Atur Layanan
                     <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                 </a>
-                <ul class="mm-collapse">
-                    <li>
-                        <a href="kategori_layanan.php">
-                            <i class="metismenu-icon"></i>
-                            Kategori Layanan
-                        </a>
-                    </li>
-                    <li>
-                        <a href="elements-dropdowns.html">
-                            <i class="metismenu-icon"></i>
-                            Atur Item Layanan
-                        </a>
-                    </li>
+                <ul class="mm-collapse" id="sub-layanan">
+                    <?php foreach ($layanan as $lyn) { ?>
+                        <li>
+                            <a href="layanan.php?layanan_id=<?= $lyn['id'] ?>" id="nv-layanan<?= $lyn['id'] ?>">
+                                <i class="metismenu-icon"></i>
+                                <?= $lyn['nama_layanan'] ?>
+                            </a>
+                        </li>
+                    <?php } ?>
                 </ul>
             </li>
             <li>
@@ -452,4 +452,5 @@ data-class="bg-happy-green sidebar-text-light">
     </div>
 </div>
 </div>
-            <!--end header-->
+<!--end header-->
+<div class="app-main__outer">
