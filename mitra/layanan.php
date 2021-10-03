@@ -176,7 +176,11 @@ $atribut = mysqli_query($conn, "SELECT * FROM atribut_layanan WHERE layanan_id='
                                 <span class="badge <?= $bgcolor ?>"><?= ucwords($atr['status']) ?></span>
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-sm btn-primary" data-tooltip="tooltip" data-placement="top" title="" data-original-title="Atur Item Atribut"><i class="fa fa-cog"></i></button>
+                                <?php if ($atr['item'] == 1) { ?>
+                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-set-atribut<?= $atr['id'] ?>" data-tooltip="tooltip" data-placement="top" title="" data-original-title="Atur Item Atribut"><i class="fa fa-cog"></i></button>
+                                <?php } else { ?>
+                                    <button class="btn btn-sm btn-primary" disabled="" data-tooltip="tooltip" data-placement="top" title="" data-original-title="Atur Item Atribut"><i class="fa fa-cog"></i></button>
+                                <?php } ?>
                                 <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-edit<?= $atr['id'] ?>" data-tooltip="tooltip" data-placement="top" title="" data-original-title="Edit Atribut"><i class="fa fa-edit"></i></button>
                                 <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-hapus<?= $atr['id'] ?>" data-tooltip="tooltip" data-placement="top" title="" data-original-title="Hapus Atribut"><i class="fa fa-trash"></i></button>
                             </td>
@@ -312,6 +316,100 @@ require('template/footer.php');
 </div>
 
 <?php foreach ($atribut as $dta) { ?>
+    <!-- MODAL SET ATRIBUT -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal-set-atribut<?= $dta['id'] ?>">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Atur Item Atribut</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST">
+                    <div class="modal-body item-content-big">
+                        <div class="pl-4 mb-2">
+                            <?php 
+                            $atr_id = $dta['id'];
+                            $cek_items = mysqli_query($conn, "SELECT * FROM item_layanan WHERE atribut_id='$atr_id'");
+                            $cekit = mysqli_fetch_assoc($cek_items);
+                            $cekitem = $cekit ? $cekit['harga'] : '';
+                            $ceksatuan = $cekit ? $cekit['satuan'] : '';
+                            ?>
+                            <label class="form-check-label">
+                                <input type="checkbox" <?= $cekitem ? 'checked' : '' ?> class="form-check-input is_harga" data-id="<?= $dta['id'] ?>"> <span>Aktifkan harga per item?</span>
+                            </label>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th width="5">No</th>
+                                    <th>Item Atribut</th>
+                                    <th width="350">Harga</th>
+                                    <th width="100">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
+                                $items = mysqli_query($conn, "SELECT * FROM item_layanan WHERE atribut_id='$atr_id'");
+                                $no = 1;
+                                foreach ($items as $itm) { ?>
+                                    <tr class="item-content">
+                                        <td><?= $no ?></td>
+                                        <td>
+                                            <input type="text" name="item[]" class="form-control" style="height: 30px; font-size: 13px;" placeholder="Nama Item" value="<?= $itm['item_pilihan'] ?>">
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                <span class="col-md-1">Rp</span>
+                                                <div class="col-md-5 pr-0">
+                                                    <input type="number" name="harga[]" class="form-control harga-vl<?= $dta['id'] ?>" style="height: 30px; font-size: 13px;" placeholder="Harga" value="<?= $itm['harga'] ? $itm['harga'] : '' ?>" <?= $itm['harga'] ? '' : 'readonly' ?> required>
+                                                </div>
+                                                <span class="col-md-1">/</span>
+                                                <div class="col-md-5 pl-0">
+                                                    <input type="text" name="satuan[]" class="form-control satuan_val satuan-vl<?= $dta['id'] ?>" data-id="<?= $dta['id'] ?>" style="height: 30px; font-size: 13px;" placeholder="Satuan (Optional)" value="<?= $itm['satuan'] ?>" <?= $itm['harga'] ? '' : 'readonly' ?>>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-sm btn-danger del-item"><i class="fa fa-trash"></i> Hapus</button>
+                                        </td>
+                                    </tr>
+                                    <?php $no=$no+1; 
+                                } ?>
+                                <tr class="item-content-add" style="background-color: #F4F8FB;">
+                                    <td class="no-last no-lastid<?= $dta['id'] ?>" data-id="<?= $dta['id'] ?>"><?= $no ?></td>
+                                    <td>
+                                        <input type="text" class="form-control nama-item" style="height: 30px; font-size: 13px;" placeholder="Nama Item">
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <span class="col-md-1">Rp</span>
+                                            <div class="col-md-5 pr-0">
+                                                <input type="number" class="form-control harga-vl<?= $dta['id'] ?> input-last harga-item" style="height: 30px; font-size: 13px;" placeholder="Harga" <?= ($cekitem) ? '' : 'readonly' ?>>
+                                            </div>
+                                            <span class="col-md-1">/</span>
+                                            <div class="col-md-5 pl-0">
+                                                <input type="text" class="form-control satuan_val satuan-vl<?= $dta['id'] ?> satuan-item" data-id="<?= $dta['id'] ?>" style="height: 30px; font-size: 13px;" placeholder="Satuan (Optional)" value="<?= $ceksatuan ?>" <?= ($cekitem) ? '' : 'readonly' ?>>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-sm btn-success add-item" data-id="<?= $dta['id'] ?>"><i class="fa fa-plus"></i> Tambah</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+                        <button type="submit" class="btn btn-success" name="set_item">Simpan</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Tutup</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL EDIT -->
     <div class="modal fade" tabindex="-1" role="dialog" id="modal-edit<?= $dta['id'] ?>">
         <div class="modal-dialog" role="document">
@@ -446,16 +544,91 @@ require('template/footer.php');
             $(this).parents('.form-edit').find('.biaya_add_e').removeAttr('hidden');
         });
 
+        // SET ITEM
+        $('.is_harga').change(function(event) {
+            var id = $(this).attr('data-id');
+            if ($(this).is(':checked')) {
+                $('.harga-vl'+id).removeAttr('readonly').attr('required', '');
+                $('.satuan-vl'+id).removeAttr('readonly');
+                $('.input-last').removeAttr('required');
+            } else {
+                $('.harga-vl'+id).val('').attr('readonly', '').removeAttr('required');
+                $('.satuan-vl'+id).val('').attr('readonly', '').removeAttr('required');
+            }
+        });
 
-        <?php if ($success == true) { ?>
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil Diproses',
-                text: 'Data telah telah diperbarui',
-                preConfirm: () => {
-                    window.location.href='layanan.php?layanan_id=<?= $ly_id ?>';
+        $(document).on('keyup', '.satuan_val', function(event) {
+            var id = $(this).attr('data-id');
+            $('.satuan-vl'+id).val($(this).val());
+        });
+
+        $(document).on('click', '.del-item', function(event) {
+            var no = $(this).parents('.item-content-big').find('.no-last').text();
+            var id = $(this).parents('.item-content-big').find('.no-last').attr('data-id');
+            $('.no-lastid'+id).text(no-1);
+            $(this).parents('.item-content').remove();
+        });
+
+        $('.add-item').click(function(event) {
+            var id = $(this).parents('.item-content-big').find('.no-last').attr('data-id');
+            var no = $(this).parents('.item-content-big').find('.no-last').text();
+            var nama = $(this).parents('.item-content-add').find('.nama-item');
+            var harga = $(this).parents('.item-content-add').find('.harga-item');
+            var satuan = $(this).parents('.item-content-add').find('.satuan-item');
+            var is_harga = $(this).parents('.item-content-big').find('.is_harga')
+
+            if (nama.val()=='') {
+                alert('Lengkapi data!');
+                return
+            }
+
+            var ronly = 'readonly';
+            if (is_harga.is(':checked')) {
+                ronly = '';
+                if (harga.val()=='') {
+                    alert('Lengkapi data!');
+                    return
                 }
+            }
+
+            $('.no-lastid'+id).text(parseInt(no)+1);
+            $(this).parents('.item-content-add').before(`<tr class="item-content">
+                <td>`+no+`</td>
+                <td>
+                <input type="text" name="item[]" class="form-control" style="height: 30px; font-size: 13px;" placeholder="Nama Item" value="`+nama.val()+`">
+                </td>
+                <td>
+                <div class="row">
+                <span class="col-md-1">Rp</span>
+                <div class="col-md-5 pr-0">
+                <input type="number" name="harga[]" class="form-control harga-vl`+id+`" style="height: 30px; font-size: 13px;" placeholder="Harga" value="`+harga.val()+`" required `+ronly+`>
+                </div>
+                <span class="col-md-1">/</span>
+                <div class="col-md-5 pl-0">
+                <input type="text" name="satuan[]" class="form-control satuan_val satuan-vl`+id+`" data-id="`+id+`" style="height: 30px; font-size: 13px;" placeholder="Satuan (Optional)" value="`+satuan.val()+`" `+ronly+`>
+                </div>
+                </div>
+                </td>
+                <td class="text-center">
+                <button type="button" class="btn btn-sm btn-danger del-item"><i class="fa fa-trash"></i> Hapus</button>
+                </td>
+                </tr>`);
+
+            nama.val('');
+            harga.val('');
+
+        });
+
+
+                <?php if ($success == true) { ?>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil Diproses',
+                        text: 'Data telah telah diperbarui',
+                        preConfirm: () => {
+                            window.location.href='layanan.php?layanan_id=<?= $ly_id ?>';
+                        }
+                    });
+                <?php } ?>
             });
-        <?php } ?>
-    });
-</script>
+        </script>
