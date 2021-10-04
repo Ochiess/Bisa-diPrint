@@ -43,6 +43,22 @@ if (isset($_POST['edit_atribut'])) {
     $success = true;
 }
 
+if (isset($_POST['set_item'])) {
+    $atribut_id = $_POST['atribut_id'];
+    $item = $_POST['item'];
+    $harga = $_POST['harga'];
+    $satuan = $_POST['satuan'];
+
+    mysqli_query($conn, "DELETE FROM item_layanan WHERE atribut_id='$atribut_id'");
+    
+    foreach ($_POST['item'] as $i => $itm) {
+        $hrg = ($harga[$i]=='') ? 0 : $harga[$i]; 
+        $stn = $satuan[$i];        
+        mysqli_query($conn, "INSERT INTO item_layanan VALUES(NULL, '$atribut_id', '$itm', '$hrg', '$stn')");
+    }
+    $success = true;
+}
+
 if (isset($_GET['hapus_data'])) {
     $id = $_GET['id'];
     mysqli_query($conn, "DELETE FROM atribut_layanan WHERE id='$id'");
@@ -402,6 +418,7 @@ require('template/footer.php');
                         </table>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
+                        <input type="hidden" name="atribut_id" value="<?= $dta['id'] ?>">
                         <button type="submit" class="btn btn-success" name="set_item">Simpan</button>
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Tutup</button>
                     </div>
@@ -620,15 +637,15 @@ require('template/footer.php');
         });
 
 
-                <?php if ($success == true) { ?>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil Diproses',
-                        text: 'Data telah telah diperbarui',
-                        preConfirm: () => {
-                            window.location.href='layanan.php?layanan_id=<?= $ly_id ?>';
-                        }
-                    });
-                <?php } ?>
+        <?php if ($success == true) { ?>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil Diproses',
+                text: 'Data telah telah diperbarui',
+                preConfirm: () => {
+                    window.location.href='layanan.php?layanan_id=<?= $ly_id ?>';
+                }
             });
-        </script>
+        <?php } ?>
+    });
+</script>
