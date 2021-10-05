@@ -68,6 +68,9 @@ if (isset($_GET['hapus_data'])) {
 
 $layanan = mysqli_query($conn, "SELECT * FROM layanan WHERE id='$ly_id'");
 $ly = mysqli_fetch_assoc($layanan);
+$dis=false;
+if ($ly['nama_layanan'] == 'Cetak Dokumen' || $ly['nama_layanan'] == 'Cetak Foto') $dis=true;
+
 $atribut = mysqli_query($conn, "SELECT * FROM atribut_layanan WHERE layanan_id='$ly_id'");
 ?>
 
@@ -227,14 +230,15 @@ require('template/footer.php');
                     <div class="form-group row">
                         <label class="col-md-4">Nama Layanan</label>
                         <div class="col-md-8">
-                            <input type="text" name="nama_layanan" required="required" class="form-control" placeholder="Nama Layanan..." autocomplete="off" value="<?= $ly['nama_layanan'] ?>">
+                            <input type="text" name="nama_layanan" required="required" class="form-control" placeholder="Nama Layanan..." autocomplete="off" value="<?= $ly['nama_layanan'] ?>" <?= $dis ? 'readonly' : '' ?>>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-md-4">Jenis File Upload</label>
                         <div class="col-md-8">
                             <?php $berkas = [['dokumen', 'Dokumen (docx, pdf, dll)'], ['foto', 'Foto (png, jpg, dll)']]; ?>
-                            <select class="form-control" name="jenis_file" required="">
+                            <input type="hidden" name="jenis_file" value="<?= $ly['jenis_file'] ?>">
+                            <select class="form-control" name="jenis_file" required="" <?= $dis ? 'disabled' : '' ?>>
                                 <option value="">--Pilih Jenis Berkas--</option>
                                 <?php foreach ($berkas as $bks) { ?>
                                     <option value="<?= $bks[0] ?>" <?php if ($bks[0] == $ly['jenis_file']) echo "selected" ?>><?= $bks[1] ?></option>

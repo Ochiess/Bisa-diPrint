@@ -353,14 +353,14 @@ if(isset($_SESSION["masuk"]) ) {
                         <ul class="vertical-nav-menu">
                             <li class="app-sidebar__heading">Menu</li>
                             <li>
-                                <a href="index.php">
+                                <a href="index.php" id="nv-beranda">
                                     <i class="metismenu-icon pe-7s-home"></i>
                                     Beranda
                                     <i class="metismenu-state-icon"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="marchent.php">
+                                <a href="marchent.php" id="nv-find">
                                     <i class="metismenu-icon pe-7s-search"></i>
                                     Temukan Percetakan
                                 </a>
@@ -381,4 +381,5 @@ if(isset($_SESSION["masuk"]) ) {
                     </div>
                 </div>
             </div>
+            <div class="app-main__outer">
             <!--end header-->

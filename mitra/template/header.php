@@ -443,7 +443,7 @@ data-class="bg-happy-green sidebar-text-light">
                 </ul>
             </li>
             <li>
-                <a href="#">
+                <a href="pengaturan.php" id="nv-settings">
                     <i class="metismenu-icon pe-7s-config"></i>
                     Pengaturan
                 </a>
