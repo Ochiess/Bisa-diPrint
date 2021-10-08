@@ -14,8 +14,6 @@ if(isset($_SESSION["masuk_mitra"]) ) {
     header("Location: login.php");
     exit;
 }
-
-$layanan = mysqli_query($conn, "SELECT * FROM layanan WHERE agen_id='$id'");
 ?>
 
 <!doctype html>
@@ -25,7 +23,7 @@ $layanan = mysqli_query($conn, "SELECT * FROM layanan WHERE agen_id='$id'");
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta http-equiv="Content-Language" content="en">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>diPrint-admin</title>
+        <title>diPrint-mitra</title>
         <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
         <meta name="description" content="This is an example dashboard created using build-in elements and components.">
@@ -432,14 +430,16 @@ data-class="bg-happy-green sidebar-text-light">
                     <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                 </a>
                 <ul class="mm-collapse" id="sub-layanan">
-                    <?php foreach ($layanan as $lyn) { ?>
-                        <li>
-                            <a href="layanan.php?layanan_id=<?= $lyn['id'] ?>" id="nv-layanan<?= $lyn['id'] ?>">
-                                <i class="metismenu-icon"></i>
-                                <?= $lyn['nama_layanan'] ?>
-                            </a>
-                        </li>
-                    <?php } ?>
+                    <li>
+                        <a href="cetak_dokumen.php" id="nv-cetak-dokumen">
+                            <i class="metismenu-icon"></i>Cetak Dokumen
+                        </a>
+                    </li>
+                    <li>
+                        <a href="cetak_foto.php" id="nv-cetak-foto">
+                            <i class="metismenu-icon"></i>Cetak Foto
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li>

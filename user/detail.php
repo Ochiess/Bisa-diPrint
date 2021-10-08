@@ -4,6 +4,8 @@ $id_agen = $_GET['id'];
 $result = panggil_produk($id_agen);
 $agent = mysqli_query($conn, "SELECT * FROM agen WHERE id='$id_agen'");
 $agn = mysqli_fetch_assoc($agent);
+$config = mysqli_query($conn, "SELECT * FROM setting_agen WHERE agen_id='$id_agen'");
+$cfg = mysqli_fetch_assoc($config);
 ?>
 
 <div class="app-main__inner">
@@ -78,63 +80,133 @@ $agn = mysqli_fetch_assoc($agent);
             <div class="main-card card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Daftar Layanan</h5>
-                    <?php 
-                    $layanan = mysqli_query($conn, "SELECT * FROM layanan WHERE agen_id='$id_agen'");
-                    foreach ($layanan as $lyn) { ?>
-                        <table class="mb-2 table table-bordered">
-                            <thead>
-                                <tr class="bg-secondary text-white">
-                                    <td colspan="3">
-                                        <h6><b><?= $lyn['nama_layanan'] ?></b></h6>
-                                        <span><?= $lyn['keterangan'] ?></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Atribut</th>
-                                    <th>Item</th>
-                                    <th>Harga</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php 
-                                $ly_id = $lyn['id'];
-                                $atribut = mysqli_query($conn, "SELECT * FROM atribut_layanan WHERE layanan_id='$ly_id'");
-                                foreach ($atribut as $atr) {
-                                    $atr_id = $atr['id'];
-                                    $items = mysqli_query($conn, "SELECT * FROM item_layanan WHERE atribut_id='$atr_id'");
+                    
+                    <table class="mb-2 table table-bordered">
+                        <thead>
+                            <tr class="bg-secondary text-white">
+                                <td colspan="3">
+                                    <h6><b>Cetak Dokumen</b></h6>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Atribut</th>
+                                <th>Item</th>
+                                <th>Harga</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Warna Tulisan</td>
+                                <td>
+                                    1. Hitam-Putih<br>
+                                    2. Berwarna<br>
+                                </td>
+                                <td>
+                                    <?php 
+                                    $warna_tulisan = mysqli_query($conn, "SELECT * FROM warna_tulisan WHERE agen_id='$id_agen'");
+                                    $wrt = mysqli_fetch_assoc($warna_tulisan);
+                                    echo 'Rp.'.number_format($wrt['hitam_putih']).'/lembar<br>';
+                                    echo 'Rp.'.number_format($wrt['berwarna']).'/lembar<br>';
                                     ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <?php 
+                                $jenis_kertas = mysqli_query($conn, "SELECT * FROM jenis_kertas WHERE agen_id='$id_agen'");
+                                ?>
+                                <td>Jenis Kertas</td>
+                                <td>
+                                    <?php 
+                                    $no=1;
+                                    foreach ($jenis_kertas as $jnk) {
+                                        echo $no.'. '.$jnk['jenis_kertas'].'<br>';
+                                        $no++;
+                                    } ?>
+                                </td>
+                                <td>
+                                    <?php 
+                                    $no=1;
+                                    foreach ($jenis_kertas as $jnk) {
+                                        echo $jnk['harga'] ? 'Rp.'.number_format($jnk['harga']).'/lembar' : '-';
+                                        echo '<br>';
+                                        $no++;
+                                    } ?>
+                                </td>
+                            </tr>
+                            <?php if ($cfg['jilid'] == '1') {
+                                $jilid = mysqli_query($conn, "SELECT * FROM jilid WHERE agen_id='$id_agen'"); 
+                                if (mysqli_num_rows($jilid) > 0) { ?>
                                     <tr>
-                                        <td><?= $atr['nama_atribut'] ?></td>
+                                        <td>Jilid</td>
                                         <td>
                                             <?php 
                                             $no=1;
-                                            if ($atr['item'] == 0) echo '-';
-                                            else {
-                                                foreach ($items as $itm) {
-                                                    echo $no.'. '.$itm['item_pilihan'].'<br>';
-                                                    $no++;
-                                                }
-                                            }
-                                            ?>
+                                            foreach ($jilid as $jld) {
+                                                echo $no.'. '.$jld['item'].'<br>';
+                                                $no++;
+                                            } ?>
                                         </td>
                                         <td>
                                             <?php 
-                                            if ($atr['item'] == 0) {
-                                                echo $atr['harga'] ? 'Rp.'.number_format($atr['harga']) : '-';
-                                            } else {
-                                                foreach ($items as $itm) {
-                                                    $satuan = ($itm['satuan'] != '') ? '/'.$itm['satuan'] : '';
-                                                    echo $itm['harga'] ? 'Rp.'.number_format($itm['harga']).$satuan.'<br>' : '-<br>';
-                                                    $no++;
-                                                }
-                                            }
-                                            ?>
+                                            $no=1;
+                                            foreach ($jilid as $jld) {
+                                                echo $jld['harga'] ? 'Rp.'.number_format($jld['harga']) : '-';
+                                                echo '<br>';
+                                                $no++;
+                                            } ?>
                                         </td>
                                     </tr>
-                                <?php } ?>
-                            </tbody>
-                        </table>
-                    <?php } ?>
+                                <?php }
+                            } ?>
+                        </tbody>
+                    </table>
+
+                    <table class="mb-2 table table-bordered">
+                        <thead>
+                            <tr class="bg-secondary text-white">
+                                <td colspan="3">
+                                    <h6><b>Cetak Foto</b></h6>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Atribut</th>
+                                <th>Item</th>
+                                <th>Harga</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <?php 
+                                $ukuran_foto = mysqli_query($conn, "SELECT * FROM ukuran_foto WHERE agen_id='$id_agen'");
+                                ?>
+                                <td>Ukuran Foto</td>
+                                <td>
+                                    <?php 
+                                    $no=1;
+                                    foreach ($ukuran_foto as $jnk) {
+                                        echo $no.'. '.$jnk['ukuran'].'<br>';
+                                        $no++;
+                                    } ?>
+                                </td>
+                                <td>
+                                    <?php 
+                                    $no=1;
+                                    foreach ($ukuran_foto as $jnk) {
+                                        echo $jnk['harga'] ? 'Rp.'.number_format($jnk['harga']).'/lembar' : '-';
+                                        echo '<br>';
+                                        $no++;
+                                    } ?>
+                                </td>
+                            </tr>
+                            <?php if ($cfg['latar'] == '1') { ?>
+                                <tr>
+                                    <td>Ganti Latar</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

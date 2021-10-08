@@ -144,7 +144,7 @@ require 'koneksi.php';
         global $conn;
         
         // cek username sudah ada atau belum
-        $result = mysqli_query($conn, "SELECT * FROM agen");
+        $result = mysqli_query($conn, "SELECT * FROM agen WHERE status='active'");
 
         return $result;
     }

@@ -26,7 +26,13 @@ $row = lihat_profil($id);
                 <tbody>
                     <tr>
                         <td>Foto Profil</td>
-                        <td><img src="img/daftar<?= $row["poto"];?>" alt="" height="250"> </td>
+                        <td>
+                            <?php if ($row["poto"]) { ?>
+                                <img width="100" class="rounded-circle" src="img/daftar<?= $row['poto'] ?>" alt="" height="100">
+                            <?php } else { ?>
+                                <img width="100" class="rounded-circle" src="../user/img/default.png" alt="" height="100">
+                            <?php } ?>
+                        </td>
                     </tr>
                     <tr>
                         <td>Nama Percetakan</td>

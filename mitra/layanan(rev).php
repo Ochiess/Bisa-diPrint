@@ -103,7 +103,7 @@ $atribut = mysqli_query($conn, "SELECT * FROM atribut_layanan WHERE layanan_id='
                                 <td>:</td>
                                 <td><b><?= ucwords($ly['jenis_file']) ?></b></td>
                             </tr>
-                            <!-- <tr>
+                            <tr>
                                 <td>Estimasi Waktu Pengerjaan</td>
                                 <td>:</td>
                                 <td><b><?= $ly['waktu_kerja'] ?> Menint</b></td>
@@ -112,7 +112,7 @@ $atribut = mysqli_query($conn, "SELECT * FROM atribut_layanan WHERE layanan_id='
                                 <td>Keterangan</td>
                                 <td>:</td>
                                 <td><b><?= $ly['keterangan'] ?></b></td>
-                            </tr> -->
+                            </tr>
                         </tbody>
                     </table>
                     <button class="btn btn-primary btn-sm mt-2 mb-2" data-toggle="modal" data-target=".modal-edt-layanan"><i class="fa fa-edit"></i> Edit</button>
