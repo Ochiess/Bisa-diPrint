@@ -85,6 +85,8 @@ $cfg = mysqli_fetch_assoc($config);
                                                 </select>
                                             </div>
                                         </div>
+                                    <?php } else { ?>
+                                        <input type="hidden" name="jilid" value="">
                                     <?php } ?>
                                     <div class="position-relative form-group row">
                                         <label for="exampleFile" class="col-sm-3">Dokumen</label>
@@ -123,6 +125,8 @@ $cfg = mysqli_fetch_assoc($config);
                                                 <input type="radio" name="ganti_latar" id="tidak_ganti" value="Tidak"> <label for="tidak_ganti">Tidak</label>
                                             </div>
                                         </div>
+                                    <?php } else { ?>
+                                        <input type="hidden" name="ganti_latar" value="">
                                     <?php } ?>
                                     <div class="position-relative form-group row">
                                         <label for="exampleFile" class="col-sm-3">Upload Foto</label>
