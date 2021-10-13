@@ -260,7 +260,6 @@ $cfg = mysqli_fetch_assoc($config);
 <?php
 require('template/footer.php');
 ?>
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-DAbmO3EFyeXaOTdB"></script>
 
 <script>
     $(document).ready(function() {

@@ -21,8 +21,10 @@
 <script src="./../layout/vendor/jquery/jquery.min.js"></script>
 <script src="./assets/scripts/main.js"></script>
 <script src="./assets/sweetalert2/sweetalert2.min.js"></script>
+<script src="./../assets/izitoast/js/iziToast.min.js"></script>
 <script src="./../layout/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="./../layout/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-DAbmO3EFyeXaOTdB"></script>
 <script>
     $(document).ready(function() {
         $('#dataTable').DataTable();

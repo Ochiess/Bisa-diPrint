@@ -12,6 +12,17 @@ if(isset($_SESSION["masuk"]) ) {
     header("Location: login.php");
     exit;
 }
+
+$get_pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND status='panding'");
+foreach ($get_pesanan as $dta) {
+    $waktu_pesanan = strtotime($dta['waktu_pesanan']);
+    $waktu_sekrng = strtotime(date('Y-m-d H:i:s'));
+
+    if ($waktu_pesanan + 3600 < $waktu_sekrng) {
+        $id = $dta['id'];
+        mysqli_query($conn, "UPDATE cetak SET status='cancel' WHERE id='$id'");
+    }
+}
 ?>
 <!doctype html>
     <html lang="en">
@@ -26,6 +37,8 @@ if(isset($_SESSION["masuk"]) ) {
         <meta name="description" content="This is an example dashboard created using build-in elements and components.">
         <meta name="msapplication-tap-highlight" content="no">
         <link href="./main.css" rel="stylesheet">
+        <link href="./../layout/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+        <link href="./../assets/izitoast/css/iziToast.min.css" rel="stylesheet">
         <link rel="stylesheet" href="../user/assets/sweetalert2/sweetalert2.min.css">
     </head>
 
@@ -361,13 +374,13 @@ if(isset($_SESSION["masuk"]) ) {
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="marchent.php">
+                                    <a href="data_pesanan.php" id="nv-datapesanana">
                                         <i class="metismenu-icon pe-7s-paperclip"></i>
                                         Pesanan Saya
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="history.php">
+                                    <a href="history.php" id="nv-riwayat">
                                         <i class="metismenu-icon pe-7s-clock"></i>
                                         Riwayat Pesanan
                                     </a>
