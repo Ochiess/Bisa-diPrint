@@ -15,6 +15,7 @@ if( isset($_COOKIE['key']) && isset($_COOKIE['oci']) ) {
    //cek cookie dan username
     if( $oci === hash('sha256', $row['email']) ) {
         $_SESSION['masuk_mitra'] = true;
+        $_SESSION['id_mitra'] = $key;
     }
 
 }
@@ -50,7 +51,7 @@ if(isset($_POST["login"]) ) {
             if( isset($_POST['remember']) ) {
 
                 //buat cookienya
-                setcookie('key', $row['id'], strtotime('+7 days'),'/' );
+                setcookie('id_mitra', $row['id'], strtotime('+7 days'),'/' );
                 setcookie('oci', hash('sha256',$row['email']), strtotime('+7 days'),'/');
                 setcookie('poto', $row['poto'],  strtotime('+7 days'),'/' );
                 setcookie('nama_percetakan', $row['nama_percetakan'],  strtotime('+7 days'),'/' );

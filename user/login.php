@@ -14,6 +14,7 @@ if( isset($_COOKIE['key']) && isset($_COOKIE['oci']) ) {
    //cek cookie dan username
     if( $oci === hash('sha256', $row['email']) ) {
         $_SESSION['masuk'] = true;
+        $_SESSION['key'] = $key;
     }
 }
 if( isset($_SESSION["masuk"]) ) {
