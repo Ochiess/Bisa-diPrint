@@ -276,19 +276,20 @@ require('template/footer.php');
         $(document).on('click', '.bayar', function(event) {
             var id = $(this).attr('data-id');
             var token = $(this).attr('data-token');
+            var kode = $(this).attr('data-kode');
 
             snap.pay(token, {
                 onSuccess: function(result){
-                    cekStatusPayment(id, token);
+                    cekStatusPayment(id, kode);
                 },
                 onPending: function(result){
-                    cekStatusPayment(id, token);
+                    cekStatusPayment(id, kode);
                 },
                 onError: function(result){
-                    cekStatusPayment(id, token);
+                    cekStatusPayment(id, kode);
                 },
                 onClose: function(result){
-                    cekStatusPayment(id, token);
+                    cekStatusPayment(id, kode);
                 }
             });
         });
@@ -325,21 +326,23 @@ require('template/footer.php');
             });            
         }
 
-        function cekStatusPayment(id, token) {
+        function cekStatusPayment(id, kode) {
             $.ajax({
-                url     : 'https://api.sandbox.midtrans.com/v2/'+token+'/status',
+                url     : 'controller.php',
                 method  : "POST",
-                header  : {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": "Basic U0ItTWlkLXNlcnZlci1paEdXdzBkREY0aHV4OVI1akF4N0dlQmQ6"
+                data    : {
+                    req: 'cekStatusPayment',
+                    kode: kode,
                 },
                 success : function(data) {
-                    console.log(data);
-                    if (data.transaction_status) {
-                        if (data.transaction_status == "settlement" || data.transaction_status == "capture") {
-                            updateStatus(id, 'review');
-                        }
+                    if (data.transaction_status == "settlement" || data.transaction_status == "capture") {
+                        updateStatus(id, 'review');
+                    } else {
+                        iziToast.info({
+                            title: "Selesaikan pembayaran",
+                            message: "Silahkan selesaikan pembayaran anda. Pesanan akan dibatalkan jika pembayaran tidak dilakuka dalam 1 jam",
+                            position: 'topRight'
+                        });
                     }
                 }
             });

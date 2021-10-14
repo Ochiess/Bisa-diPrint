@@ -48,7 +48,7 @@ if (isset($_POST['req'])) {
 			$aksi = '';
 			if ($dta['status'] == 'panding') {
 				$badge = 'badge-warning';
-				$aksi = '<button class="btn btn-outline-primary btn-sm bayar" data-token="'.$dta['payment_token'].'" data-id="'.$dta['id'].'" style="font-size: 12px;"><i class="fa fa-credit-card"></i> Bayar</button>';
+				$aksi = '<button class="btn btn-outline-primary btn-sm bayar" data-token="'.$dta['payment_token'].'" data-id="'.$dta['id'].'" data-kode="KPR-'.sprintf('%05s', $dta['id']).'" style="font-size: 12px;"><i class="fa fa-credit-card"></i> Bayar</button>';
 			}
 			else if ($dta['status'] == 'review') {
 				$badge = 'badge-info';
@@ -146,6 +146,29 @@ if (isset($_POST['req'])) {
 		$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (status != 'finish' AND status != 'cancel')");
 		$res = mysqli_num_rows($pesanan);
 		echo json_encode($res);
+	}
+
+	if($_POST['req'] == 'cekStatusPayment') {
+		$kode = $_POST['kode'];
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => "https://api.sandbox.midtrans.com/v2/".$kode."/status",
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "GET",
+			CURLOPT_HTTPHEADER => array(
+				"Accept: application/json",
+				"Content-Type: application/json",
+				"Authorization: Basic U0ItTWlkLXNlcnZlci1EbG54MzFvbzhMcWh0bGY3T1M3RkFSWGQ6"
+			),
+		));
+
+		$response = curl_exec($curl);
+		echo $response;
 	}
 }
 
