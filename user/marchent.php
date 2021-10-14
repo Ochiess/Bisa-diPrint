@@ -17,7 +17,11 @@ $result = marchent();
     </div>
     <div class="card-group">
         <div class="row">
-            <?php foreach ($result as $i => $row) { ?>
+            <?php foreach ($result as $i => $row) { 
+                $agen_id = $row['id'];
+                $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$agen_id' AND (status != 'finish' AND status != 'cancel')");
+                $antrian = mysqli_num_rows($pesanan);
+                ?>
                 <div class="col-md-4 mb-3">
                     <div class="card">
                         <img class="card-img-top d-block w-100" height="250" src="../mitra/img/daftar<?= $row["poto"] ?>" alt="Card image cap">
@@ -46,7 +50,7 @@ $result = marchent();
                                     <?php } ?>
                                 </div>
                                 <div class="col-md-4 text-right">
-                                    <small><i class="fa fa-users"></i> 300</small>
+                                    <small><i class="fa fa-users"></i> <?= $antrian ?></small>
                                 </div>
                             </div>
                         </div>

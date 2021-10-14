@@ -73,7 +73,7 @@ $cfg = mysqli_fetch_assoc($config);
                                             </select>
                                         </div>
                                     </div>
-                                    <?php if (mysqli_num_rows($jilid) > 0) { ?>
+                                    <?php if ($cfg['jilid'] == '1' && mysqli_num_rows($jilid) > 0) { ?>
                                         <div class="position-relative form-group row">
                                             <label for="jilid" class="col-sm-3">Jilid (Optional)</label>
                                             <div class="col-sm-9">
@@ -86,7 +86,7 @@ $cfg = mysqli_fetch_assoc($config);
                                             </div>
                                         </div>
                                     <?php } else { ?>
-                                        <input type="hidden" name="jilid" value="">
+                                        <input type="hidden" name="jilid" value="0">
                                     <?php } ?>
                                     <div class="position-relative form-group row">
                                         <label for="exampleFile" class="col-sm-3">Dokumen</label>
@@ -126,7 +126,7 @@ $cfg = mysqli_fetch_assoc($config);
                                             </div>
                                         </div>
                                     <?php } else { ?>
-                                        <input type="hidden" name="ganti_latar" value="">
+                                        <input type="hidden" name="ganti_latar" value="Tidak">
                                     <?php } ?>
                                     <div class="position-relative form-group row">
                                         <label for="exampleFile" class="col-sm-3">Upload Foto</label>
@@ -261,6 +261,7 @@ $cfg = mysqli_fetch_assoc($config);
 require('template/footer.php');
 ?>
 
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-DAbmO3EFyeXaOTdB"></script>
 <script>
     $(document).ready(function() {
         $('#nv-find').addClass('mm-active');

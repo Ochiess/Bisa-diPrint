@@ -6,6 +6,8 @@ $agent = mysqli_query($conn, "SELECT * FROM agen WHERE id='$id_agen'");
 $agn = mysqli_fetch_assoc($agent);
 $config = mysqli_query($conn, "SELECT * FROM setting_agen WHERE agen_id='$id_agen'");
 $cfg = mysqli_fetch_assoc($config);
+$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id_agen' AND (status != 'finish' AND status != 'cancel')");
+$antrian = mysqli_num_rows($pesanan);
 ?>
 
 <div class="app-main__inner">
@@ -60,7 +62,7 @@ $cfg = mysqli_fetch_assoc($config);
                                 <span class="col-sm-1 p-0">
                                     <i class="fa fa-users"></i>
                                 </span>
-                                <span class="col-sm-11 p-0">&nbsp;<b>5 Antrian</b></span>
+                                <span class="col-sm-11 p-0">&nbsp;<b><?= $antrian ?> Antrian</b></span>
                             </div>
                         </div>
                     </div>

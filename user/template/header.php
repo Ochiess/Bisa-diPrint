@@ -376,7 +376,7 @@ foreach ($get_pesanan as $dta) {
                                 <li>
                                     <a href="data_pesanan.php" id="nv-datapesanana">
                                         <i class="metismenu-icon pe-7s-paperclip"></i>
-                                        Pesanan Saya
+                                        Pesanan Saya <span class="badge badge-pill badge-danger px-0 py-1" id="countPesanan" hidden="">0</span>
                                     </a>
                                 </li>
                                 <li>

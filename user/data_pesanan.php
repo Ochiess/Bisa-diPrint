@@ -239,6 +239,7 @@ require('template/footer.php');
     </div>
 <?php } ?>
 
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-DAbmO3EFyeXaOTdB"></script>
 <script>
     $(document).ready(function() {
         $('#nv-datapesanana').addClass('mm-active');
@@ -259,6 +260,7 @@ require('template/footer.php');
                     $('#dataPesanan').html(data);
                 }
             });
+            countPesanan();
         }
 
         $('.batalkan').click(function(event) {
@@ -323,14 +325,14 @@ require('template/footer.php');
             });            
         }
 
-        cekStatusPayment(id, token) {
+        function cekStatusPayment(id, token) {
             $.ajax({
                 url     : 'https://api.sandbox.midtrans.com/v2/'+token+'/status',
                 method  : "POST",
                 header  : {
-                    "Accept: application/json",
-                    "Content-Type: application/json",
-                    "Authorization: Basic U0ItTWlkLXNlcnZlci1paEdXdzBkREY0aHV4OVI1akF4N0dlQmQ6"
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Basic U0ItTWlkLXNlcnZlci1paEdXdzBkREY0aHV4OVI1akF4N0dlQmQ6"
                 },
                 success : function(data) {
                     console.log(data);

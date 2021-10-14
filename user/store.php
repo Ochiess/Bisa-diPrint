@@ -56,6 +56,8 @@ if (isset($_POST['req'])) {
 
 		// Seleksi Metode Pembayaran
 		if ($metode_pembayaran == 'virtual') {
+			$status = 'panding';
+
 			// Midtrans Config
 			$transaction_details = [
 				'order_id' => "KPR-".sprintf('%05s', $cetak_id)
@@ -73,11 +75,9 @@ if (isset($_POST['req'])) {
 				'transaction_details' => $transaction_details,
 				'item_details' => $item_details,
 			];
-
 			$payment_token = Snap::getSnapToken($transaction);
-			$status = 'panding';
 		} else {
-			$status = 'new';
+			$status = 'review';
 			$payment_token = null;
 		}
 

@@ -91,6 +91,23 @@ require 'koneksi.php';
         $password = password_hash($password, PASSWORD_DEFAULT);
         // menambahkan user baru kedatabase
         mysqli_query($conn, "INSERT INTO agen VALUES(NULL, '$nama_percetakan', '$nama_pemilik', '$telpon', '$email', '$alamat', '$password', '$poto', '$keterangan', 'new')");
+
+        // add attribut layanan & config
+        $agen_id = mysqli_insert_id($conn);
+        mysqli_query($conn, "INSERT INTO warna_tulisan VALUES(NULL, '$agen_id', '100', '200')");
+
+        $jenis_kertas = ["Letter", "A4", "F4 (Folio)", "A3", "B5", "A5"];
+        foreach ($jenis_kertas as $jnk) {
+            mysqli_query($conn, "INSERT INTO jenis_kertas VALUES(NULL, '$agen_id', '$jnk', '0')");
+        }
+
+        $ukuran_foto = ["Ukuran 2x3", "Ukuran 3x4", "Ukuran 4x6"];
+        foreach ($ukuran_foto as $ukf) {
+            mysqli_query($conn, "INSERT INTO ukuran_foto VALUES(NULL, '$agen_id', '$ukf', '0')");
+        }
+        
+        mysqli_query($conn, "INSERT INTO setting_agen VALUES(NULL, '$agen_id', '1', '1', NULL, NULL, '1', '1', '0', '0')");
+
         return 1;
     }
 

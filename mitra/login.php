@@ -3,17 +3,17 @@ session_start();
 require '../function.php';
 
 // cek cookie
-if( isset($_COOKIE['key']) && isset($_COOKIE['oci']) ) {
+if( isset($_COOKIE['key']) && isset($_COOKIE['oci_m']) ) {
 
    $key = $_COOKIE['key'];
-   $oci = $_COOKIE['oci']; 
+   $oci_m = $_COOKIE['oci_m']; 
 
    // ambil username berdasarkan id
    $result = mysqli_query($conn, "SELECT email FROM agen WHERE id = $key");
    $row = mysqli_fetch_assoc($result);
 
    //cek cookie dan username
-    if( $oci === hash('sha256', $row['email']) ) {
+    if( $oci_m === hash('sha256', $row['email']) ) {
         $_SESSION['masuk_mitra'] = true;
         $_SESSION['id_mitra'] = $key;
     }
@@ -39,28 +39,33 @@ if(isset($_POST["login"]) ) {
         $row = mysqli_fetch_assoc($result);
 
         if(password_verify($password, $row["password"]) ) {
-            
-            // set session
-            $_SESSION["masuk_mitra"] = true;
-            $_SESSION["id_mitra"] = $row['id'];
-            $_SESSION["poto"] = $row['poto'];
-            $_SESSION["nama_percetakan"] = $row['nama_percetakan'];
-            $_SESSION["alamat"] = $row['alamat'];
+            if($row['status'] == 'new') {
+                echo "<script>alert('Akun anda belum di verifikasi oleh admin!')</script>";
+            }else if($row['status'] == 'banned') {
+                echo "<script>alert('Akun anda telah di nonaktifkan, anda tidak bisa masuk. Silahkan hubungi admin')</script>";
+            } else {
+                // set session
+                $_SESSION["masuk_mitra"] = true;
+                $_SESSION["id_mitra"] = $row['id'];
+                $_SESSION["poto"] = $row['poto'];
+                $_SESSION["nama_percetakan"] = $row['nama_percetakan'];
+                $_SESSION["alamat"] = $row['alamat'];
 
-            // cek remember me
-            if( isset($_POST['remember']) ) {
+                // cek remember me
+                if( isset($_POST['remember']) ) {
 
-                //buat cookienya
-                setcookie('id_mitra', $row['id'], strtotime('+7 days'),'/' );
-                setcookie('oci', hash('sha256',$row['email']), strtotime('+7 days'),'/');
-                setcookie('poto', $row['poto'],  strtotime('+7 days'),'/' );
-                setcookie('nama_percetakan', $row['nama_percetakan'],  strtotime('+7 days'),'/' );
-                setcookie('alamat', $row['alamat'],  strtotime('+7 days'),'/' );
+                    //buat cookienya
+                    setcookie('id_mitra', $row['id'], strtotime('+7 days'),'/' );
+                    setcookie('oci_m', hash('sha256',$row['email']), strtotime('+7 days'),'/');
+                    setcookie('poto', $row['poto'],  strtotime('+7 days'),'/' );
+                    setcookie('nama_percetakan', $row['nama_percetakan'],  strtotime('+7 days'),'/' );
+                    setcookie('alamat', $row['alamat'],  strtotime('+7 days'),'/' );
+                }
+
+                header("Location: index.php");
+
+                exit;
             }
-
-            header("Location: index.php");
-
-            exit;
         }
     }
 

@@ -69,27 +69,27 @@ if (isset($_POST['req'])) {
 
 			$html .= '
 			<tr>
-				<td>'.$nama_percetakan.'</td>
-				<td>'.ucwords($dta['jenis_layanan']).'</td>
-				<td class="text-center">
-					'.date('d/m/Y', strtotime($dta['waktu_pesanan'])).'
-					<b>'.date('H:i', strtotime($dta['waktu_pesanan'])).'</b>
-				</td>
-				<td class="text-center">
-					'.date('d/m/Y', strtotime($dta['waktu_pengambilan'])).'
-					<b>'.date('H:i', strtotime($dta['waktu_pengambilan'])).'</b>
-				</td>
-				<td>Rp.'.number_format($dta['harga']).'</td>
-				<td class="text-center">
-					<span class="'.$bayar[0].'" style="font-size: 12px;"><b>'.$bayar[1].'</b></span>
-				</td>
-				<td>
-					<span class="badge '.$badge.' badge-pill">'.$dta['status'].'</span>
-				</td>
-				<td class="text-center">
-					<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#modal-detail'.$dta['id'].'"><i class="fa fa-list"></i> Detail</button>
-					'.$aksi.'
-				</td>
+			<td>'.$nama_percetakan.'</td>
+			<td>'.ucwords($dta['jenis_layanan']).'</td>
+			<td class="text-center">
+			'.date('d/m/Y', strtotime($dta['waktu_pesanan'])).'
+			<b>'.date('H:i', strtotime($dta['waktu_pesanan'])).'</b>
+			</td>
+			<td class="text-center">
+			'.date('d/m/Y', strtotime($dta['waktu_pengambilan'])).'
+			<b>'.date('H:i', strtotime($dta['waktu_pengambilan'])).'</b>
+			</td>
+			<td>Rp.'.number_format($dta['harga']).'</td>
+			<td class="text-center">
+			<span class="'.$bayar[0].'" style="font-size: 12px;"><b>'.$bayar[1].'</b></span>
+			</td>
+			<td>
+			<span class="badge '.$badge.' badge-pill">'.$dta['status'].'</span>
+			</td>
+			<td class="text-center">
+			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#modal-detail'.$dta['id'].'"><i class="fa fa-list"></i> Detail</button>
+			'.$aksi.'
+			</td>
 			</tr>
 			';
 		}
@@ -113,7 +113,23 @@ if (isset($_POST['req'])) {
 			$statusRes = "Berhasil";
 			if ($status == 'review') $message = 'Pembayaran berhasil, pesanan anda sedang ditinjau.';
 			else if ($status == 'cancel') $message = 'Pesanan anda telah dibatalkan';
-			else if ($status == 'finish') $message = 'Pesanan anda telah selesai dan telah dikonfirmasi';
+			else if ($status == 'finish') {
+				$message = 'Pesanan anda telah selesai dan telah dikonfirmasi';
+				$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE id='$id'");
+				$psn = mysqli_fetch_assoc($pesanan);
+				if ($psn['metode_pembayaran'] == 'virtual') {
+					$agen_id = $psn['agen_id'];
+					$payment = mysqli_query($conn, "SELECT * FROM virtual_payment WHERE agen_id='$agen_id'");
+					$pay = mysqli_fetch_assoc($payment);
+					if ($pay) {
+						$saldo = $pay['jumlah_saldo']+$psn['harga'];
+						mysqli_query($conn, "UPDATE virtual_payment SET jumlah_saldo='$saldo' WHERE agen_id='$agen_id'");
+					} else {
+						$saldo = $psn['harga'];
+						mysqli_query($conn, "INSERT INTO virtual_payment VALUES(NULL, '$agen_id', '$saldo', '0')");
+					}
+				}
+			}
 		} else {
 			$statusRes = "Gagal";
 			$message = 'Terjadi kesalahan, permintaan anda gagal diproses';
@@ -122,6 +138,13 @@ if (isset($_POST['req'])) {
 			"status" => $statusRes,
 			"message" => $message,
 		];
+		echo json_encode($res);
+	}
+
+	if($_POST['req'] == 'countPesanan') {
+		$id = $_POST['id'];
+		$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (status != 'finish' AND status != 'cancel')");
+		$res = mysqli_num_rows($pesanan);
 		echo json_encode($res);
 	}
 }

@@ -4,7 +4,7 @@ if (isset($_POST["daftar"])) {
 
     if (registrasi_agen($_POST) > 0) {
         echo "<script> 
-        alert ('Berhasil mendaftar');
+        alert ('Berhasil mendaftar, silahkan tunggu sampai admin memverifikasi pendaftaran anda');
         document.location.href = 'login.php';
         </script>";
     } else {

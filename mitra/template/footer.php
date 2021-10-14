@@ -16,7 +16,7 @@
         <script src="./../layout/vendor/datatables/dataTables.bootstrap4.min.js"></script>
         <script>
             $(document).ready(function() {
-                $('#dataTable').DataTable();
+                $('.dataTable').DataTable();
             });
         </script>
     </body>

@@ -24,12 +24,27 @@
 <script src="./../assets/izitoast/js/iziToast.min.js"></script>
 <script src="./../layout/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="./../layout/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-DAbmO3EFyeXaOTdB"></script>
 <script>
     $(document).ready(function() {
         $('#dataTable').DataTable();
+
     });
+    var user_id = '<?= $id ?>';
+    countPesanan();
+    function countPesanan() {
+        $.ajax({
+            url     : 'controller.php',
+            method  : "POST",
+            data    : {
+                req: 'countPesanan',
+                id: user_id
+            },
+            success : function(data) {
+                if (data <= 0) $('#countPesanan').attr('hidden', '').text(data);
+                else $('#countPesanan').removeAttr('hidden').text(data);
+            }
+        });
+    }
 </script>
 </body>
-
 </html>

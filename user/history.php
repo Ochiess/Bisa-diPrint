@@ -23,6 +23,7 @@ $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (sta
             <table class="table table-bordered" id="dataTable">
                 <thead>
                     <tr>
+                        <th width="10">No</th>
                         <th width="150">Tempat Cetak</th>
                         <th width="80">Tipe File</th>
                         <th>Waktu Pemesanan</th>
@@ -34,6 +35,7 @@ $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (sta
                 </thead>
                 <tbody>
                     <?php 
+                    $no=1;
                     foreach ($pesanan as $dta) {
                         $print = mysqli_query($conn, "SELECT * FROM agen WHERE id='".$dta["agen_id"]."'");
                         $prt = mysqli_fetch_assoc($print);
@@ -45,6 +47,7 @@ $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (sta
                         if ($dta['metode_pembayaran'] == 'langsung') $bayar = ['text-primary', 'Bayar Langsung'];
                         else $bayar = ['text-success', 'Pembayaran Virtual']; ?>
                         <tr>
+                            <td><?= $no ?></td>
                             <td><?= $prt ? $prt["nama_percetakan"] : '<i>Tidak tersedia lagi</i>' ?></td>
                             <td><?= ucwords($dta['jenis_layanan']) ?></td>
                             <td class="text-center">
@@ -61,12 +64,9 @@ $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (sta
                                 <button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#modal-detail<?= $dta['id'] ?>"><i class="fa fa-list"></i> Detail</button>
                             </td>
                         </tr>
-                    <?php } 
-                    if (!isset($dta)) { ?>
-                        <tr>
-                            <td colspan="8" class="text-center"><i>Tidak ada data</i></td>
-                        </tr>
-                    <?php } ?>
+                        <?php 
+                        $no++;
+                    } ?>
                 </tbody>
             </table>
         </div>

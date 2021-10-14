@@ -418,7 +418,7 @@ data-class="bg-happy-green sidebar-text-light">
                 </a>
             </li>
             <li>
-                <a href="riwayat.php">
+                <a href="riwayat.php" id="nv-riwayat">
                     <i class="metismenu-icon pe-7s-clock"></i>
                     Riwayat Pesanan
                 </a>
