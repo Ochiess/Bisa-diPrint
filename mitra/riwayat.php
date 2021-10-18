@@ -98,6 +98,7 @@ foreach ($get_pelanggan as $dta) {
                                 <th>Nama Pelanggan</th>
                                 <th>Telepon</th>
                                 <th>Email</th>
+                                <th width="10">Pesan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -118,6 +119,9 @@ foreach ($get_pelanggan as $dta) {
                                     <td><?= $usr ? $usr["nama_lengkap"] : '<i>Tidak diketahui</i>' ?></td>
                                     <td><?= $usr ? $usr["hp"] : '<i>Tidak diketahui</i>' ?></td>
                                     <td><?= $usr ? $usr["email"] : '<i>Tidak diketahui</i>' ?></td>
+                                    <td class="text-center">
+                                        <a href="#" class="btn btn-success"><i class="fa fa-comment"></i> Chat</a>
+                                    </td>
                                 </tr>
                                 <?php 
                                 $no++;
@@ -154,7 +158,7 @@ require('template/footer.php');
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
-                                <td width="200">Tempat Cetak</td>
+                                <td width="200">Nama Pelanggan</td>
                                 <td width="10">:</td>
                                 <td><?= $user["nama_lengkap"] ?></td>
                             </tr>
@@ -230,6 +234,11 @@ require('template/footer.php');
                                 </tr>
                             <?php } ?>
                             <tr>
+                                <td width="200">Catatan Untuk Pencetak</td>
+                                <td width="10">:</td>
+                                <td><?= $dta['catatan'] ? $dta['catatan'] : '' ?></td>
+                            </tr>
+                            <tr>
                                 <td width="200">Waktu Pesanan</td>
                                 <td width="10">:</td>
                                 <td><?= date('d/m/Y H:i', strtotime($dta['waktu_pesanan'])) ?></td>
@@ -238,11 +247,6 @@ require('template/footer.php');
                                 <td width="200">Permintan Waktu Selesai</td>
                                 <td width="10">:</td>
                                 <td><?= date('d/m/Y H:i', strtotime($dta['waktu_pengambilan'])) ?></td>
-                            </tr>
-                            <tr>
-                                <td width="200">Catatan Untuk Pencetak</td>
-                                <td width="10">:</td>
-                                <td><?= $dta['catatan'] ? $dta['catatan'] : '' ?></td>
                             </tr>
                             <tr>
                                 <td width="200">Harga</td>

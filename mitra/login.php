@@ -3,19 +3,19 @@ session_start();
 require '../function.php';
 
 // cek cookie
-if( isset($_COOKIE['key']) && isset($_COOKIE['oci_m']) ) {
+if( isset($_COOKIE['id_mitra']) && isset($_COOKIE['oci_m']) ) {
 
-   $key = $_COOKIE['key'];
+   $id_mitra = $_COOKIE['id_mitra'];
    $oci_m = $_COOKIE['oci_m']; 
 
    // ambil username berdasarkan id
-   $result = mysqli_query($conn, "SELECT email FROM agen WHERE id = $key");
+   $result = mysqli_query($conn, "SELECT email FROM agen WHERE id = $id_mitra");
    $row = mysqli_fetch_assoc($result);
 
    //cek cookie dan username
     if( $oci_m === hash('sha256', $row['email']) ) {
         $_SESSION['masuk_mitra'] = true;
-        $_SESSION['id_mitra'] = $key;
+        $_SESSION['id_mitra'] = $id_mitra;
     }
 
 }

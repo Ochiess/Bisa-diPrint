@@ -52,7 +52,7 @@ require('template/footer.php');
     if ($dta['status'] == 'panding') $text = 'text-warning';    
     else if ($dta['status'] == 'review') $text = 'text-info';    
     else if ($dta['status'] == 'proccess') $text = 'text-alternate';    
-    else if ($dta['status'] == 'done') $text = 'text-success';    ?>
+    else if ($dta['status'] == 'done') $text = 'text-success'; ?>
 
     <!-- MODAL DETAIL PESANAN -->
     <div class="modal fade" tabindex="-1" role="dialog" id="modal-detail<?= $dta['id'] ?>">

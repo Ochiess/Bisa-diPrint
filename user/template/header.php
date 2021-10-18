@@ -285,7 +285,7 @@ foreach ($get_pesanan as $dta) {
                                                         <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <a href="" class="btn text-left">
+                                                                    <a href="#" class="btn text-left show-chat">
                                                                         <div class="widget-content p-0">
                                                                             <div class="widget-content-wrapper">
                                                                                 <div class="widget-content-left mr-3">
@@ -310,17 +310,23 @@ foreach ($get_pesanan as $dta) {
                                                             </tr>
                                                             <tr>
                                                                 <td>
-                                                                    <a href="" class="btn text-left">
+                                                                    <a href="#" class="btn text-left show-chat">
                                                                         <div class="widget-content p-0">
                                                                             <div class="widget-content-wrapper">
                                                                                 <div class="widget-content-left mr-3">
                                                                                     <div class="widget-content-left">
-                                                                                        <div class="font-icon-wrapper font-icon-sm"><i class="pe-7s-mail icon-gradient bg-malibu-beach"> </i></div>
+                                                                                        <img width="40" class="rounded-circle" src="assets/images/avatars/4.jpg" alt="">
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="widget-content-left flex2">
-                                                                                    <div class="widget-heading">Pesanan Baru</div>
-                                                                                    <div class="widget-subheading opacity-5 text-justify">Rahmat Ilyas telah melakukan pemesanan, silahkan diproses</div>
+                                                                                <div class="widget-content-left row">
+                                                                                    <div class="widget-heading col-12">
+                                                                                        <small class="pull-right text-success">13.00</small>
+                                                                                        Kamisama Print
+                                                                                    </div>
+                                                                                    <div class="widget-subheading opacity-5 col-12">
+                                                                                        <span class="badge badge-success badge-pill pull-right px-0 py-1">3</span>
+                                                                                        Apaji kali manami pesananta
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>

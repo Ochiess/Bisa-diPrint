@@ -24,13 +24,15 @@ if (isset($_POST['req'])) {
 
 		mysqli_query($conn, "INSERT INTO cetak VALUES(NULL, '$user_id', '$agen_id', '$layanan', '', '$catatan', '$waktu_pesanan', '$waktu_pengambilan', '$harga', '$metode_pembayaran', '', '')");
 		$cetak_id = mysqli_insert_id($conn);
+		$users = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM user WHERE id='$user_id'"));
+		$nama_user = str_replace(' ', '-', $users['nama_lengkap']);
 
 		// Seleksi Layanan
 		if ($layanan == 'dokumen') {
 			// SET FILE
 			$file = $_FILES['dokumen']['name'];
 			$ext = pathinfo($file, PATHINFO_EXTENSION);
-			$nama_file = "dokumen-".$user_id."-".date('Ymd-Hi').".".$ext;
+			$nama_file = "Dokumen-".$nama_user."-".date('dmY-Hi').".".$ext;
 			$file_tmp = $_FILES['dokumen']['tmp_name'];
 			move_uploaded_file($file_tmp, '../assets/files/dokumen/'.$nama_file);
 
@@ -44,7 +46,7 @@ if (isset($_POST['req'])) {
 			// SET FILE
 			$file = $_FILES['foto']['name'];
 			$ext = pathinfo($file, PATHINFO_EXTENSION);
-			$nama_file = "foto-".$user_id."-".date('Ymd-Hi').".".$ext;
+			$nama_file = "Foto-".$nama_user."-".date('dmY-Hi').".".$ext;
 			$file_tmp = $_FILES['foto']['tmp_name'];
 			move_uploaded_file($file_tmp, '../assets/files/foto/'.$nama_file);
 

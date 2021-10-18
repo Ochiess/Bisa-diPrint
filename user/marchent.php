@@ -37,7 +37,7 @@ $result = marchent();
                             </div>
                             <div class="row mt-2" style="margin-bottom: -10px;">
                                 <a href="detail.php?id=<?= $row['id'] ?>" class="col-sm-9 mx-2 btn btn-primary btn-block">Kunjungi</a>
-                                <button class="btn btn-success col-sm-2"><i class="fa fa-comment"></i></button>
+                                <button class="btn btn-success col-sm-2 show-chat"><i class="fa fa-comment"></i></button>
                             </div>
                         </div>
                         <div class="card-footer pr-0">
