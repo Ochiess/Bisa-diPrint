@@ -48,7 +48,7 @@ if (isset($_POST['req'])) {
 			$aksi = '';
 			if ($dta['status'] == 'panding') {
 				$badge = 'badge-warning';
-				$aksi = '<button class="btn btn-outline-primary btn-sm bayar" data-token="'.$dta['payment_token'].'" data-id="'.$dta['id'].'" data-kode="KPR-'.sprintf('%05s', $dta['id']).'" style="font-size: 12px;"><i class="fa fa-credit-card"></i> Bayar</button>';
+				$aksi = '<button class="btn btn-outline-primary btn-sm bayar" data-token="'.$dta['payment_token'].'" data-id="'.$dta['id'].'" data-agen="'.$dta['agen_id'].'" data-kode="KPR-'.sprintf('%05s', $dta['id']).'" style="font-size: 12px;"><i class="fa fa-credit-card"></i> Bayar</button>';
 			}
 			else if ($dta['status'] == 'review') {
 				$badge = 'badge-info';
@@ -146,6 +146,42 @@ if (isset($_POST['req'])) {
 		$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (status != 'finish' AND status != 'cancel')");
 		$res = mysqli_num_rows($pesanan);
 		echo json_encode($res);
+	}
+
+	if($_POST['req'] == 'createMessage') {
+		$send_by = $_POST['send_by'];
+		$from_id = $_POST['from_id'];
+		$to_id = $_POST['to_id'];
+		$type = $_POST['type'];
+		$content = $_POST['content'];
+
+		$user = mysqli_query($conn, "SELECT * FROM user WHERE id='$from_id'");
+		$usr = mysqli_fetch_assoc($user);
+		$nama = $usr ? $usr['nama_lengkap'] : 'Pelanggan';
+
+		if ($type == 'live_pay') {
+			$title = 'Pesanan Baru';
+			$content = $nama." telah melakukan pesanan, silahkan diproses";
+		} else if ($type == 'virtual_pay') {
+			$title = 'Pesanan Baru';
+			$content = $nama." telah melakukan pesanan dengan metode pembayaran virtual";
+		} else if ($type == 'confirm_pay') {
+			$title = 'Pembayaran Dikonfirmasi';
+			$content = $nama." telah mengkonfirmasi pembayaran, silahkan diproses";
+		} else if ($type == 'order_cancel') {
+			$title = 'Pesanan Dibatalkan';
+			$content = $nama." telah membatalkan pesanan, pesanan tidak dapat diproses";
+		} else if ($type == 'order_finish') {
+			$title = 'Pesanan Selesai';
+			$content = $nama." telah menkonfirmasi pesanan";
+		} else if ($type == 'message') $title = 'Pesan Baru';
+
+		mysqli_query($conn, "INSERT INTO notifikasi VALUES(NULL, '$send_by', '$from_id', '$to_id', '$type', '$content', 'new', CURRENT_TIMESTAMP)");
+
+		echo json_encode([
+			"title" => $title,
+			"message" => $content,
+		]);
 	}
 
 	if($_POST['req'] == 'cekStatusPayment') {

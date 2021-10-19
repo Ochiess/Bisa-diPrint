@@ -320,7 +320,7 @@ require('template/footer.php');
                         </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
-                        <a href="#" role="button" class="btn btn-success proses" data-id="<?= $dta['id'] ?>">Lanjutkan</a>
+                        <a href="#" role="button" class="btn btn-success proses" data-id="<?= $dta['id'] ?>" data-user="<?= $dta['user_id'] ?>">Lanjutkan</a>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Nanti Dulu</button>
                     </div>
                 </form>
@@ -345,7 +345,7 @@ require('template/footer.php');
                         <small class="text-muted">Pastikn anda telah menyelesaikan pesanan sesuai detail pesanan sebelum melanjutkan.</small>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
-                        <a href="#" role="button" class="btn btn-success selesai" data-id="<?= $dta['id'] ?>">Lanjutkan</a>
+                        <a href="#" role="button" class="btn btn-success selesai" data-id="<?= $dta['id'] ?>" data-user="<?= $dta['user_id'] ?>">Lanjutkan</a>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Nanti Dulu</button>
                     </div>
                 </form>
@@ -363,7 +363,7 @@ require('template/footer.php');
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="POST" class="tolak" data-id="<?= $dta['id'] ?>">
+                <form method="POST" class="tolak" data-id="<?= $dta['id'] ?>" data-user="<?= $dta['user_id'] ?>">
                     <div class="modal-body">
                         Yakin ingin menolah pesanan ini? Silahkan masukkan alasan penolakan anda pada form di bawah!
                         <textarea class="form-control my-2 pesan-tolak" required="" placeholder="Masukkan alasan penolakan..."></textarea>
@@ -410,21 +410,27 @@ require('template/footer.php');
         $('.selesai').click(function(event) {
             event.preventDefault();
             var id = $(this).attr('data-id');
+            var agen_id = $(this).attr('data-user');
             updateStatus(id, 'done');
+            createMessage(agen_id, 'order_done');
         });
 
         $('.proses').click(function(event) {
             event.preventDefault();
             var id = $(this).attr('data-id');
+            var agen_id = $(this).attr('data-user');
             updateStatus(id, 'proccess');
+            createMessage(agen_id, 'order_start');
         });
 
         $('.tolak').submit(function(event) {
             event.preventDefault();
             var id = $(this).attr('data-id');
+            var agen_id = $(this).attr('data-user');
             updateStatus(id, 'cancel');
 
             var pesanTolak = $(this).find('.pesan-tolak').val();
+            createMessage(agen_id, 'order_refuse', pesanTolak);
         });
 
         $(document).on('click', '.selesaikan', function(event) {
@@ -465,7 +471,7 @@ require('template/footer.php');
                         $('#tab_proses_link').addClass('active show');
                         $('#tab_antrian').removeClass('active show');
                         $('#tab_proses').addClass('active show');
-                    } else if(status == 'done') {
+                    } else if(status == 'done' || status == 'cancel') {
                         $('#tab_antrian_link').addClass('active show');
                         $('#tab_proses_link').removeClass('active show');
                         $('#tab_antrian').addClass('active show');
@@ -479,5 +485,9 @@ require('template/footer.php');
                 }
             });            
         }
+        messaging.onMessage((payload) => {
+            getDataPesanan();
+        });
     });
+
 </script>

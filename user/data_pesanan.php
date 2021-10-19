@@ -205,7 +205,7 @@ require('template/footer.php');
                         <small class="text-muted">Jika anda menggunakan metode pembayaran virtual, kami akan mengembalikan pembayaran anda dalam 1x24 jam</small>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
-                        <a href="#" role="button" class="btn btn-danger batalkan" data-id="<?= $dta['id'] ?>">Lanjutkan</a>
+                        <a href="#" role="button" class="btn btn-danger batalkan" data-id="<?= $dta['id'] ?>" data-agen="<?= $dta['agen_id'] ?>">Lanjutkan</a>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak Jadi</button>
                     </div>
                 </form>
@@ -230,7 +230,7 @@ require('template/footer.php');
                         <small class="text-muted">Jika anda menggunakan metode pembayaran virtual, setelah proses ini pembayaran tidak dapat dikembalikan lagi dan akan dikirim ke percetakan ini</small>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
-                        <a href="#" role="button" class="btn btn-success selesaikan" data-id="<?= $dta['id'] ?>">Selesaikan</a>
+                        <a href="#" role="button" class="btn btn-success selesaikan" data-id="<?= $dta['id'] ?>" data-agen="<?= $dta['agen_id'] ?>">Selesaikan</a>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Nanti Dulu</button>
                     </div>
                 </form>
@@ -265,31 +265,36 @@ require('template/footer.php');
 
         $('.batalkan').click(function(event) {
             var id = $(this).attr('data-id');
+            var agen_id = $(this).attr('data-agen');
             updateStatus(id, 'cancel');
+            createMessage(agen_id, 'order_cancel');
         });
 
         $('.selesaikan').click(function(event) {
             var id = $(this).attr('data-id');
+            var agen_id = $(this).attr('data-agen');
             updateStatus(id, 'finish');
+            createMessage(agen_id, 'order_finish');
         });
 
         $(document).on('click', '.bayar', function(event) {
             var id = $(this).attr('data-id');
+            var agen_id = $(this).attr('data-agen');
             var token = $(this).attr('data-token');
             var kode = $(this).attr('data-kode');
 
             snap.pay(token, {
                 onSuccess: function(result){
-                    cekStatusPayment(id, kode);
+                    cekStatusPayment(id, agen_id, kode);
                 },
                 onPending: function(result){
-                    cekStatusPayment(id, kode);
+                    cekStatusPayment(id, agen_id, kode);
                 },
                 onError: function(result){
-                    cekStatusPayment(id, kode);
+                    cekStatusPayment(id, agen_id, kode);
                 },
                 onClose: function(result){
-                    cekStatusPayment(id, kode);
+                    cekStatusPayment(id, agen_id, kode);
                 }
             });
         });
@@ -326,7 +331,7 @@ require('template/footer.php');
             });            
         }
 
-        function cekStatusPayment(id, kode) {
+        function cekStatusPayment(id, agen_id, kode) {
             $.ajax({
                 url     : 'controller.php',
                 method  : "POST",
@@ -337,6 +342,7 @@ require('template/footer.php');
                 success : function(data) {
                     if (data.transaction_status == "settlement" || data.transaction_status == "capture") {
                         updateStatus(id, 'review');
+                        createMessage(agen_id, 'confirm_pay');
                     } else {
                         iziToast.info({
                             title: "Selesaikan pembayaran",
@@ -347,5 +353,10 @@ require('template/footer.php');
                 }
             });
         }
+        
+        messaging.onMessage((payload) => {
+            getDataPesanan();
+        });
     });
+
 </script>

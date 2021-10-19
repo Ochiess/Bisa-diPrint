@@ -108,7 +108,14 @@
     <script src="./../assets/izitoast/js/iziToast.min.js"></script>
     <script src="./../layout/vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="./../layout/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-messaging.js"></script>
     <script>
+        var user_id = '<?= $id ?>';
+
         $(document).ready(function() {
             $('#dataTable').DataTable();
             $('.chat-content').hide();  
@@ -128,7 +135,6 @@
             });
         });
         
-        var user_id = '<?= $id ?>';
         countPesanan();
         function countPesanan() {
             $.ajax({
@@ -144,6 +150,85 @@
                 }
             });
         }
+
+        function createMessage(to, type, content=null) {
+            $.ajax({
+                url     : 'controller.php',
+                method  : "POST",
+                data    : {
+                    req: 'createMessage',
+                    send_by: 'user',
+                    from_id: user_id,
+                    to_id: to,
+                    type: type,
+                    content: content,
+                },
+                success : function(data) {
+                    pushMessage(to, data.title, data.message);
+                }
+            });
+        }
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAju5B0X0LZPoPD0GEMgHkX4cVVuuexvoA",
+            authDomain: "diprint.firebaseapp.com",
+            databaseURL: "https://diprint-default-rtdb.firebaseio.com",
+            projectId: "diprint",
+            storageBucket: "diprint.appspot.com",
+            messagingSenderId: "668022140321",
+            appId: "1:668022140321:web:c24e877b14162f25846fe0"
+        };
+
+        firebase.initializeApp(firebaseConfig)
+        const messaging = firebase.messaging();
+        const database = firebase.database();
+
+        messaging.requestPermission().then(function () {
+            return messaging.getToken()
+        }).then(function(token) {
+            database.ref('device_token/user_token/'+user_id).set({
+                user_id : user_id,
+                token : token
+            });
+        }).catch(function (err) {
+            console.log("Unable to get permission to notify.", err);
+        });
+
+        function pushMessage(to, title, message) {
+            database.ref('device_token/agen_token/'+to).on('value', function(item) {
+                if (item.val()) {
+                    var token = item.val().token;
+                    $.ajax({
+                        url     : 'https://fcm.googleapis.com/fcm/send',
+                        method  : "POST",
+                        headers  : {
+                            "Content-Type"  : "application/json",
+                            "Authorization" : "key=AAAAm4k47aE:APA91bG5NZXK7QtR7wddVbiyRSgA-drKMVtUcUOPzP_qxdJMbfs_3kAU23Nfir93NcPlU7BBRCqPWT1yYcMXK8HO0ryPZ2DD61a9mDCWYslqFH9bzWbI8G1Kd1c4_6R96uU30BNHETru",
+                        },
+                        data    : JSON.stringify({
+                            "registration_ids" : [token],
+                            "notification" : {
+                                "title": title,
+                                "body": message, 
+                            },
+                            "webpush" : {
+                                "headers" : {
+                                    "Urgency" : "high"
+                                }
+                            },
+                            "webpush" : 10
+                        })
+                    });
+                }
+            });
+        }
+
+        messaging.onMessage((payload) => {
+            countPesanan();
+            console.log("ok");
+        });
+
     </script>
 </body>
 </html>

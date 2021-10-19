@@ -84,7 +84,10 @@ if (isset($_POST['req'])) {
 		}
 
 		mysqli_query($conn, "UPDATE cetak SET file='$nama_file', payment_token='$payment_token', status='$status' WHERE id='$cetak_id'");
-		echo json_encode(["token" => $payment_token]);
+		echo json_encode([
+			"token" => $payment_token,
+			"agen_id" => $agen_id
+		]);
 	}
 }
 ?>

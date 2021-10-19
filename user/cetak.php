@@ -450,6 +450,7 @@ require('template/footer.php');
                 processData: false,
                 success : function(data) {
                     if (data.token) {
+                        createMessage(data.agen_id, 'virtual_pay');
                         snap.pay(data.token, {
                             onSuccess: function(result){
                                 alert_payment();
@@ -465,6 +466,7 @@ require('template/footer.php');
                             }
                         });
                     } else {
+                        createMessage(data.agen_id, 'live_pay');
                         Swal.fire({
                             title: "Pesanan Anda Sedang Diproses",
                             icon: "success",

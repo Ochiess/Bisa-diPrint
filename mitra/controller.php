@@ -120,6 +120,11 @@ if (isset($_POST['req'])) {
 			if ($prs['jenis_layanan'] == 'dokumen') $file = '../assets/files/dokumen/'.$prs['file'];
 			else $file = '../assets/files/foto/'.$prs['file'];
 
+			$catatan = ($prs['catatan'] == '') ? '-' : $prs['catatan'];
+			$isProses = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND status = 'proccess'");
+			if (mysqli_num_rows($isProses) == 0) $info = 'data-info="0"';
+			else $info = 'data-info="1"';
+
 			$html_proccess .= '
 			<tr>
 			<td>'.$nama_pelanggan.'</td>
@@ -271,6 +276,35 @@ if (isset($_POST['req'])) {
 			"done" => $done,
 		];
 		echo json_encode($response);
+	}
+
+	if($_POST['req'] == 'createMessage') {
+		$send_by = $_POST['send_by'];
+		$from_id = $_POST['from_id'];
+		$to_id = $_POST['to_id'];
+		$type = $_POST['type'];
+		$content = $_POST['content'];
+
+		$agen = mysqli_query($conn, "SELECT * FROM agen WHERE id='$from_id'");
+		$agn = mysqli_fetch_assoc($agen);
+		$agen = $agn ? $agn['nama_percetakan'] : 'Pencetakan';
+
+		if ($type == 'order_start') {
+			$title = 'Pesanan Diproses';
+			$content = $agen." telah memproses pesanan anda";
+		} else if ($type == 'order_refuse') {
+			$title = 'Pesanan Dibatalkan';
+		} else if ($type == 'order_done') {
+			$title = 'Selesai Diproses';
+			$content = $agen." telah menyelesaikan pesanan anda, silahkan diambil dan dikonfirmasi";
+		} else if ($type == 'message') $title = 'Pesan Baru';
+
+		mysqli_query($conn, "INSERT INTO notifikasi VALUES(NULL, '$send_by', '$from_id', '$to_id', '$type', '$content', 'new', CURRENT_TIMESTAMP)");
+
+		echo json_encode([
+			"title" => $title,
+			"message" => $content,
+		]);
 	}
 }
 ?>
