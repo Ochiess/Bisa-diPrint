@@ -144,8 +144,24 @@ if (isset($_POST['req'])) {
 	if($_POST['req'] == 'countPesanan') {
 		$id = $_POST['id'];
 		$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (status != 'finish' AND status != 'cancel')");
-		$res = mysqli_num_rows($pesanan);
-		echo json_encode($res);
+		$psn = mysqli_num_rows($pesanan);
+
+		$notif = mysqli_query($conn, "SELECT * FROM notifikasi WHERE to_id='$id' AND (type != 'message' AND status = 'new')");
+		$ntf = mysqli_num_rows($notif);
+
+		$chat = mysqli_query($conn, "SELECT * FROM notifikasi WHERE to_id='$id' AND (type = 'message' AND status = 'new')");
+		$jum_pesan = [];
+		foreach ($chat as $msg) {
+			$jum_pesan[] = $msg['from_id'];
+		}
+		$cht = count(array_unique($jum_pesan));
+
+		$response = [
+			"pesanan" => $psn,
+			"notif" => $ntf,
+			"pesan" => $cht,
+		];
+		echo json_encode($response);
 	}
 
 	if($_POST['req'] == 'createMessage') {

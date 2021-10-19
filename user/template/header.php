@@ -90,11 +90,11 @@ foreach ($get_pesanan as $dta) {
                                     <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="nav-link-icon fa fa-bell"> </i>
                                         Notifikasi
-                                        <span class="badge badge-pill badge-danger px-0 py-1" id="countNotif">1</span>
+                                        <small><span class="badge badge-pill badge-danger countNotif" style="padding: 5px 0 5px 0;" hidden="">0</span></small>
                                     </a>
                                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-131px, 33px, 0px); width: 350px;">
                                         <div class="px-3 py-2">
-                                            <span class="badge badge-success pull-right">New 3</span>
+                                            <span class="badge badge-success pull-right new-notif">New 0</span>
                                             <b>NOTIFIKASI</b>
                                         </div>
                                         <div tabindex="-1" class="dropdown-divider"></div>
@@ -270,11 +270,11 @@ foreach ($get_pesanan as $dta) {
                                     <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="nav-link-icon fa fa-envelope"> </i>
                                         Pesan
-                                        <span class="badge badge-pill badge-danger px-0 py-1" id="countNotif">1</span>
+                                        <small><span class="badge badge-pill badge-danger countMessage" style="padding: 5px 0 5px 0;" hidden="">0</span></small>
                                     </a>
                                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-131px, 33px, 0px); width: 350px;">
                                         <div class="px-3 py-2">
-                                            <span class="badge badge-success pull-right">New 3</span>
+                                            <span class="badge badge-success pull-right new-message">New <span class="countMessage">0</span></span>
                                             <b>PESAN</b>
                                         </div>
                                         <div tabindex="-1" class="dropdown-divider"></div>

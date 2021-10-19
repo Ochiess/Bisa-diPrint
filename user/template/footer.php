@@ -123,6 +123,7 @@
             $(document).find('.show-chat').click(function(event) {
                 event.preventDefault();
                 $('.chat-content').show('slow/400/fast');
+                $('.dropdown-menu').removeClass('show');
             });
 
             $('#close-chat').click(function(event) {
@@ -145,8 +146,24 @@
                     id: user_id
                 },
                 success : function(data) {
-                    if (data <= 0) $('#countPesanan').attr('hidden', '').text(data);
-                    else $('#countPesanan').removeAttr('hidden').text(data);
+                    if (data.pesanan <= 0) $('#countPesanan').attr('hidden', '').text(data.pesanan);
+                    else $('#countPesanan').removeAttr('hidden').text(data.pesanan);
+
+                    if (data.notif <= 0) {
+                        $('.countNotif, .new-notif').attr('hidden', '').text(data.notif);
+                    }
+                    else {
+                        $('.countNotif').removeAttr('hidden').text(data.notif);
+                        $('.new-notif').removeAttr('hidden').text('New '+data.notif);
+                    }
+
+                    if (data.notif <= 0) {
+                        $('.countMessage, .new-message').attr('hidden', '').text(data.pesan);
+                    }
+                    else {
+                        $('.countMessage').removeAttr('hidden').text(data.pesan);
+                        $('.new-message').removeAttr('hidden').text('New '+data.pesan);
+                    }
                 }
             });
         }
