@@ -51,9 +51,57 @@
 
                 if (data.panding <= 0) $('.badgePanding').attr('hidden', '').text(data.panding);
                 else $('.badgePanding').removeAttr('hidden').text(data.panding);
+
+                if (data.notif <= 0) {
+                    $('.countNotif, .new-notif').attr('hidden', '').text(data.notif);
+                }
+                else {
+                    $('.countNotif').removeAttr('hidden').text(data.notif);
+                    $('.new-notif').removeAttr('hidden').text('New '+data.notif);
+                }
+
+                if (data.pesan <= 0) {
+                    $('.countMessage, .new-message').attr('hidden', '').text(data.pesan);
+                }
+                else {
+                    $('.countMessage').removeAttr('hidden').text(data.pesan);
+                    $('.new-message').removeAttr('hidden').text('New '+data.pesan);
+                }
             }
         });
     }
+
+    getNotifPesan()
+    function getNotifPesan() {
+        $.ajax({
+            url     : 'controller.php',
+            method  : "POST",
+            data    : {
+                req: 'getNotifPesan',
+                id: agen_id
+            },
+            success : function(data) {
+                $(document).find('#notifContent').html(data.notif);
+            }
+        });
+    }
+
+    $(document).find('#notifContent').on('click', '.updateNotif', function(event) {
+        event.preventDefault();
+        var id = $(this).attr('data-id');
+        var href = $(this).attr('data-href');
+        $.ajax({
+            url     : 'controller.php',
+            method  : "POST",
+            data    : {
+                req: 'updateNotif',
+                id: id
+            },
+            success : function(data) {
+                window.location.href = href
+            }
+        });
+    });
 
     function createMessage(to, type, content=null) {
         $.ajax({
@@ -130,6 +178,7 @@
     
     messaging.onMessage((payload) => {
         countPesanan();
+        getNotifPesan();
         console.log("ok");
     });
 </script>

@@ -268,14 +268,106 @@ if (isset($_POST['req'])) {
 		$get_done = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND status = 'done'");
 		$done = mysqli_num_rows($get_done);
 
+		$notif = mysqli_query($conn, "SELECT * FROM notifikasi WHERE to_id='$id' AND (type != 'message' AND status = 'new')");
+		$ntf = mysqli_num_rows($notif);
+
+		$chat = mysqli_query($conn, "SELECT * FROM notifikasi WHERE to_id='$id' AND (type = 'message' AND status = 'new')");
+		$jum_pesan = [];
+		foreach ($chat as $msg) {
+			$jum_pesan[] = $msg['from_id'];
+		}
+		$cht = count(array_unique($jum_pesan));
+
 		$response = [
 			"all" => $all,
 			"panding" => $panding,
 			"review" => $review,
 			"proccess" => $proccess,
 			"done" => $done,
+			"notif" => $ntf,
+			"pesan" => $cht,
 		];
 		echo json_encode($response);
+	}
+
+	if($_POST['req'] == 'getNotifPesan') {
+		$id = $_POST['id'];
+
+		$notif = mysqli_query($conn, "SELECT * FROM notifikasi WHERE to_id='$id' AND type != 'message' ORDER BY status ASC, waktu DESC");
+		$content_notif = '';
+		foreach ($notif as $dta) {
+			if ($dta['status'] == 'new') $new = '<small><span class="badge badge-danger badge-pill pull-right">New</span></small>';
+			else $new = '';
+
+			if ($dta['type'] == 'live_pay') {
+				$title = 'Pesanan Baru';
+				$icon = '<div class="font-icon-wrapper font-icon-sm"><i class="pe-7s-print icon-gradient bg-malibu-beach"> </i></div>';
+				$href = 'pesanan.php';
+			} else if ($dta['type'] == 'virtual_pay') {
+				$title = 'Pesanan Baru';
+				$icon = '<div class="font-icon-wrapper font-icon-sm"><i class="pe-7s-credit icon-gradient bg-sunny-morning"></i></div>';
+				$href = 'pesanan.php?virtual_pay=true';
+			} else if ($dta['type'] == 'confirm_pay') {
+				$title = 'Pembayaran Dikonfirmasi';
+				$icon = '<div class="font-icon-wrapper font-icon-sm"><i class="pe-7s-cash icon-gradient bg-grow-early"> </i></div>';
+				$href = 'pesanan.php';
+			} else if ($dta['type'] == 'order_cancel') {
+				$title = 'Pesanan Dibatalkan';
+				$icon = '<div class="font-icon-wrapper font-icon-sm"><i class="pe-7s-close-circle icon-gradient bg-ripe-malin"> </i></div>';
+				$href = 'riwayat.php';
+			} else if ($dta['type'] == 'order_finish') {
+				$title = 'Pesanan Selesai';
+				$icon = '<div class="font-icon-wrapper font-icon-sm"><i class="pe-7s-check icon-gradient bg-grow-early"> </i></div>';
+				$href = 'riwayat.php';
+			} 
+
+			if (date('ymd') == date('ymd', strtotime($dta['waktu']))) {
+				$time = date('H.i', strtotime($dta['waktu']));
+			} else {
+				$time = date('d/m/y', strtotime($dta['waktu']));
+			}
+
+			$content_notif .= '
+			<tr>
+                <td>
+                    <a href="#" class="btn text-left updateNotif" data-id="'.$dta['id'].'" data-href="'.$href.'">
+                        <div class="widget-content p-0">
+                            <div class="widget-content-wrapper">
+                                <div class="widget-content-left mr-3">
+                                    <div class="widget-content-left">
+                                        '.$icon.'
+                                    </div>
+                                </div>
+                                <div class="widget-content-left flex2 row">
+                                    <div class="widget-heading  col-12">
+                                        '.$new.' '.$title.'
+                                    </div>
+                                    <div class="widget-subheading opacity-5 text-justify  col-12">
+                                    '.$dta['content'].'<br>
+                                    <small>'.$time.'</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </td>
+            </tr>
+			';
+		}
+
+		$content_pesan = '';
+
+		$response = [
+			"notif" => $content_notif,
+			"pesan" => $content_pesan,
+		];
+		echo json_encode($response);
+	}
+
+	if($_POST['req'] == 'updateNotif') {
+		$id = $_POST['id'];
+		mysqli_query($conn, "UPDATE notifikasi SET status='read' WHERE id='$id'");
+		echo json_encode(true);
 	}
 
 	if($_POST['req'] == 'createMessage') {
@@ -296,7 +388,7 @@ if (isset($_POST['req'])) {
 			$title = 'Pesanan Dibatalkan';
 		} else if ($type == 'order_done') {
 			$title = 'Selesai Diproses';
-			$content = $agen." telah menyelesaikan pesanan anda, silahkan diambil dan dikonfirmasi";
+			$content = $agen." telah menyelesaikan pesanan anda, silahkan dikonfirmasi";
 		} else if ($type == 'message') $title = 'Pesan Baru';
 
 		mysqli_query($conn, "INSERT INTO notifikasi VALUES(NULL, '$send_by', '$from_id', '$to_id', '$type', '$content', 'new', CURRENT_TIMESTAMP)");

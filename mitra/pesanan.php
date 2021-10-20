@@ -35,7 +35,7 @@ $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND (sta
                     <small><span class="badge badge-pill badge-danger badgeDone" style="margin-bottom: 20px; padding: 5px 0 5px 0; margin-left: -35px;" hidden="">0</span></small>
                 </li>
                 <li class="nav-item">
-                    <a data-toggle="tab" href="#tab_belum_bayar" class="nav-link"><i class="fa fa-credit-card" style="font-size: 15px;"></i> Belum Dibayar</a>
+                    <a data-toggle="tab" href="#tab_belum_bayar" class="nav-link" id="tab_belum_bayar_link"><i class="fa fa-credit-card" style="font-size: 15px;"></i> Belum Dibayar</a>
                     <small><span class="badge badge-pill badge-danger badgePanding" style="margin-bottom: 20px; padding: 5px 0 5px 0; margin-left: -35px;" hidden="">0</span></small>
                 </li>
             </ul>
@@ -383,6 +383,13 @@ require('template/footer.php');
 
 <script>
     $(document).ready(function() {
+        <?php if (isset($_GET['virtual_pay'])) { ?>
+            $('#tab_antrian_link').removeClass('active show');
+            $('#tab_belum_bayar_link').addClass('active show');
+            $('#tab_antrian').removeClass('active show');
+            $('#tab_belum_bayar').addClass('active show');
+        <?php } ?>
+
         $('#nv-pesanan').addClass('mm-active');
 
         var agen_id = '<?= $id ?>';
@@ -466,12 +473,12 @@ require('template/footer.php');
                         position: 'topRight'
                     });
 
-                    if (status == 'proccess') {
+                    if (status == 'proccess' || status == 'cancel') {
                         $('#tab_antrian_link').removeClass('active show');
                         $('#tab_proses_link').addClass('active show');
                         $('#tab_antrian').removeClass('active show');
                         $('#tab_proses').addClass('active show');
-                    } else if(status == 'done' || status == 'cancel') {
+                    } else if(status == 'done') {
                         $('#tab_antrian_link').addClass('active show');
                         $('#tab_proses_link').removeClass('active show');
                         $('#tab_antrian').addClass('active show');

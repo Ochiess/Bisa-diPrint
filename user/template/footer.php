@@ -113,26 +113,37 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-messaging.js"></script>
-    <script>
+    <script type="text/javascript">
         var user_id = '<?= $id ?>';
 
-        $(document).ready(function() {
-            $('#dataTable').DataTable();
-            $('.chat-content').hide();  
+        $('#dataTable').DataTable();
+        $('.chat-content').hide();  
 
-            $(document).find('.show-chat').click(function(event) {
-                event.preventDefault();
-                $('.chat-content').show('slow/400/fast');
-                $('.dropdown-menu').removeClass('show');
-            });
+        $(document).find('.show-chat').click(function(event) {
+            event.preventDefault();
+            $('.chat-content').show('slow/400/fast');
+            $('.dropdown-menu').removeClass('show');
+        });
 
-            $('#close-chat').click(function(event) {
-                event.preventDefault();
-                $('.chat-content').hide('slow/400/fast'); 
-            });
+        $('#close-chat').click(function(event) {
+            event.preventDefault();
+            $('.chat-content').hide('slow/400/fast'); 
+        });
 
-            $('.app-container').click(function(event) {
-
+        $(document).find('#notifContent').on('click', '.updateNotif', function(event) {
+            event.preventDefault();
+            var id = $(this).attr('data-id');
+            var href = $(this).attr('data-href');
+            $.ajax({
+                url     : 'controller.php',
+                method  : "POST",
+                data    : {
+                    req: 'updateNotif',
+                    id: id
+                },
+                success : function(data) {
+                    window.location.href = href
+                }
             });
         });
         
@@ -157,13 +168,29 @@
                         $('.new-notif').removeAttr('hidden').text('New '+data.notif);
                     }
 
-                    if (data.notif <= 0) {
+                    if (data.pesan <= 0) {
                         $('.countMessage, .new-message').attr('hidden', '').text(data.pesan);
                     }
                     else {
                         $('.countMessage').removeAttr('hidden').text(data.pesan);
                         $('.new-message').removeAttr('hidden').text('New '+data.pesan);
                     }
+                }
+            });
+        }
+
+        getNotifPesan()
+        function getNotifPesan() {
+            $.ajax({
+                url     : 'controller.php',
+                method  : "POST",
+                data    : {
+                    req: 'getNotifPesan',
+                    id: user_id
+                },
+                success : function(data) {
+                    $(document).find('#notifContent').html(data.notif);
+                    // $(document).find('#messsageContent').html(data.pesan);
                 }
             });
         }
@@ -243,6 +270,7 @@
 
         messaging.onMessage((payload) => {
             countPesanan();
+            getNotifPesan();
             console.log("ok");
         });
 
