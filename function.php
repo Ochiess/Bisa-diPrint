@@ -261,10 +261,12 @@ require 'koneksi.php';
     //kalo ada foto
     $photo = photo();
         if (!$photo) {
-            return false;
+            $query = "UPDATE user SET nama_lengkap='$nama_lengkap', nama_akun='$nama_akun', hp='$hp', email='$email' WHERE id=$id";
+        } else{
+            $query = "UPDATE user SET photo='$photo', nama_lengkap='$nama_lengkap', nama_akun='$nama_akun', hp='$hp', email='$email' WHERE id=$id";
         }
 
-    $query = "UPDATE user SET photo='$photo', nama_lengkap='$nama_lengkap', nama_akun='$nama_akun', hp='$hp', email='$email' WHERE id=$id";
+
      
     mysqli_query($conn,$query);
 
@@ -329,12 +331,18 @@ require 'koneksi.php';
        $email = $data["email"];
        $alamat = $data["alamat"];
        
-       $poto = upload();
-        if (!$poto) {
-            return false;
+       
+       $error = $_FILES['poto']['error'];
+       $tmpName = $_FILES['poto']['tmp_name'];
+       
+       // cek apakah tidak ada gambar yang diupload
+       if($error === 4 ) {
+           $query = "UPDATE agen SET nama_percetakan='$nama_percetakan', nama_pemilik='$nama_pemilik', telpon='$telpon', email='$email', alamat='$alamat' WHERE id=$id";
+        } else {
+            $poto = upload();            
+            $query = "UPDATE agen SET nama_percetakan='$nama_percetakan', nama_pemilik='$nama_pemilik', telpon='$telpon', email='$email', alamat='$alamat', poto='$poto' WHERE id=$id";
         }
-
-       $query = "UPDATE agen SET nama_percetakan='$nama_percetakan', nama_pemilik='$nama_pemilik', telpon='$telpon', email='$email', alamat='$alamat', poto='$poto' WHERE id=$id";
+        
 
        mysqli_query($conn, $query);
 

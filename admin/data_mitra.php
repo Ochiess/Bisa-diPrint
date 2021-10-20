@@ -7,7 +7,7 @@ require('template/header.php');
     <div class="app-page-title">
         <div class="page-title-wrapper">
             <div class="page-title-heading">
-                <div>Validasi Pengguna</div>
+                <div>Daftar Pengguna</div>
             </div>
         </div>
     </div>
@@ -40,8 +40,8 @@ require('template/header.php');
                                         <td>dhgsdffs</td>
                                         <td>dhgsdffs</td>
                                         <td>
-                                        <button class="mb-2 mr-2 btn btn-success"><i class="fa fa-check-circle"></i> Validasi</button>
-                                        <button class="mb-2 mr-2 btn btn-danger"><i class="fa fa-times-circle"></i> Tolak</button>
+                                        <button class="mb-2 mr-2 btn btn-primary"><i class="fa fa-key"></i> Reset Password</button>
+                                        <button class="mb-2 mr-2 btn btn-danger"><i class="fa fa-times-circle"></i> Banned</button>
                                         </td> <!--tidak responsive ki bagian ini gan-->
                                     </tr>
                                 </tbody>

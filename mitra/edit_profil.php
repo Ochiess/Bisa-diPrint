@@ -12,7 +12,7 @@ if (isset($_POST["submit"])) {
     if(ubah_profil($_POST)) {
         echo "<script>
         alert ('Profil diPerbaharui!!!');
-
+        document.location.href = 'profil.php';
         </script>";
     } else {
         echo "<script>

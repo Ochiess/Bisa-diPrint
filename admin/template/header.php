@@ -343,7 +343,21 @@
                             <li>
                                 <a href="monitoring.php">
                                     <i class="metismenu-icon pe-7s-note2"></i>
-                                    Data Pengguna
+                                    Permintaan Validasi
+                                    <i class="metismenu-state-icon"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="data_mitra.php">
+                                    <i class="metismenu-icon pe-7s-note2"></i>
+                                    Data Mitra
+                                    <i class="metismenu-state-icon"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="data_user.php">
+                                    <i class="metismenu-icon pe-7s-note2"></i>
+                                    Data User
                                     <i class="metismenu-state-icon"></i>
                                 </a>
                             </li>
@@ -351,5 +365,6 @@
                     </div>
                 </div>
             </div>
+            <div class="app-main__outer">
         
             <!--end header-->
