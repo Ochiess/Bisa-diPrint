@@ -221,12 +221,12 @@ if (isset($_POST['req'])) {
 			';
 		}
 
-		$pesan = mysqli_query($conn, "SELECT * FROM notifikasi WHERE to_id='$id' AND type = 'message'");
-		$jum_pesan = [];
-		foreach ($chat as $msg) {
-			$jum_pesan[] = $msg['from_id'];
-		}
-		$cht = count(array_unique($jum_pesan));
+		// $pesan = mysqli_query($conn, "SELECT * FROM notifikasi WHERE to_id='$id' AND type = 'message'");
+		// $jum_pesan = [];
+		// foreach ($chat as $msg) {
+		// 	$jum_pesan[] = $msg['from_id'];
+		// }
+		// $cht = count(array_unique($jum_pesan));
 
 		$content_pesan = '';
 
