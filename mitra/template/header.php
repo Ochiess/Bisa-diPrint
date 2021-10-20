@@ -10,6 +10,7 @@ if(isset($_SESSION["masuk_mitra"]) ) {
     $poto = $mtr["poto"];
     $nama_percetakan = $mtr["nama_percetakan"];
     $alamat = $mtr["alamat"];
+    $telpon = $mtr["telpon"];
 } else {
     header("Location: login.php");
     exit;
@@ -202,7 +203,7 @@ if(isset($_SESSION["masuk_mitra"]) ) {
                                     <?php echo $nama_percetakan?>
                                 </div>
                                 <div class="widget-subheading">
-                                    <?php echo $alamat?>
+                                    <?php echo $telpon?>
                                 </div>
                             </div>
                         </div>
