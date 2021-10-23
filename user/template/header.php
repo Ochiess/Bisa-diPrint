@@ -19,8 +19,8 @@ foreach ($get_pesanan as $dta) {
     $waktu_sekrng = strtotime(date('Y-m-d H:i:s'));
 
     if ($waktu_pesanan + 3600 < $waktu_sekrng) {
-        $id = $dta['id'];
-        mysqli_query($conn, "UPDATE cetak SET status='cancel' WHERE id='$id'");
+        $id_updt = $dta['id'];
+        mysqli_query($conn, "UPDATE cetak SET status='cancel' WHERE id='$id_updt'");
     }
 }
 ?>

@@ -4,8 +4,8 @@ $_SESSION = [];
 session_unset();
 session_destroy();
 
-setcookie('key', '', time() - 3600);
-setcookie('oci', '', time() - 3600);
+setcookie('id_mitra', NULL, -3600, '/');
+setcookie('oci_m', NULL, -3600, '/');
 
 header("Location: ../index.php");
 exit;

@@ -15,6 +15,17 @@ if(isset($_SESSION["masuk_mitra"]) ) {
     header("Location: login.php");
     exit;
 }
+
+$get_pesanan_ = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND status='panding'");
+foreach ($get_pesanan_ as $dta) {
+    $waktu_pesanan = strtotime($dta['waktu_pesanan']);
+    $waktu_sekrng = strtotime(date('Y-m-d H:i:s'));
+
+    if ($waktu_pesanan + 3600 < $waktu_sekrng) {
+        $id_updt = $dta['id'];
+        mysqli_query($conn, "UPDATE cetak SET status='cancel' WHERE id='$id_updt'");
+    }
+}
 ?>
 
 <!doctype html>

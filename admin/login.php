@@ -1,26 +1,23 @@
- <?php
+<?php
 session_start();
 require '../function.php';
-
 // cek cookie
-if( isset($_COOKIE['id_mitra']) && isset($_COOKIE['oci_m']) ) {
+if( isset($_COOKIE['key_admin']) && isset($_COOKIE['oci_admin']) ) {
 
-   $id_mitra = $_COOKIE['id_mitra'];
-   $oci_m = $_COOKIE['oci_m']; 
+   $key_admin = $_COOKIE['key_admin'];
+   $oci_admin = $_COOKIE['oci_admin']; 
 
    // ambil username berdasarkan id
-   $result = mysqli_query($conn, "SELECT email FROM agen WHERE id = $id_mitra");
+   $result = mysqli_query($conn, "SELECT username FROM super_admin WHERE id = $key_admin");
    $row = mysqli_fetch_assoc($result);
 
    //cek cookie dan username
-    if( $oci_m === hash('sha256', $row['email']) ) {
-        $_SESSION['masuk_mitra'] = true;
-        $_SESSION['id_mitra'] = $id_mitra;
+    if( $oci_admin === hash('sha256', $row['username']) ) {
+        $_SESSION['masuk_admin'] = true;
+        $_SESSION['key_admin'] = $key_admin;
     }
-
 }
-
-if( isset($_SESSION["masuk_mitra"]) ) {
+if( isset($_SESSION["masuk_admin"]) ) {
     header("Location: index.php");
     exit;
   }
@@ -28,53 +25,37 @@ if( isset($_SESSION["masuk_mitra"]) ) {
 
 if(isset($_POST["login"]) ) {
 
-    $email = $_POST["email"];
+    $username = $_POST["username"];
     $password = $_POST["password"];
 
-    $result = mysqli_query($conn, "SELECT * FROM agen WHERE email = '$email'");
+    $result = mysqli_query($conn, "SELECT * FROM super_admin WHERE username = '$username'");
 
-    // cek email
+    // cek username
     if(mysqli_num_rows($result)===1 ) {
         // cek password
         $row = mysqli_fetch_assoc($result);
 
         if(password_verify($password, $row["password"]) ) {
-            if($row['status'] == 'new') {
-                echo "<script>alert('Akun anda belum di verifikasi oleh admin!')</script>";
-            } else if($row['status'] == 'refuse') {
-                echo "<script>alert('Permintaan pendaftaran anda tidak disetujui, anda tidak bisa masuk. Silahkan hubungi admin')</script>";
-            } else if($row['status'] == 'banned') {
-                echo "<script>alert('Akun anda telah di nonaktifkan, anda tidak bisa masuk. Silahkan hubungi admin')</script>";
-            } else {
-                // set session
-                $_SESSION["masuk_mitra"] = true;
-                $_SESSION["id_mitra"] = $row['id'];
-                $_SESSION["poto"] = $row['poto'];
-                $_SESSION["nama_percetakan"] = $row['nama_percetakan'];
-                $_SESSION["alamat"] = $row['alamat'];
 
-                // cek remember me
-                if( isset($_POST['remember']) ) {
-
-                    //buat cookienya
-                    setcookie('id_mitra', $row['id'], strtotime('+7 days'),'/' );
-                    setcookie('oci_m', hash('sha256',$row['email']), strtotime('+7 days'),'/');
-                    setcookie('poto', $row['poto'],  strtotime('+7 days'),'/' );
-                    setcookie('nama_percetakan', $row['nama_percetakan'],  strtotime('+7 days'),'/' );
-                    setcookie('alamat', $row['alamat'],  strtotime('+7 days'),'/' );
-                }
-
-                header("Location: index.php");
-
-                exit;
+            // set session
+            $_SESSION["masuk_admin"] = true;
+            $_SESSION['key_admin'] = $row['id'];
+            
+            // cek remember me
+            if( isset($_POST['remember']) ) {
+                //buat cookienya
+                setcookie('key_admin', $row['id'],strtotime('+7 days'),'/' );
+                setcookie('oci_admin', hash('sha256',$row['username']), strtotime('+7 days'),'/');
             }
+            header("Location: index.php");
+            exit;
         }
     }
 
     $error = true;
 }
 
-?> 
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -86,7 +67,7 @@ if(isset($_POST["login"]) ) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>diPrint - Login</title>
+    <title>diPrint - Login Admin</title>
 
     <!-- Custom fonts for this template-->
     <link href="../layout/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -121,29 +102,23 @@ if(isset($_POST["login"]) ) {
                                             <p style="color:red; font-style: italic;">Username / Password Anda Salah</p>
                                         <?php endif; ?>
                                     </div>
-                                    <form class="user" id="form-login" method="POST">
+                                    <form action="" class="user" id="form-login" method="POST">
                                         <div class="form-group">
-                                            <input for="email" type="email" name="email" id="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Alamat Email...">
+                                            <input for="username" type="username" name="username" id="username" class="form-control form-control-user" id="username" aria-describedby="usernameHelp" placeholder="Alamat Username...">
                                         </div>
                                         <div class="form-group">
-                                            <input for="password" type="password" name="password" id="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                                            <input for="password" type="password" name="password" id="password" class="form-control form-control-user" id="password" placeholder="Password">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" name="remember" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember Me</label>
+                                                <input type="checkbox" name="remember" class="custom-control-input" id="remember">
+                                                <label for="remember" class="custom-control-label" for="customCheck">Remember Me</label>
                                             </div>
                                         </div>
                                         <button type="submit" name="login" class="btn btn-primary btn-user btn-block">
                                             Login
                                         </button>
                                     </form>
-                                    <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Lupa Password?</a> <br>
-                                        <a class="small" href="register.php">Buat Akun!</a>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
