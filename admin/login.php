@@ -104,7 +104,7 @@ if(isset($_POST["login"]) ) {
                                     </div>
                                     <form action="" class="user" id="form-login" method="POST">
                                         <div class="form-group">
-                                            <input for="username" type="username" name="username" id="username" class="form-control form-control-user" id="username" aria-describedby="usernameHelp" placeholder="Alamat Username...">
+                                            <input for="username" type="username" name="username" id="username" class="form-control form-control-user" id="username" aria-describedby="usernameHelp" placeholder="Username...">
                                         </div>
                                         <div class="form-group">
                                             <input for="password" type="password" name="password" id="password" class="form-control form-control-user" id="password" placeholder="Password">
