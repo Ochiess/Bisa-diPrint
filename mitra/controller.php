@@ -56,6 +56,7 @@ if (isset($_POST['req'])) {
 		}
 
 		// Get Pesanan Review
+		// rumus untuk logika prioritas
 		$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND status = 'review' ORDER BY waktu_pengambilan ASC");
 		$html_review = '';
 		$no=1;

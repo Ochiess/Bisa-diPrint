@@ -9,9 +9,9 @@ $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND (sta
         <div class="page-title-wrapper">
             <div class="page-title-heading">
                 <div class="page-title-icon">
-                    <i class="metismenu-icon pe-7s-clock icon-gradient bg-deep-blue"></i>
+                    <i class="metismenu-icon pe-7s-print icon-gradient bg-deep-blue"></i>
                 </div>
-                <div>Riwayat Pesanan & Data Pelanggan</div>
+                <div>Data Pesanan Masuk</div>
             </div>
         </div>
     </div>

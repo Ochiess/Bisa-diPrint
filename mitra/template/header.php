@@ -540,7 +540,7 @@ data-class="bg-happy-green sidebar-text-light">
             <li>
                 <a href="pesanan.php" id="nv-pesanan">
                     <i class="metismenu-icon pe-7s-print"></i>
-                    Pesana Masuk <span class="badge badge-pill badge-danger px-0 py-1 countPesanan" hidden="">0</span>
+                    Pesanan Masuk <span class="badge badge-pill badge-danger px-0 py-1 countPesanan" hidden="">0</span>
                 </a>
             </li>
             <li>
