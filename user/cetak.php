@@ -200,7 +200,7 @@ $cfg = mysqli_fetch_assoc($config);
                                                 </div>
                                             </label>
 
-                                            <label class="col-sm-6">Jild <span id="jenisJilid"></span></label>
+                                            <label class="col-sm-6">Jilid <span id="jenisJilid"></span></label>
                                             <label class="col-sm-6 pl-0">= Rp.<span id="hargaJilid">0</span></label>
 
                                             <label class="col-sm-6">Sub Total</label>

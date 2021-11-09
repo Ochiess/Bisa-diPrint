@@ -10,65 +10,51 @@ $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (sta
         <div class="page-title-wrapper">
             <div class="page-title-heading">
                 <div class="page-title-icon">
-                    <i class="metismenu-icon pe-7s-clock icon-gradient bg-deep-blue"></i>
+                    <i class="metismenu-icon pe-7s-id icon-gradient bg-deep-blue"></i>
                 </div>
-                <div>Riwayat Pesanan</div>
+                <div>Member Premium</div>
             </div>
         </div>
     </div>
     <div class="main-card mb-3 card">
         <div class="card-body">
-            <h5 class="card-title">Data Riwayat Pesanan</h5>
+            <h5 class="card-title">Member Premium</h5>
+            <div>
+                <h4 class="text-center mt-5 mb-5"><i>Anda belum menjadi member premium</i></h4>
+            </div>
             <hr>
-            <table class="table table-bordered" id="dataTable">
-                <thead>
-                    <tr>
-                        <th width="10">No</th>
-                        <th width="150">Tempat Cetak</th>
-                        <th width="80">Tipe File</th>
-                        <th>Waktu Pemesanan</th>
-                        <th>Harga</th>
-                        <th width="120">Metode Bayar</th>
-                        <th>Status</th>
-                        <th width="70">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
-                    $no=1;
-                    foreach ($pesanan as $dta) {
-                        $print = mysqli_query($conn, "SELECT * FROM agen WHERE id='".$dta["agen_id"]."'");
-                        $prt = mysqli_fetch_assoc($print);
-                        $badge = '';
-                        if ($dta['status'] == 'cancel') $badge = 'badge-danger';
-                        else if ($dta['status'] == 'finish') $badge = 'badge-success';
+            <h5 class="text-center mt-3">Bayar Sekali Print berkali-kali</h5>
+            <div class="text-center mb-5">
+                Untuk menjadi member premium, silahkan melakukan top up di berbagai paket di bawah ini
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3 text-center card card-body shadow">
+                    <h4 style="text-transform: uppercase">Paket Perdana</h4>
+                        <h4 class="mt-2 text-success">Rp. 20.000 </h4>
+                        <hr>
+                        <button class="btn btn-primary mt-2">TOP UP</button>
+                    </div>
+                </div>
 
-                        $bayar = [];
-                        if ($dta['metode_pembayaran'] == 'langsung') $bayar = ['text-primary', 'Bayar Langsung'];
-                        else $bayar = ['text-success', 'Pembayaran Virtual']; ?>
-                        <tr>
-                            <td><?= $no ?></td>
-                            <td><?= $prt ? $prt["nama_percetakan"] : '<i>Tidak tersedia lagi</i>' ?></td>
-                            <td><?= ucwords($dta['jenis_layanan']) ?></td>
-                            <td class="text-center">
-                                <span><?= date('d/m/Y', strtotime($dta['waktu_pesanan'])) ?></span> <b><?= date('H:i', strtotime($dta['waktu_pesanan'])) ?></b>
-                            </td>
-                            <td>Rp.<?= number_format($dta['harga']) ?></td>
-                            <td class="text-center">
-                                <span class="<?= $bayar[0] ?>" style="font-size: 12px;"><b><?= $bayar[1] ?></b></span>
-                            </td>
-                            <td>
-                                <span class="badge <?= $badge ?> badge-pill"><?= $dta['status'] ?></span>
-                            </td>
-                            <td class="text-center">
-                                <button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#modal-detail<?= $dta['id'] ?>"><i class="fa fa-list"></i> Detail</button>
-                            </td>
-                        </tr>
-                        <?php 
-                        $no++;
-                    } ?>
-                </tbody>
-            </table>
+                <div class="col-md-4">
+                    <div class="mb-3 text-center card card-body shadow">
+                        <h4 style="text-transform: uppercase">Paket Medium</h4>
+                        <h4 class="mt-2 text-success">Rp. 50.000 </h4>
+                        <hr>
+                        <button class="btn btn-warning mt-2">TOP UP</button>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3 text-center card card-body shadow">
+                    <h4 style="text-transform: uppercase">Paket Super</h4>
+                        <h4 class="mt-2 text-success">Rp.100.000 </h4>
+                        <hr>
+                        <button class="btn btn-danger mt-2">TOP UP</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -78,10 +64,10 @@ require('template/footer.php');
 ?>
 
 <?php foreach ($pesanan as $dta) {
-    $print = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM agen WHERE id='".$dta["agen_id"]."'")); 
+    $print = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM agen WHERE id='" . $dta["agen_id"] . "'"));
 
     $text = '';
-    if ($dta['status'] == 'cancel') $text = 'text-danger';  
+    if ($dta['status'] == 'cancel') $text = 'text-danger';
     else if ($dta['status'] == 'finish') $text = 'text-success'; ?>
 
     <!-- MODAL DETAIL PESANAN -->
@@ -111,7 +97,7 @@ require('template/footer.php');
                                 <td width="200">Telepon</td>
                                 <td width="10">:</td>
                                 <td><?= $print["telpon"] ?></td>
-                            </tr>                              
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-bordered">
@@ -121,8 +107,8 @@ require('template/footer.php');
                                 <td width="10">:</td>
                                 <td>Cetak <?= ucwords($dta["jenis_layanan"]) ?></td>
                             </tr>
-                            <?php if ($dta["jenis_layanan"] == 'dokumen') { 
-                                $dokumen = mysqli_query($conn, "SELECT * FROM cetak_dokumen WHERE cetak_id='".$dta['id']."'");
+                            <?php if ($dta["jenis_layanan"] == 'dokumen') {
+                                $dokumen = mysqli_query($conn, "SELECT * FROM cetak_dokumen WHERE cetak_id='" . $dta['id'] . "'");
                                 $dkm = mysqli_fetch_assoc($dokumen);
                                 $jnk_id = $dkm ? $dkm['jenis_kertas'] : 0;
                                 $jld_id = $dkm ? $dkm['jilid'] : 0;
@@ -130,7 +116,7 @@ require('template/footer.php');
                                 $jilid = mysqli_query($conn, "SELECT * FROM jilid WHERE id='$jld_id'");
                                 $jnk = mysqli_fetch_assoc($jenis_kertas);
                                 $jld = mysqli_fetch_assoc($jilid);
-                                ?>
+                            ?>
                                 <tr>
                                     <td width="200">Warna Tulisan</td>
                                     <td width="10">:</td>
@@ -149,19 +135,19 @@ require('template/footer.php');
                                 <tr>
                                     <td width="200">Jumlah Halaman</td>
                                     <td width="10">:</td>
-                                    <td><?= $dkm ? $dkm["jumlah_halaman"].' Lembar' : '-' ?></td>
+                                    <td><?= $dkm ? $dkm["jumlah_halaman"] . ' Lembar' : '-' ?></td>
                                 </tr>
                                 <tr>
                                     <td width="200">Jumlah Rangkap</td>
                                     <td width="10">:</td>
-                                    <td><?= $dkm ? $dkm["jumlah_rangkap"].' Rangkap' : '-' ?></td>
+                                    <td><?= $dkm ? $dkm["jumlah_rangkap"] . ' Rangkap' : '-' ?></td>
                                 </tr>
-                            <?php } else { 
-                                $foto = mysqli_query($conn, "SELECT * FROM cetak_foto WHERE cetak_id='".$dta['id']."'");
-                                $fto = mysqli_fetch_assoc($foto); 
+                            <?php } else {
+                                $foto = mysqli_query($conn, "SELECT * FROM cetak_foto WHERE cetak_id='" . $dta['id'] . "'");
+                                $fto = mysqli_fetch_assoc($foto);
                                 $ukf_id = $fto ? $fto['ukuran_foto'] : 0;
                                 $ukuran_foto = mysqli_query($conn, "SELECT * FROM ukuran_foto WHERE id='$ukf_id'");
-                                $ukf = mysqli_fetch_assoc($ukuran_foto);?>
+                                $ukf = mysqli_fetch_assoc($ukuran_foto); ?>
                                 <tr>
                                     <td width="200">Ukuran Foto</td>
                                     <td width="10">:</td>
@@ -175,7 +161,7 @@ require('template/footer.php');
                                 <tr>
                                     <td width="200">Jumlah Rangkap</td>
                                     <td width="10">:</td>
-                                    <td><?= $fto ? $fto["jumlah_rangkap"].' Lembar' : '-' ?></td>
+                                    <td><?= $fto ? $fto["jumlah_rangkap"] . ' Lembar' : '-' ?></td>
                                 </tr>
                             <?php } ?>
                             <tr>
@@ -207,7 +193,7 @@ require('template/footer.php');
                                 <td width="200">Status</td>
                                 <td width="10">:</td>
                                 <td class="<?= $text ?>"><b><?= ucwords($dta["status"]) ?></b></td>
-                            </tr>                      
+                            </tr>
                         </tbody>
                     </table>
                 </div>
