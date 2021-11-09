@@ -481,6 +481,13 @@ foreach ($get_pesanan as $dta) {
                                         Riwayat Pesanan
                                     </a>
                                 </li>
+                                <li class="app-sidebar__heading text-success">Member</li>
+                                <li>
+                                    <a href="member_premium.php" id="nv-member" class="text-success">
+                                        <i class="metismenu-icon pe-7s-id"></i>
+                                        Member Premium
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
