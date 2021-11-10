@@ -279,6 +279,18 @@ if (isset($_POST['req'])) {
 		]);
 	}
 
+	if($_POST['req'] == 'updateStatusMember') {
+		$user_id = $_POST['user_id'];
+		$getSaldo = mysqli_query($conn, "SELECT * FROM member WHERE user_id='$user_id'");
+		$get = mysqli_fetch_assoc($getSaldo);
+		$saldo = $get['saldo'];
+		$topup = $get['topup'];
+		$saldo_fix = $saldo + $topup;
+
+		mysqli_query($conn, "UPDATE member SET saldo='$saldo_fix', payment_id=NULL, payment_token=Null, created_at=NULL, status='active' WHERE user_id='$user_id'");
+		echo json_encode(true);
+	}
+
 	if($_POST['req'] == 'cekStatusPayment') {
 		$kode = $_POST['kode'];
 		$curl = curl_init();

@@ -23,6 +23,21 @@ foreach ($get_pesanan as $dta) {
         mysqli_query($conn, "UPDATE cetak SET status='cancel' WHERE id='$id_updt'");
     }
 }
+
+$get_member_regist = mysqli_query($conn, "SELECT * FROM member WHERE user_id='$id' AND status!='active'");
+$mbr = mysqli_fetch_assoc($get_member_regist);
+if ($mbr) {
+    $waktu_topup = strtotime($mbr['created_at']);
+    $waktu_sekrng = strtotime(date('Y-m-d H:i:s'));
+
+    if ($waktu_topup + 3600 < $waktu_sekrng) {
+        $id_mbr = $mbr['id'];
+        if ($mbr['status'] == 'regist') 
+            mysqli_query($conn, "DELETE FROM member WHERE id='$id_mbr'");
+        else if ($mbr['status'] == 'renew')
+            mysqli_query($conn, "UPDATE member SET payment_id=NULL, payment_token=Null, created_at=NULL, status='active' WHERE id='$id_mbr'");
+    }
+ }
 ?>
 <!doctype html>
 <html lang="en">

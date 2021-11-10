@@ -2,7 +2,8 @@
 
 require('template/header.php');
 
-$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (status = 'finish' OR status = 'cancel') ORDER BY id DESC");
+$member = mysqli_query($conn, "SELECT * FROM member WHERE user_id='$id'");
+$cek = mysqli_fetch_assoc($member);
 ?>
 
 <div class="app-main__inner">
@@ -19,21 +20,126 @@ $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (sta
     <div class="main-card mb-3 card">
         <div class="card-body">
             <h5 class="card-title">Member Premium</h5>
-            <div>
-                <h4 class="text-center mt-5 mb-5"><i>Anda belum menjadi member premium</i></h4>
+            <div style="min-height: 300px;">
+                <?php if (!$cek) { ?>
+                    <div class="text-center">
+                        <h4 class="mt-5"><i>Anda belum menjadi member premium</i></h4>
+                        <a href="#member_premium" class="btn btn-success btn-rounded">Gabung Jadi Member</a>
+                    </div>
+                <?php } else if ($cek && $cek['status'] == 'regist') { ?>
+                    <div class="text-center">
+                        <h4 class="mt-3">Selesikan transaksi</h4>
+                        <span>Anda telah mendaftar sebgai member premium. Silahkan selesaikan transaksi berikut untuk mengaktifkan paket premium anda!</span>
+                        <div class="row justify-content-center mt-3">
+                            <div class="col-sm-5">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>Paket</td>
+                                            <td>:</td>
+                                            <td>
+                                                <?php
+                                                if ($cek['topup'] == 20000) echo "Paket Perdana";
+                                                else if ($cek['topup'] == 50000) echo "Paket Medium";
+                                                else if ($cek['topup'] == 100000) echo "Paket Super";
+                                                ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Harga</td>
+                                            <td>:</td>
+                                            <td>Rp.<?= $cek['topup'] ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button class="btn btn-primary" id="bayar" data-token="<?= $cek['payment_token'] ?>" data-kode="<?= $cek['payment_id'] ?>">Bayar Sekarang</button>
+                            </div>
+                        </div>
+                    </div>
+                <?php } else if ($cek && ($cek['status'] == 'active' || $cek['status'] == 'renew')) { ?>
+                    <div class="text-center">
+                        <h4 class="mt-3">Anda terdaftar sebagai member premium</h4>
+                        <span>Terima kasih telah menjadi member peremium kami, silahkan nikmati layanan yang kami sediakan!</span>
+                    </div>
+                    <div class="row justify-content-center mt-3">
+                        <div class="col-sm-5">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td width="180"><b>Saldo Anda</b></td>
+                                        <td>:</td>
+                                        <td><b class="text-success">Rp.<?= $cek['saldo'] ?></b></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Saldo Digunakan</b></td>
+                                        <td>:</td>
+                                        <td><b class="text-danger">Rp.<?= $cek['saldo_digunakan'] ?></b></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Riwayat Pemakaian</b></td>
+                                        <td>:</td>
+                                        <td>
+                                            <?php 
+                                            $cek_pakai = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND metode_pembayaran='member'");
+                                            $total_pakai = mysqli_num_rows($cek_pakai);
+                                            if ($total_pakai > 0) echo $total_pakai."x Pemakaian";
+                                            else echo "<i>belum dipakai</i>";
+                                            ?>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <?php  if ($cek['status'] == 'active') { ?>
+                            <a href="#member_premium" class="btn btn-success btn-rounded">Tambah Paket Lainnya</a>
+                        <?php } else { ?>
+                            <hr>
+                            <h4 class="mt-3">Paket Tambahan</h4>
+                            <span>Sepertinya and telah melakukan pembelian paket tambahan, silahkan selesaikan transaksi anda!</span>
+                            <div class="row justify-content-center mt-3">
+                                <div class="col-sm-5">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td>Paket</td>
+                                                <td>:</td>
+                                                <td>
+                                                    <?php
+                                                    if ($cek['topup'] == 20000) echo "Paket Perdana";
+                                                    else if ($cek['topup'] == 50000) echo "Paket Medium";
+                                                    else if ($cek['topup'] == 100000) echo "Paket Super";
+                                                    ?>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Harga</td>
+                                                <td>:</td>
+                                                <td>Rp.<?= $cek['topup'] ?></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <button class="btn btn-primary" id="bayar" data-token="<?= $cek['payment_token'] ?>" data-kode="<?= $cek['payment_id'] ?>">Bayar Sekarang</button>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
             </div>
             <hr>
+            <h5 class="card-title">Pilih Paket Langganan</h5>
             <h5 class="text-center mt-3">Bayar Sekali Print berkali-kali</h5>
             <div class="text-center mb-5">
                 Untuk menjadi member premium, silahkan melakukan top up di berbagai paket di bawah ini
             </div>
-            <div class="row">
+            <div class="row" id="member_premium">
                 <div class="col-md-4">
                     <div class="mb-3 text-center card card-body shadow">
-                    <h4 style="text-transform: uppercase">Paket Perdana</h4>
+                        <h4 style="text-transform: uppercase">Paket Perdana</h4>
                         <h4 class="mt-2 text-success">Rp. 20.000 </h4>
                         <hr>
-                        <button class="btn btn-primary mt-2">TOP UP</button>
+                        <button class="btn btn-primary mt-2 top-up" data-price="20000" data-paket="Paket Perdana">TOP UP</button>
                     </div>
                 </div>
 
@@ -42,16 +148,16 @@ $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (sta
                         <h4 style="text-transform: uppercase">Paket Medium</h4>
                         <h4 class="mt-2 text-success">Rp. 50.000 </h4>
                         <hr>
-                        <button class="btn btn-warning mt-2">TOP UP</button>
+                        <button class="btn btn-warning mt-2 top-up" data-price="50000" data-paket="Paket Medium">TOP UP</button>
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="mb-3 text-center card card-body shadow">
-                    <h4 style="text-transform: uppercase">Paket Super</h4>
+                        <h4 style="text-transform: uppercase">Paket Super</h4>
                         <h4 class="mt-2 text-success">Rp.100.000 </h4>
                         <hr>
-                        <button class="btn btn-danger mt-2">TOP UP</button>
+                        <button class="btn btn-danger mt-2 top-up" data-price="100000" data-paket="Paket Super">TOP UP</button>
                     </div>
                 </div>
             </div>
@@ -63,150 +169,119 @@ $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (sta
 require('template/footer.php');
 ?>
 
-<?php foreach ($pesanan as $dta) {
-    $print = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM agen WHERE id='" . $dta["agen_id"] . "'"));
-
-    $text = '';
-    if ($dta['status'] == 'cancel') $text = 'text-danger';
-    else if ($dta['status'] == 'finish') $text = 'text-success'; ?>
-
-    <!-- MODAL DETAIL PESANAN -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="modal-detail<?= $dta['id'] ?>">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Detil Pesanan</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <table class="table table-bordered">
-                        <tbody>
-                            <tr>
-                                <td width="200">Tempat Cetak</td>
-                                <td width="10">:</td>
-                                <td><?= $print["nama_percetakan"] ?></td>
-                            </tr>
-                            <tr>
-                                <td width="200">Alamat</td>
-                                <td width="10">:</td>
-                                <td><?= $print["alamat"] ?></td>
-                            </tr>
-                            <tr>
-                                <td width="200">Telepon</td>
-                                <td width="10">:</td>
-                                <td><?= $print["telpon"] ?></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-bordered">
-                        <tbody>
-                            <tr>
-                                <td width="200">Jenis Layanan</td>
-                                <td width="10">:</td>
-                                <td>Cetak <?= ucwords($dta["jenis_layanan"]) ?></td>
-                            </tr>
-                            <?php if ($dta["jenis_layanan"] == 'dokumen') {
-                                $dokumen = mysqli_query($conn, "SELECT * FROM cetak_dokumen WHERE cetak_id='" . $dta['id'] . "'");
-                                $dkm = mysqli_fetch_assoc($dokumen);
-                                $jnk_id = $dkm ? $dkm['jenis_kertas'] : 0;
-                                $jld_id = $dkm ? $dkm['jilid'] : 0;
-                                $jenis_kertas = mysqli_query($conn, "SELECT * FROM jenis_kertas WHERE id='$jnk_id'");
-                                $jilid = mysqli_query($conn, "SELECT * FROM jilid WHERE id='$jld_id'");
-                                $jnk = mysqli_fetch_assoc($jenis_kertas);
-                                $jld = mysqli_fetch_assoc($jilid);
-                            ?>
-                                <tr>
-                                    <td width="200">Warna Tulisan</td>
-                                    <td width="10">:</td>
-                                    <td><?= $dkm ? $dkm["warna_tulisan"] : '-' ?></td>
-                                </tr>
-                                <tr>
-                                    <td width="200">Jenis Kertas</td>
-                                    <td width="10">:</td>
-                                    <td><?= $jnk ? $jnk["jenis_kertas"] : '-' ?></td>
-                                </tr>
-                                <tr>
-                                    <td width="200">Jilid</td>
-                                    <td width="10">:</td>
-                                    <td><?= $jld ? $jld["item"] : '-' ?></td>
-                                </tr>
-                                <tr>
-                                    <td width="200">Jumlah Halaman</td>
-                                    <td width="10">:</td>
-                                    <td><?= $dkm ? $dkm["jumlah_halaman"] . ' Lembar' : '-' ?></td>
-                                </tr>
-                                <tr>
-                                    <td width="200">Jumlah Rangkap</td>
-                                    <td width="10">:</td>
-                                    <td><?= $dkm ? $dkm["jumlah_rangkap"] . ' Rangkap' : '-' ?></td>
-                                </tr>
-                            <?php } else {
-                                $foto = mysqli_query($conn, "SELECT * FROM cetak_foto WHERE cetak_id='" . $dta['id'] . "'");
-                                $fto = mysqli_fetch_assoc($foto);
-                                $ukf_id = $fto ? $fto['ukuran_foto'] : 0;
-                                $ukuran_foto = mysqli_query($conn, "SELECT * FROM ukuran_foto WHERE id='$ukf_id'");
-                                $ukf = mysqli_fetch_assoc($ukuran_foto); ?>
-                                <tr>
-                                    <td width="200">Ukuran Foto</td>
-                                    <td width="10">:</td>
-                                    <td><?= $ukf ? $ukf["ukuran"] : '-' ?></td>
-                                </tr>
-                                <tr>
-                                    <td width="200">Ganti Latar</td>
-                                    <td width="10">:</td>
-                                    <td><?= $fto ? $fto["ganti_latar"] : '-' ?></td>
-                                </tr>
-                                <tr>
-                                    <td width="200">Jumlah Rangkap</td>
-                                    <td width="10">:</td>
-                                    <td><?= $fto ? $fto["jumlah_rangkap"] . ' Lembar' : '-' ?></td>
-                                </tr>
-                            <?php } ?>
-                            <tr>
-                                <td width="200">Waktu Pesanan</td>
-                                <td width="10">:</td>
-                                <td><?= date('d/m/Y H:i', strtotime($dta['waktu_pesanan'])) ?></td>
-                            </tr>
-                            <tr>
-                                <td width="200">Permintan Waktu Selesai</td>
-                                <td width="10">:</td>
-                                <td><?= date('d/m/Y H:i', strtotime($dta['waktu_pengambilan'])) ?></td>
-                            </tr>
-                            <tr>
-                                <td width="200">Catatan Untuk Pencetak</td>
-                                <td width="10">:</td>
-                                <td><?= $dta['catatan'] ? $dta['catatan'] : '' ?></td>
-                            </tr>
-                            <tr>
-                                <td width="200">Harga</td>
-                                <td width="10">:</td>
-                                <td>Rp.<?= number_format($dta["harga"]) ?></td>
-                            </tr>
-                            <tr>
-                                <td width="200">Metode Pembayaran</td>
-                                <td width="10">:</td>
-                                <td><?= ($dta["metode_pembayaran"] == 'virtual') ? 'Pembayaran Virtual' : 'Bayar Langsung' ?></td>
-                            </tr>
-                            <tr>
-                                <td width="200">Status</td>
-                                <td width="10">:</td>
-                                <td class="<?= $text ?>"><b><?= ucwords($dta["status"]) ?></b></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer bg-whitesmoke br">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                </div>
-            </div>
-        </div>
-    </div>
-<?php } ?>
-
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-DAbmO3EFyeXaOTdB"></script>
 <script>
     $(document).ready(function() {
         $('#nv-member').addClass('mm-active');
+
+        $('.top-up').click(function(event) {
+            var price = $(this).attr('data-price');
+            var paket = $(this).attr('data-paket');
+
+            $.ajax({
+                url     : 'store.php',
+                method  : "POST",
+                data    : {
+                    user_id: "<?= $id ?>",
+                    price: price,
+                    paket: paket,
+                    req: 'topUp'
+                },
+                // contentType : false,
+                // processData: false,
+                success : function(data) {
+                    if (data.token) {
+                        snap.pay(data.token, {
+                            onSuccess: function(result){
+                                alert_payment();
+                            },
+                            onPending: function(result){
+                                alert_payment();
+                            },
+                            onError: function(result){
+                                alert_payment();
+                            },
+                            onClose: function(result){
+                                alert_payment();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Selesaikan Pembayaran",
+                            icon: "warning",
+                            text: "Anda belum menyelesaikan transaksi sebelumnya, mohon segera sdiselesaikan"
+                        });
+                    }
+                }
+            });
+        });
+
+        $(document).on('click', '#bayar', function(event) {
+            var token = $(this).attr('data-token');
+            var kode = $(this).attr('data-kode');
+
+            snap.pay(token, {
+                onSuccess: function(result){
+                    cekStatusPayment(kode);
+                },
+                onPending: function(result){
+                    cekStatusPayment(kode);
+                },
+                onError: function(result){
+                    cekStatusPayment(kode);
+                },
+                onClose: function(result){
+                    cekStatusPayment(kode);
+                }
+            });
+        });
+
+        function alert_payment() {
+            Swal.fire({
+                title: "Selesaikan Pembayaran",
+                icon: "info",
+                text: "Silahkan selesaikan pembayaran anda. Transaksi anda akan dibatalkan jika pembayaran tidak dilakuka dalam 1 jam"
+            }).then(function() {
+                location.href = "member_premium.php";
+            });
+        }
+
+        function cekStatusPayment(kode) {
+            $.ajax({
+                url     : 'controller.php',
+                method  : "POST",
+                data    : {
+                    req: 'cekStatusPayment',
+                    kode: kode,
+                },
+                success : function(data) {
+                    if (data.transaction_status == "settlement" || data.transaction_status == "capture") {
+                        $.ajax({
+                            url     : 'controller.php',
+                            method  : "POST",
+                            data    : {
+                                req: 'updateStatusMember',
+                                user_id: "<?= $id ?>",
+                            },
+                            success : function(data) {
+                                Swal.fire({
+                                    title: "Transaksi Berhasil",
+                                    icon: "success",
+                                    text: "Terimakasih telah menyelesaikan transaksi, anda sekarang telah menjadi member premium kami"
+                                }).then(function() {
+                                    location.href = "member_premium.php";
+                                });
+                            }
+                        });    
+                    } else {
+                        iziToast.info({
+                            title: "Selesaikan pembayaran",
+                            message: "Silahkan selesaikan pembayaran anda. Transaksi anda akan dibatalkan jika pembayaran tidak dilakuka dalam 1 jam",
+                            position: 'topRight'
+                        });
+                    }
+                }
+            });
+        }
     });
 </script>

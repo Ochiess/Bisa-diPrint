@@ -88,6 +88,46 @@ if (isset($_POST['req'])) {
 			"token" => $payment_token,
 			"agen_id" => $agen_id
 		]);
+	} else if ($_POST['req'] == 'topUp') {
+		$user_id = $_POST['user_id'];
+		$price = $_POST['price'];
+		$paket = $_POST['paket'];
+		$payment_id = rand().sprintf('%05s', $user_id);
+		$created_at = date('Y-m-d H:i:s');
+
+		// Midtrans Config
+		$transaction_details = [
+			'order_id' => $payment_id
+		];
+
+		$item_details[] = [
+			'id' => $user_id,
+			'price' => (int)$price,
+			'quantity' => 1,
+			'name' => $paket
+		];
+
+		// Fill transaction details
+		$transaction = [
+			'transaction_details' => $transaction_details,
+			'item_details' => $item_details,
+		];
+
+		$cek = mysqli_query($conn, "SELECT * FROM member WHERE user_id='$user_id'");
+		$cek = mysqli_fetch_assoc($cek);
+		if (!$cek) {
+			$payment_token = Snap::getSnapToken($transaction);
+			mysqli_query($conn, "INSERT INTO member VALUES (NULL, '$user_id', 0, 0, '$price', '$payment_id', '$payment_token', '$created_at', 'regist')");
+		} else if ($cek && $cek['status'] == 'active') {
+			$payment_token = Snap::getSnapToken($transaction);
+			mysqli_query($conn, "UPDATE member SET topup='$price', payment_id='$payment_id', payment_token='$payment_token', created_at='$created_at', status='renew'");
+		} else {
+			$payment_token = null;
+		}
+
+		echo json_encode([
+			"token" => $payment_token
+		]);
 	}
 }
 ?>
