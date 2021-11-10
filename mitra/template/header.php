@@ -210,29 +210,31 @@ $cfg = mysqli_fetch_assoc($config);
                             </div>
                         </div>
                     </li>
-                    <li class="nav-item">
-                        <div class="d-inline-block dropdown">
-                            <a href="#" class="nav-link text-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="nav-link-icon fa fa-credit-card text-success"></i> <b>Rp.<?= number_format($sld['jumlah_saldo']) ?></b>
-                            </a>
-                            <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-131px, 33px, 0px); width: 350px;">
-                                <div class="px-3 py-2">
-                                    <span class="badge badge-success pull-right">Rp.<?= number_format($sld['jumlah_saldo']) ?></span>
-                                    <b>DETAIL SALDO ANDA</b>
-                                </div>
-                                <div tabindex="-1" class="dropdown-divider"></div>
-                                <div class="p-2" style="margin-top: -10px;">
-                                    <small>Info: Semua pembayaran yang dilakukan pelanggan secara virtual atau menggunakan saldo member akan masuk disini!</small>
-                                    <div class="p-2">
-                                        <b>Total Saldo : </b> <span class="text-success">Rp.<?= number_format($sld['jumlah_saldo']) ?></span><br>
-                                        <b>Saldo Ditarik : </b> <span class="text-danger">Rp.<?= number_format($sld['saldo_diambil']) ?></span><br>
+                    <?php if ($sld) { ?>
+                        <li class="nav-item">
+                            <div class="d-inline-block dropdown">
+                                <a href="#" class="nav-link text-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="nav-link-icon fa fa-credit-card text-success"></i> <b>Rp.<?= number_format($sld['jumlah_saldo']) ?></b>
+                                </a>
+                                <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-131px, 33px, 0px); width: 350px;">
+                                    <div class="px-3 py-2">
+                                        <span class="badge badge-success pull-right">Rp.<?= number_format($sld['jumlah_saldo']) ?></span>
+                                        <b>DETAIL SALDO ANDA</b>
+                                    </div>
+                                    <div tabindex="-1" class="dropdown-divider"></div>
+                                    <div class="p-2" style="margin-top: -10px;">
+                                        <small>Info: Semua pembayaran yang dilakukan pelanggan secara virtual atau menggunakan saldo member akan masuk disini!</small>
+                                        <div class="p-2">
+                                            <b>Total Saldo : </b> <span class="text-success">Rp.<?= number_format($sld['jumlah_saldo']) ?></span><br>
+                                            <b>Saldo Ditarik : </b> <span class="text-danger">Rp.<?= number_format($sld['saldo_diambil']) ?></span><br>
 
-                                        <button class="btn btn-success btn-block btn-pill mt-3"  data-toggle="modal" data-target=".modal-tarik-saldo"><i class="fa fa-credit-card"></i> Lakuan Penarikan</button>
+                                            <button class="btn btn-success btn-block btn-pill mt-3"  data-toggle="modal" data-target=".modal-tarik-saldo"><i class="fa fa-credit-card"></i> Lakuan Penarikan</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
+                    <?php } ?>
                 </ul>
             </div>
             <div class="app-header-right">
