@@ -27,9 +27,21 @@ foreach ($get_pesanan_ as $dta) {
     }
 }
 
+$res_tarik_saldo = false;
+if (isset($_POST['tarik_saldo'])) {
+    $jumlah = $_POST['jumlah'];
+    $my_saldo = mysqli_query($conn, "SELECT * FROM virtual_payment WHERE agen_id='$id'");
+    $sld = mysqli_fetch_assoc($my_saldo);
+    $jumlah_saldo = $sld['jumlah_saldo'] - $jumlah;    
+    $saldo_diambil = $sld['saldo_diambil'] + $jumlah;
+
+    mysqli_query($conn, "UPDATE virtual_payment SET jumlah_saldo='$jumlah_saldo', saldo_diambil='$saldo_diambil' WHERE agen_id='$id'");
+    $res_tarik_saldo = true;
+}
+
 $my_saldo = mysqli_query($conn, "SELECT * FROM virtual_payment WHERE agen_id='$id'");
 $sld = mysqli_fetch_assoc($my_saldo);
-$config = mysqli_query($conn, "SELECT * FROM setting_agen WHERE agen_id='$agen_id'");
+$config = mysqli_query($conn, "SELECT * FROM setting_agen WHERE agen_id='$id'");
 $cfg = mysqli_fetch_assoc($config);
 
 ?>

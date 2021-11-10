@@ -25,26 +25,33 @@
                 <div class="modal-body">
                     <h4 class="text-center text-success">Saldo: Rp.<?= number_format($sld['jumlah_saldo']) ?></h4>
                     <hr>
-                    <div class="form-group">
-                        <label>Jenis Rekening</label>
-                        <?php
-                        $bank = ["Bank BRI", "Bank BNI", "Bank Syariah", "GoPay", "Dana", "OVO"]; 
-                        ?>
-                        <select class="form-control" name="rekening" required="">
-                            <option value="">.::Pilih Rekening::.</option>
-                            <?php foreach ($bank as $bnk) { ?>
-                                <option value="<?= $bnk ?>" <?php if ($bnk == $cfg['rekening']) echo 'selected' ?>><?= $bnk ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Nomor Rekening</label>
-                        <input type="text" name="no_rekening" class="form-control" placeholder="Nomor Rekening.." value="<?= $cfg['no_rekening'] ?>" required="" autocomplete="off">
+                    <div class="px-3">
+                        <div class="form-group">
+                            <label>Jumlah Penarikan (Rp)</label>
+                            <input type="hidden" id="this_saldo" value="<?= $sld['jumlah_saldo'] ?>">
+                            <input type="number" name="jumlah" id="jumlah_penarikan" class="form-control" placeholder="Jumlah Penarikan.." required="" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Jenis Rekening</label>
+                            <?php
+                            $bank = ["Bank BRI", "Bank BNI", "Bank Syariah", "GoPay", "Dana", "OVO"]; 
+                            ?>
+                            <select class="form-control" name="rekening" required="">
+                                <option value="">.::Pilih Rekening::.</option>
+                                <?php foreach ($bank as $bnk) { ?>
+                                    <option value="<?= $bnk ?>" <?php if ($bnk == $cfg['rekening']) echo 'selected' ?>><?= $bnk ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nomor Rekening</label>
+                            <input type="text" name="no_rekening" class="form-control" placeholder="Nomor Rekening.." value="<?= $cfg['no_rekening'] ?>" required="" autocomplete="off">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer bg-whitesmoke">
-                    <a href="#" role="button" class="btn btn-success proses" data-id="<?= $dta['id'] ?>" data-user="<?= $dta['user_id'] ?>">Lanjutkan</a>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Nanti Dulu</button>
+                    <button type="submit" class="btn btn-success" name="tarik_saldo">Lanjutkan Penarikan</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak Jadi</button>
                 </div>
             </form>
         </div>
@@ -65,6 +72,30 @@
 <script>
     $(document).ready(function() {
         $('.dataTable').DataTable();
+
+        $('#jumlah_penarikan').keyup(function(event) {
+            var saldo = $('#this_saldo').val();
+            var jumlah = $(this).val();
+
+            if (parseInt(jumlah) > parseInt(saldo)) {
+                $(this).val('');
+                iziToast.warning({
+                    title: 'Saldo Tidak Mencukupi',
+                    message: 'Jumlah Saldo yang ada milik tidak mencukupi. Silahkan input sesuai saldo anda!',
+                    position: 'topRight'
+                });
+            }
+        });
+
+        <?php if ($res_tarik_saldo == true) { ?>
+            Swal.fire({
+                icon: 'success',
+                title: 'Penarikan Berhasil',
+                text: 'Penarikan saldo anda telah berhasil dilakukan. Silahkan cek rekening yang anda kaitkan'
+            }).then(function() {
+                location.href=window.location.href;
+            });
+        <?php } ?>
     });
 
     var agen_id = '<?= $id ?>';
