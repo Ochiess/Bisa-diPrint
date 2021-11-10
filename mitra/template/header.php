@@ -29,6 +29,8 @@ foreach ($get_pesanan_ as $dta) {
 
 $my_saldo = mysqli_query($conn, "SELECT * FROM virtual_payment WHERE agen_id='$id'");
 $sld = mysqli_fetch_assoc($my_saldo);
+$config = mysqli_query($conn, "SELECT * FROM setting_agen WHERE agen_id='$agen_id'");
+$cfg = mysqli_fetch_assoc($config);
 
 ?>
 

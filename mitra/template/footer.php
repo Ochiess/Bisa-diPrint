@@ -16,22 +16,33 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Proses Pesanan</h5>
+                <h5 class="modal-title">Penarikan Saldo</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form method="POST">
                 <div class="modal-body">
-                    Yakin ingin memproses pesanan? Silahkan kilk "Lanjutkan" untuk memproses pesanan ini.
-                    <hr style="margin-top: 5px; margin-bottom: 5px;">
-                    <small class="text-muted">Pastikn anda telah mendownload file dan melihat detail pesanan untuk menghindari kesalahan percetakan yang tidak diinginkan.</small>
-                    <div class="text-center mt-2">
-                        <a href="#" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target=".modal-detail<?= $dta['id'] ?>"><i class="fa fa-list"></i> Lihat Detail</a>
-                        <a href="'<?= $file ?>'" class="btn btn-outline-primary btn-sm"><i class="fa fa-download"></i> Download File</a>
+                    <h4 class="text-center text-success">Saldo: Rp.<?= number_format($sld['jumlah_saldo']) ?></h4>
+                    <hr>
+                    <div class="form-group">
+                        <label>Jenis Rekening</label>
+                        <?php
+                        $bank = ["Bank BRI", "Bank BNI", "Bank Syariah", "GoPay", "Dana", "OVO"]; 
+                        ?>
+                        <select class="form-control" name="rekening" required="">
+                            <option value="">.::Pilih Rekening::.</option>
+                            <?php foreach ($bank as $bnk) { ?>
+                                <option value="<?= $bnk ?>" <?php if ($bnk == $cfg['rekening']) echo 'selected' ?>><?= $bnk ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor Rekening</label>
+                        <input type="text" name="no_rekening" class="form-control" placeholder="Nomor Rekening.." value="<?= $cfg['no_rekening'] ?>" required="" autocomplete="off">
                     </div>
                 </div>
-                <div class="modal-footer bg-whitesmoke br">
+                <div class="modal-footer bg-whitesmoke">
                     <a href="#" role="button" class="btn btn-success proses" data-id="<?= $dta['id'] ?>" data-user="<?= $dta['user_id'] ?>">Lanjutkan</a>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Nanti Dulu</button>
                 </div>
