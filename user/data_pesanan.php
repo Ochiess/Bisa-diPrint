@@ -171,7 +171,13 @@ require('template/footer.php');
                             <tr>
                                 <td width="200">Metode Pembayaran</td>
                                 <td width="10">:</td>
-                                <td><?= ($dta["metode_pembayaran"] == 'virtual') ? 'Pembayaran Virtual' : 'Bayar Langsung' ?></td>
+                                <td>
+                                    <?php
+                                    if ($dta['metode_pembayaran'] == 'langsung') echo 'Bayar Langsung';
+                                    else if ($dta['metode_pembayaran'] == 'member') echo 'Saldo Member';
+                                    else echo 'Pembayaran Virtual';
+                                    ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td width="200">Status</td>

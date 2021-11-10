@@ -225,7 +225,39 @@ $cfg = mysqli_fetch_assoc($config);
                                     <h4 class="text-success"><b><i>RP.<span class="totalHarga">0</span></i></b></h4>
                                     <input type="hidden" name="harga" class="totalHarga">
                                 </div>
-                                <div class="position-relative form-group">
+                                <?php 
+                                $is_member = '';
+                                $non_member = '';
+                                $is_member_name = '';
+                                $non_member_name = '';
+                                if ($mbr && $mbr['status'] != 'regist') {
+                                    $non_member = 'hidden';
+                                    $is_member_name = 'metode_pembayaran';
+                                } else { 
+                                    $is_member = 'hidden';
+                                    $non_member_name = 'metode_pembayaran';
+                                }
+
+                                if ($mbr && $mbr['status'] != 'regist') { ?>
+                                    <input type="hidden" value="<?= $mbr['saldo'] ?>" id="saldo_member">
+                                <?php } ?>
+                                <div class="position-relative form-group" <?= $is_member ?> id="is_memeber_content">
+                                    <div class="alert alert-success">
+                                        Anda terdaftar sebagai member premium. Anda dapat melakukan transaksi sesuai saldo yang anda miliki.<br> 
+                                        Saldo anda saat ini: <b>Rp. <?= number_format($mbr['saldo']) ?></b>
+                                    </div>
+                                    <input type="hidden" name="<?= $is_member_name ?>" value="member" id="is_memeber">
+                                </div>
+
+                                <div class="position-relative form-group" id="renew_memeber" hidden="">
+                                    <div class="alert alert-warning">
+                                        Saldo member anda tidak mencukupi, silahkan lakukan topup dan pilih paket member yang kami sediakan atau pilih metode pembayaran di bawah.<br> 
+                                        Sias saldo anda: <b>Rp. <?= number_format($mbr['saldo']) ?></b>
+                                        <a href="member_premium.php">Top Up Sekarag</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="position-relative form-group" <?= $non_member ?> id="non_memeber_content">
                                     <?php
                                     $cek_pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id'");
                                     $first = true;
@@ -236,12 +268,14 @@ $cfg = mysqli_fetch_assoc($config);
                                     if (!$first && $cfg['pembayaran_virtual'] == 0) $d_pv = true;
                                     ?>
                                     <label for="exampleSelect">Metode Pembayaran</label>
-                                    <select name="metode_pembayaran" id="metode_pembayaran" class="form-control">
+                                    <select name="<?= $non_member_name ?>" id="non_memeber" class="form-control">
                                         <option value="langsung" <?= $d_pl ? 'disabled' : '' ?>>Bayar Langsung</option>
                                         <option value="virtual" <?= $d_pv ? 'disabled' : '' ?>>Pembayaran Virtual</option>
                                     </select>
                                     <?php if ($first) { ?>
-                                        <small class="form-text text-muted text-justify">Sepertinya ini pesanan pertama anda. Untuk mengantisipasi pesanan fiktif silahkan menyelesaikan pembayaran dengan metode <b>Pembayaran Virtual</b>. Kenapa ini berlaku? baca <a href="#" target="_blank">Syarat & Ketentuan</a> </small>
+                                        <div class="alert alert-info mt-2 text-justify">
+                                            Sepertinya ini pesanan pertama anda. Untuk mengantisipasi pesanan fiktif silahkan menyelesaikan pembayaran dengan metode <b>Pembayaran Virtual</b>. Kenapa ini berlaku? baca <a href="#" target="_blank">Syarat & Ketentuan</a>
+                                        </div>
                                     <?php } ?>
                                 </div>
                                 <input type="hidden" name="user_id" value="<?= $id ?>">
@@ -530,6 +564,8 @@ require('template/footer.php');
 
             $('.totalHarga').text(subtotal*jumlahrangkap);
             $('.totalHarga').val(subtotal*jumlahrangkap);
+
+            cekSaldoMemeber(subtotal*jumlahrangkap)
         }
 
         function countPriceFoto() {
@@ -540,6 +576,25 @@ require('template/footer.php');
             $('#totalHargaUkuran').text(totalhargaukuran);
             $('.totalHarga').text(totalhargaukuran);
             $('.totalHarga').val(totalhargaukuran);
+
+            cekSaldoMemeber(totalhargaukuran)
+        }
+
+        function cekSaldoMemeber(harga) {
+            var saldo = $('#saldo_member').val();
+            if (harga > saldo) {
+                $('#is_memeber_content').attr('hidden', '');
+                $('#is_memeber').removeAttr('name');
+                $('#renew_memeber').removeAttr('hidden');
+                $('#non_memeber_content').removeAttr('hidden');
+                $('#non_memeber').attr('name', 'metode_pembayaran');
+            } else {
+                $('#is_memeber_content').removeAttr('hidden');
+                $('#is_memeber').attr('name', 'metode_pembayaran');
+                $('#renew_memeber').attr('hidden', '');
+                $('#non_memeber_content').attr('hidden', '');
+                $('#non_memeber').removeAttr('name');
+            }
         }
 
         function resetForm(val) {

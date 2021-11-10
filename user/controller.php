@@ -65,6 +65,7 @@ if (isset($_POST['req'])) {
 			
 			$bayar = [];
 			if ($dta['metode_pembayaran'] == 'langsung') $bayar = ['text-primary', 'Bayar Langsung'];
+			else if ($dta['metode_pembayaran'] == 'member') $bayar = ['text-warning', 'Saldo Member'];
 			else $bayar = ['text-success', 'Pembayaran Virtual'];
 
 			$html .= '
@@ -287,7 +288,7 @@ if (isset($_POST['req'])) {
 		$topup = $get['topup'];
 		$saldo_fix = $saldo + $topup;
 
-		mysqli_query($conn, "UPDATE member SET saldo='$saldo_fix', payment_id=NULL, payment_token=Null, created_at=NULL, status='active' WHERE user_id='$user_id'");
+		mysqli_query($conn, "UPDATE member SET saldo='$saldo_fix', topup=NULL, payment_id=NULL, payment_token=NULL, created_at=NULL, status='active' WHERE user_id='$user_id'");
 		echo json_encode(true);
 	}
 

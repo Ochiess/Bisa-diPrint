@@ -22,8 +22,9 @@ $cek = mysqli_fetch_assoc($member);
             <h5 class="card-title">Member Premium</h5>
             <div style="min-height: 300px;">
                 <?php if (!$cek) { ?>
-                    <div class="text-center">
+                    <div class="text-center px-5">
                         <h4 class="mt-5"><i>Anda belum menjadi member premium</i></h4>
+                        <span>Silahkan gabung jadi member premium untuk menikmati layanan kami, dengan bergabung menjadi member premium anda dapat melakukan percetakan berkali-kali hanya dengan sekali bayar</span><br><br>
                         <a href="#member_premium" class="btn btn-success btn-rounded">Gabung Jadi Member</a>
                     </div>
                 <?php } else if ($cek && $cek['status'] == 'regist') { ?>
@@ -48,7 +49,7 @@ $cek = mysqli_fetch_assoc($member);
                                         <tr>
                                             <td>Harga</td>
                                             <td>:</td>
-                                            <td>Rp.<?= $cek['topup'] ?></td>
+                                            <td>Rp.<?= number_format($cek['topup']) ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -68,12 +69,12 @@ $cek = mysqli_fetch_assoc($member);
                                     <tr>
                                         <td width="180"><b>Saldo Anda</b></td>
                                         <td>:</td>
-                                        <td><b class="text-success">Rp.<?= $cek['saldo'] ?></b></td>
+                                        <td><b class="text-success">Rp.<?= number_format($cek['saldo']) ?></b></td>
                                     </tr>
                                     <tr>
                                         <td><b>Saldo Digunakan</b></td>
                                         <td>:</td>
-                                        <td><b class="text-danger">Rp.<?= $cek['saldo_digunakan'] ?></b></td>
+                                        <td><b class="text-danger">Rp.<?= number_format($cek['saldo_digunakan']) ?></b></td>
                                     </tr>
                                     <tr>
                                         <td><b>Riwayat Pemakaian</b></td>
@@ -116,7 +117,7 @@ $cek = mysqli_fetch_assoc($member);
                                             <tr>
                                                 <td>Harga</td>
                                                 <td>:</td>
-                                                <td>Rp.<?= $cek['topup'] ?></td>
+                                                <td>Rp.<?= number_format($cek['topup']) ?></td>
                                             </tr>
                                         </tbody>
                                     </table>

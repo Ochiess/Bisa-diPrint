@@ -79,6 +79,14 @@ if (isset($_POST['req'])) {
 			];
 			$payment_token = Snap::getSnapToken($transaction);
 		} else {
+			if ($metode_pembayaran == 'member') {
+				$member = mysqli_query($conn, "SELECT * FROM member WHERE user_id='$user_id'");
+				$mbr = mysqli_fetch_assoc($member);
+				$saldo = $mbr['saldo'] - $harga;
+				$saldo_digunakan = $mbr['saldo_digunakan'] + $harga;
+				mysqli_query($conn, "UPDATE member SET saldo='$saldo', saldo_digunakan='$saldo_digunakan' WHERE user_id='$user_id'");
+			}
+
 			$status = 'review';
 			$payment_token = null;
 		}

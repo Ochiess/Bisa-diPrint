@@ -45,6 +45,7 @@ $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND (sta
 
                         $bayar = [];
                         if ($dta['metode_pembayaran'] == 'langsung') $bayar = ['text-primary', 'Bayar Langsung'];
+                        else if ($dta['metode_pembayaran'] == 'member') $bayar = ['text-warning', 'Saldo Member'];
                         else $bayar = ['text-success', 'Pembayaran Virtual']; ?>
                         <tr>
                             <td><?= $no ?></td>
@@ -201,7 +202,13 @@ require('template/footer.php');
                             <tr>
                                 <td width="200">Metode Pembayaran</td>
                                 <td width="10">:</td>
-                                <td><?= ($dta["metode_pembayaran"] == 'virtual') ? 'Pembayaran Virtual' : 'Bayar Langsung' ?></td>
+                                <td>
+                                    <?php
+                                    if ($dta['metode_pembayaran'] == 'langsung') echo 'Bayar Langsung';
+                                    else if ($dta['metode_pembayaran'] == 'member') echo 'Saldo Member';
+                                    else echo 'Pembayaran Virtual';
+                                    ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td width="200">Status</td>
