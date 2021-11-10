@@ -107,6 +107,7 @@ require 'koneksi.php';
         }
         
         mysqli_query($conn, "INSERT INTO setting_agen VALUES(NULL, '$agen_id', '1', '1', NULL, NULL, '1', '1', '0', '0')");
+        mysqli_query($conn, "INSERT INTO virtual_payment VALUES(NULL, '$agen_id', '0', '0')");
 
         return 1;
     }

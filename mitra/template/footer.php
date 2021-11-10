@@ -10,6 +10,36 @@
 </div>
 </div>
 </div>
+
+<!-- MODAL PENARIKAN SALDO -->
+<div class="modal fade modal-tarik-saldo" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Proses Pesanan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    Yakin ingin memproses pesanan? Silahkan kilk "Lanjutkan" untuk memproses pesanan ini.
+                    <hr style="margin-top: 5px; margin-bottom: 5px;">
+                    <small class="text-muted">Pastikn anda telah mendownload file dan melihat detail pesanan untuk menghindari kesalahan percetakan yang tidak diinginkan.</small>
+                    <div class="text-center mt-2">
+                        <a href="#" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target=".modal-detail<?= $dta['id'] ?>"><i class="fa fa-list"></i> Lihat Detail</a>
+                        <a href="'<?= $file ?>'" class="btn btn-outline-primary btn-sm"><i class="fa fa-download"></i> Download File</a>
+                    </div>
+                </div>
+                <div class="modal-footer bg-whitesmoke br">
+                    <a href="#" role="button" class="btn btn-success proses" data-id="<?= $dta['id'] ?>" data-user="<?= $dta['user_id'] ?>">Lanjutkan</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Nanti Dulu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script src="./../layout/vendor/jquery/jquery.min.js"></script>
 <script src="./assets/scripts/main.js"></script>
 <script src="./assets/sweetalert2/sweetalert2.min.js"></script>

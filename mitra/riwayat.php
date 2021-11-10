@@ -62,6 +62,7 @@ foreach ($get_pelanggan as $dta) {
 
                                 $bayar = [];
                                 if ($dta['metode_pembayaran'] == 'langsung') $bayar = ['text-primary', 'Bayar Langsung'];
+                                else if ($dta['metode_pembayaran'] == 'member') $bayar = ['text-warning', 'Saldo Member'];
                                 else $bayar = ['text-success', 'Pembayaran Virtual']; ?>
                                 <tr>
                                     <td><?= $no ?></td>
@@ -98,6 +99,7 @@ foreach ($get_pelanggan as $dta) {
                                 <th>Nama Pelanggan</th>
                                 <th>Telepon</th>
                                 <th>Email</th>
+                                <th width="100">Status Member</th>
                                 <th width="10">Pesan</th>
                             </tr>
                         </thead>
@@ -106,7 +108,8 @@ foreach ($get_pelanggan as $dta) {
                             $no=1;
                             foreach (array_unique($pelanggan) as $usr_id) {
                                 $user = mysqli_query($conn, "SELECT * FROM user WHERE id='$usr_id'");
-                                $usr = mysqli_fetch_assoc($user); ?>
+                                $usr = mysqli_fetch_assoc($user); 
+                                $member = mysqli_query($conn, "SELECT * FROM member WHERE user_id='$usr_id'"); ?>
                                 <tr>
                                     <td><?= $no ?></td>
                                     <td>
@@ -119,6 +122,14 @@ foreach ($get_pelanggan as $dta) {
                                     <td><?= $usr ? $usr["nama_lengkap"] : '<i>Tidak diketahui</i>' ?></td>
                                     <td><?= $usr ? $usr["hp"] : '<i>Tidak diketahui</i>' ?></td>
                                     <td><?= $usr ? $usr["email"] : '<i>Tidak diketahui</i>' ?></td>
+                                    <td>
+                                        <?php 
+                                        if (mysqli_num_rows($member) > 0) 
+                                            echo '<span class="text-success">Member Premium</span>';
+                                        else
+                                            echo '<span class="text-warning">Member Biasa</span>';
+                                        ?>
+                                    </td>
                                     <td class="text-center">
                                         <a href="#" class="btn btn-success"><i class="fa fa-comment"></i> Chat</a>
                                     </td>
@@ -256,7 +267,13 @@ require('template/footer.php');
                             <tr>
                                 <td width="200">Metode Pembayaran</td>
                                 <td width="10">:</td>
-                                <td><?= ($dta["metode_pembayaran"] == 'virtual') ? 'Pembayaran Virtual' : 'Bayar Langsung' ?></td>
+                                <td>
+                                    <?php
+                                    if ($dta['metode_pembayaran'] == 'langsung') echo 'Bayar Langsung';
+                                    else if ($dta['metode_pembayaran'] == 'member') echo 'Saldo Member';
+                                    else echo 'Pembayaran Virtual';
+                                    ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td width="200">Status</td>

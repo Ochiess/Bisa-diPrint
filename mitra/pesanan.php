@@ -159,7 +159,8 @@ require('template/footer.php');
 ?>
 
 <?php foreach ($pesanan as $dta) {
-    $user = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM user WHERE id='".$dta["user_id"]."'")); 
+    $user = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM user WHERE id='".$dta["user_id"]."'"));
+    $member = mysqli_query($conn, "SELECT * FROM member WHERE user_id='".$dta["user_id"]."'");
 
     $text = '';
     if ($dta['status'] == 'panding') $text = 'text-warning';    
@@ -192,7 +193,19 @@ require('template/footer.php');
                                 <td width="200">Telepon</td>
                                 <td width="10">:</td>
                                 <td><?= $user["hp"] ?></td>
-                            </tr>                              
+                            </tr>
+                            <tr>
+                                <td width="200">Status Member</td>
+                                <td width="10">:</td>
+                                <td>
+                                    <?php 
+                                    if (mysqli_num_rows($member) > 0) 
+                                        echo '<span class="text-success">Member Premium</span>';
+                                    else
+                                        echo '<span class="text-warning">Member Biasa</span>';
+                                    ?>
+                                </td>
+                            </tr>                     
                         </tbody>
                     </table>
                     <table class="table table-bordered">
@@ -282,7 +295,13 @@ require('template/footer.php');
                             <tr>
                                 <td width="200">Metode Pembayaran</td>
                                 <td width="10">:</td>
-                                <td><?= ($dta["metode_pembayaran"] == 'virtual') ? 'Pembayaran Virtual' : 'Bayar Langsung' ?></td>
+                                <td>
+                                    <?php
+                                    if ($dta['metode_pembayaran'] == 'langsung') echo 'Bayar Langsung';
+                                    else if ($dta['metode_pembayaran'] == 'member') echo 'Saldo Member';
+                                    else echo 'Pembayaran Virtual';
+                                    ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td width="200">Status</td>

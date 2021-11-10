@@ -118,7 +118,7 @@ if (isset($_POST['req'])) {
 				$message = 'Pesanan anda telah selesai dan telah dikonfirmasi';
 				$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE id='$id'");
 				$psn = mysqli_fetch_assoc($pesanan);
-				if ($psn['metode_pembayaran'] == 'virtual') {
+				if ($psn['metode_pembayaran'] == 'virtual' || $psn['metode_pembayaran'] == 'member') {
 					$agen_id = $psn['agen_id'];
 					$payment = mysqli_query($conn, "SELECT * FROM virtual_payment WHERE agen_id='$agen_id'");
 					$pay = mysqli_fetch_assoc($payment);

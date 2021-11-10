@@ -25,6 +25,7 @@ if (isset($_POST['req'])) {
 			
 			$bayar = [];
 			if ($dta['metode_pembayaran'] == 'langsung') $bayar = ['text-primary', 'Bayar Langsung'];
+			else if ($dta['metode_pembayaran'] == 'member') $bayar = ['text-warning', 'Saldo Member'];
 			else $bayar = ['text-success', 'Pembayaran Virtual'];
 
 			$html_all .= '
@@ -53,6 +54,9 @@ if (isset($_POST['req'])) {
 			</tr>
 			';
 			$no++;
+		}
+		if ($no==1) {
+			$html_all .= '<tr><td colspan="9" class="text-center"><i>Tidak ada data</i></td></tr>';
 		}
 
 		// Get Pesanan Review
@@ -108,6 +112,9 @@ if (isset($_POST['req'])) {
 			</tr>
 			';
 			$no++;
+		}
+		if ($no==1) {
+			$html_review .= '<tr><td colspan="8" class="text-center"><i>Tidak ada data</i></td></tr>';
 		}
 
 		// Get Pesanan Proccess
@@ -186,6 +193,9 @@ if (isset($_POST['req'])) {
 			';
 			$no++;
 		}
+		if ($no==1) {
+			$html_done .= '<tr><td colspan="7" class="text-center"><i>Tidak ada data</i></td></tr>';
+		}
 
 		// Get Pesanan Panding
 		$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND status = 'panding' ORDER BY id DESC");
@@ -219,6 +229,9 @@ if (isset($_POST['req'])) {
 			</tr>
 			';
 			$no++;
+		}
+		if ($no==1) {
+			$html_panding .= '<tr><td colspan="8" class="text-center"><i>Tidak ada data</i></td></tr>';
 		}
 
 		$data = [
