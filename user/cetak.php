@@ -259,7 +259,7 @@ $cfg = mysqli_fetch_assoc($config);
                                 
                                 <div class="position-relative form-group" <?= $non_member ?> id="non_memeber_content">
                                     <?php
-                                    $cek_pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id'");
+                                    $cek_pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND status='finish'");
                                     $first = true;
                                     if (mysqli_num_rows($cek_pesanan) > 0) $first = false;
                                     $d_pl = false;
@@ -582,18 +582,20 @@ require('template/footer.php');
 
         function cekSaldoMemeber(harga) {
             var saldo = $('#saldo_member').val();
-            if (harga > saldo) {
-                $('#is_memeber_content').attr('hidden', '');
-                $('#is_memeber').removeAttr('name');
-                $('#renew_memeber').removeAttr('hidden');
-                $('#non_memeber_content').removeAttr('hidden');
-                $('#non_memeber').attr('name', 'metode_pembayaran');
-            } else {
-                $('#is_memeber_content').removeAttr('hidden');
-                $('#is_memeber').attr('name', 'metode_pembayaran');
-                $('#renew_memeber').attr('hidden', '');
-                $('#non_memeber_content').attr('hidden', '');
-                $('#non_memeber').removeAttr('name');
+            if (saldo != undefined) {
+                if (harga > saldo) {
+                    $('#is_memeber_content').attr('hidden', '');
+                    $('#is_memeber').removeAttr('name');
+                    $('#renew_memeber').removeAttr('hidden');
+                    $('#non_memeber_content').removeAttr('hidden');
+                    $('#non_memeber').attr('name', 'metode_pembayaran');
+                } else {
+                    $('#is_memeber_content').removeAttr('hidden');
+                    $('#is_memeber').attr('name', 'metode_pembayaran');
+                    $('#renew_memeber').attr('hidden', '');
+                    $('#non_memeber_content').attr('hidden', '');
+                    $('#non_memeber').removeAttr('name');
+                }
             }
         }
 
