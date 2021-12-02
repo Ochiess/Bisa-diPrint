@@ -65,7 +65,9 @@ $mbr = mysqli_fetch_assoc($member);
         <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
             <div class="app-header header-shadow">
                 <div class="app-header__logo">
-                    <h3>diPrint.com</h3>
+                    <div>
+                        <img src="../assets/img/jadi.png" alt="" width="70%" height="60%">
+                    </div>
                     <div class="header__pane ml-auto">
                         <div>
                             <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
