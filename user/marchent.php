@@ -1,7 +1,12 @@
 <?php
-require ('template/header.php');
+require('template/header.php');
 
 $result = marchent();
+
+if (isset($_GET['key'])) {
+    $key = $_GET['key'];
+    $result = mysqli_query($conn, "SELECT * FROM agen WHERE status='active' AND nama_percetakan LIKE '%$key%'");
+}
 ?>
 
 <div class="app-main__inner">
@@ -15,13 +20,17 @@ $result = marchent();
             </div>
         </div>
     </div>
-    <div class="card-group">
+    <div class="">
+        <?php if (isset($_GET['key'])) { ?>
+            <h4 class="text-center">Hasil Pencarian</h4>
+            <hr>
+        <?php } ?>
         <div class="row">
-            <?php foreach ($result as $i => $row) { 
+            <?php foreach ($result as $i => $row) {
                 $agen_id = $row['id'];
                 $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$agen_id' AND (status != 'finish' AND status != 'cancel')");
                 $antrian = mysqli_num_rows($pesanan);
-                ?>
+            ?>
                 <div class="col-md-4 mb-3">
                     <div class="card">
                         <img class="card-img-top d-block w-100" height="250" src="../mitra/img/daftar<?= $row["poto"] ?>" alt="Card image cap">
@@ -37,13 +46,13 @@ $result = marchent();
                             </div>
                             <div class="row mt-2" style="margin-bottom: -10px;">
                                 <a href="detail.php?id=<?= $row['id'] ?>" class="col-sm-9 mx-2 btn btn-primary btn-block">Kunjungi</a>
-                                <button class="btn btn-success col-sm-2 show-chat"><i class="fa fa-comment"></i></button>
+                                <button class="btn btn-success col-sm-2 show-chat" data-id="<?= $row["id"] ?>"><i class="fa fa-comment"></i></button>
                             </div>
                         </div>
                         <div class="card-footer pr-0">
                             <div class="row w-100">
                                 <div class="col-md-8">
-                                    <?php if($i % 2 == 1) { ?>
+                                    <?php if ($i % 2 == 1) { ?>
                                         <small class="text-muted">Last onlie 3 mins ago </small>
                                     <?php } else { ?>
                                         <small class="text-success">Online</small>
@@ -58,6 +67,10 @@ $result = marchent();
                 </div>
             <?php } ?>
         </div>
+
+        <?php if (!isset($i)) { ?>
+            <h5 class="text-center mt-5"><i>Percetakan tidak ditemukan</i></h5>
+        <?php } ?>
     </div>
 </div>
 <?php

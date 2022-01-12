@@ -1,28 +1,28 @@
-<?php 
+<?php
 
 require '../koneksi.php';
 
 if (isset($_POST['req'])) {
 	header('Content-type: application/json');
 
-	if($_POST['req'] == 'getDataPesanan') {
+	if ($_POST['req'] == 'getDataPesanan') {
 		$id = $_POST['id'];
 
 		// Get Pesanan All
 		$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND (status != 'finish' AND status != 'cancel') ORDER BY id DESC");
 		$html_all = '';
-		$no=1;
+		$no = 1;
 		foreach ($pesanan as $dta) {
-			$users = mysqli_query($conn, "SELECT * FROM user WHERE id='".$dta["user_id"]."'");
+			$users = mysqli_query($conn, "SELECT * FROM user WHERE id='" . $dta["user_id"] . "'");
 			$usr = mysqli_fetch_assoc($users);
-			$nama_pelanggan = $usr ? $usr["nama_lengkap"] : '<i>Tidak tersedia lagi</i>';	
+			$nama_pelanggan = $usr ? $usr["nama_lengkap"] : '<i>Tidak tersedia lagi</i>';
 			$badge = '';
 			$aksi = '';
 			if ($dta['status'] == 'panding') $badge = 'badge-warning';
 			else if ($dta['status'] == 'review') $badge = 'badge-info';
 			else if ($dta['status'] == 'proccess') $badge = 'badge-alternate';
 			else if ($dta['status'] == 'done') $badge = 'badge-success';
-			
+
 			$bayar = [];
 			if ($dta['metode_pembayaran'] == 'langsung') $bayar = ['text-primary', 'Bayar Langsung'];
 			else if ($dta['metode_pembayaran'] == 'member') $bayar = ['text-warning', 'Saldo Member'];
@@ -30,32 +30,32 @@ if (isset($_POST['req'])) {
 
 			$html_all .= '
 			<tr>
-			<td>'.$no.'</td>
-			<td>'.$nama_pelanggan.'</td>
-			<td>'.ucwords($dta['jenis_layanan']).'</td>
+			<td>' . $no . '</td>
+			<td>' . $nama_pelanggan . '</td>
+			<td>' . ucwords($dta['jenis_layanan']) . '</td>
 			<td class="text-center">
-			'.date('d/m/Y', strtotime($dta['waktu_pesanan'])).'
-			<b>'.date('H:i', strtotime($dta['waktu_pesanan'])).'</b>
+			' . date('d/m/Y', strtotime($dta['waktu_pesanan'])) . '
+			<b>' . date('H:i', strtotime($dta['waktu_pesanan'])) . '</b>
 			</td>
 			<td class="text-center">
-			'.date('d/m/Y', strtotime($dta['waktu_pengambilan'])).'
-			<b>'.date('H:i', strtotime($dta['waktu_pengambilan'])).'</b>
+			' . date('d/m/Y', strtotime($dta['waktu_pengambilan'])) . '
+			<b>' . date('H:i', strtotime($dta['waktu_pengambilan'])) . '</b>
 			</td>
-			<td>Rp.'.number_format($dta['harga']).'</td>
+			<td>Rp.' . number_format($dta['harga']) . '</td>
 			<td class="text-center">
-			<span class="'.$bayar[0].'" style="font-size: 12px;"><b>'.$bayar[1].'</b></span>
+			<span class="' . $bayar[0] . '" style="font-size: 12px;"><b>' . $bayar[1] . '</b></span>
 			</td>
 			<td>
-			<span class="badge '.$badge.' badge-pill">'.$dta['status'].'</span>
+			<span class="badge ' . $badge . ' badge-pill">' . $dta['status'] . '</span>
 			</td>
 			<td class="text-center">
-			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail'.$dta['id'].'"><i class="fa fa-list"></i> Detail</button>
+			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail' . $dta['id'] . '"><i class="fa fa-list"></i> Detail</button>
 			</td>
 			</tr>
 			';
 			$no++;
 		}
-		if ($no==1) {
+		if ($no == 1) {
 			$html_all .= '<tr><td colspan="9" class="text-center"><i>Tidak ada data</i></td></tr>';
 		}
 
@@ -63,14 +63,14 @@ if (isset($_POST['req'])) {
 		// rumus untuk logika prioritas
 		$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND status = 'review' ORDER BY waktu_pengambilan ASC");
 		$html_review = '';
-		$no=1;
+		$no = 1;
 		foreach ($pesanan as $dta) {
-			$users = mysqli_query($conn, "SELECT * FROM user WHERE id='".$dta["user_id"]."'");
+			$users = mysqli_query($conn, "SELECT * FROM user WHERE id='" . $dta["user_id"] . "'");
 			$usr = mysqli_fetch_assoc($users);
-			$nama_pelanggan = $usr ? $usr["nama_lengkap"] : '<i>Tidak tersedia lagi</i>';	
+			$nama_pelanggan = $usr ? $usr["nama_lengkap"] : '<i>Tidak tersedia lagi</i>';
 
-			if ($dta['jenis_layanan'] == 'dokumen') $file = '../assets/files/dokumen/'.$dta['file'];
-			else $file = '../assets/files/foto/'.$dta['file'];
+			if ($dta['jenis_layanan'] == 'dokumen') $file = '../assets/files/dokumen/' . $dta['file'];
+			else $file = '../assets/files/foto/' . $dta['file'];
 
 			$catatan = ($dta['catatan'] == '') ? '-' : $dta['catatan'];
 
@@ -79,41 +79,41 @@ if (isset($_POST['req'])) {
 			else $info = 'data-info="1"';
 
 			if ($no == 1 && mysqli_num_rows($isProses) == 0) {
-				$download = '<a href="'.$file.'" class="btn btn-outline-primary btn-sm" '.$info.' download=""><i class="fa fa-download"></i> Download</a>';
-				$aksi = '<button class="btn btn-outline-success btn-sm" '.$info.' style="font-size: 12px;" data-toggle="modal" data-target=".modal-proses'.$dta['id'].'"><i class="fa fa-check-circle"></i></button>
-				<button class="btn btn-outline-danger btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-tolak'.$dta['id'].'"><i class="fa fa-times-circle"></i></button>';
+				$download = '<a href="' . $file . '" class="btn btn-outline-primary btn-sm" ' . $info . ' download=""><i class="fa fa-download"></i> Download</a>';
+				$aksi = '<button class="btn btn-outline-success btn-sm" ' . $info . ' style="font-size: 12px;" data-toggle="modal" data-target=".modal-proses' . $dta['id'] . '"><i class="fa fa-check-circle"></i></button>
+				<button class="btn btn-outline-danger btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-tolak' . $dta['id'] . '"><i class="fa fa-times-circle"></i></button>';
 			} else {
-				$download = '<button class="btn btn-outline-primary btn-sm disabled selesaikan" '.$info.'><i class="fa fa-download"></i> Download</button>';
-				$aksi = '<button class="btn btn-outline-success btn-sm disabled selesaikan" '.$info.' style="font-size: 12px;"><i class="fa fa-check-circle"></i></button>
+				$download = '<button class="btn btn-outline-primary btn-sm disabled selesaikan" ' . $info . '><i class="fa fa-download"></i> Download</button>';
+				$aksi = '<button class="btn btn-outline-success btn-sm disabled selesaikan" ' . $info . ' style="font-size: 12px;"><i class="fa fa-check-circle"></i></button>
 				<button class="btn btn-outline-danger btn-sm disabled selesaikan" style="font-size: 12px;"><i class="fa fa-times-circle"></i></button>';
 			}
 
 			$html_review .= '
 			<tr>
-			<td>'.$no.'</td>
-			<td>'.$nama_pelanggan.'</td>
-			<td>'.ucwords($dta['jenis_layanan']).'</td>
+			<td>' . $no . '</td>
+			<td>' . $nama_pelanggan . '</td>
+			<td>' . ucwords($dta['jenis_layanan']) . '</td>
 			<td class="text-center">
-			'.date('d/m/Y', strtotime($dta['waktu_pesanan'])).'
-			<b>'.date('H:i', strtotime($dta['waktu_pesanan'])).'</b>
+			' . date('d/m/Y', strtotime($dta['waktu_pesanan'])) . '
+			<b>' . date('H:i', strtotime($dta['waktu_pesanan'])) . '</b>
 			</td>
 			<td class="text-center">
-			'.date('d/m/Y', strtotime($dta['waktu_pengambilan'])).'
-			<b>'.date('H:i', strtotime($dta['waktu_pengambilan'])).'</b>
+			' . date('d/m/Y', strtotime($dta['waktu_pengambilan'])) . '
+			<b>' . date('H:i', strtotime($dta['waktu_pengambilan'])) . '</b>
 			</td>
-			<td>'.$catatan.'</td>
+			<td>' . $catatan . '</td>
 			<td class="text-center p-0">
-			'.$download.'
+			' . $download . '
 			</td>
 			<td class="text-center p-0">
-			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail'.$dta['id'].'"><i class="fa fa-list"></i></button>
-			'.$aksi.'
+			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail' . $dta['id'] . '"><i class="fa fa-list"></i></button>
+			' . $aksi . '
 			</td>
 			</tr>
 			';
 			$no++;
 		}
-		if ($no==1) {
+		if ($no == 1) {
 			$html_review .= '<tr><td colspan="8" class="text-center"><i>Tidak ada data</i></td></tr>';
 		}
 
@@ -121,12 +121,12 @@ if (isset($_POST['req'])) {
 		$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND status = 'proccess'");
 		$html_proccess = '';
 		foreach ($pesanan as $prs) {
-			$users = mysqli_query($conn, "SELECT * FROM user WHERE id='".$prs["user_id"]."'");
+			$users = mysqli_query($conn, "SELECT * FROM user WHERE id='" . $prs["user_id"] . "'");
 			$usr = mysqli_fetch_assoc($users);
-			$nama_pelanggan = $usr ? $usr["nama_lengkap"] : '<i>Tidak tersedia lagi</i>';	
+			$nama_pelanggan = $usr ? $usr["nama_lengkap"] : '<i>Tidak tersedia lagi</i>';
 
-			if ($prs['jenis_layanan'] == 'dokumen') $file = '../assets/files/dokumen/'.$prs['file'];
-			else $file = '../assets/files/foto/'.$prs['file'];
+			if ($prs['jenis_layanan'] == 'dokumen') $file = '../assets/files/dokumen/' . $prs['file'];
+			else $file = '../assets/files/foto/' . $prs['file'];
 
 			$catatan = ($prs['catatan'] == '') ? '-' : $prs['catatan'];
 			$isProses = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND status = 'proccess'");
@@ -135,24 +135,24 @@ if (isset($_POST['req'])) {
 
 			$html_proccess .= '
 			<tr>
-			<td>'.$nama_pelanggan.'</td>
-			<td>'.ucwords($prs['jenis_layanan']).'</td>
+			<td>' . $nama_pelanggan . '</td>
+			<td>' . ucwords($prs['jenis_layanan']) . '</td>
 			<td class="text-center">
-			'.date('d/m/Y', strtotime($prs['waktu_pesanan'])).'
-			<b>'.date('H:i', strtotime($prs['waktu_pesanan'])).'</b>
+			' . date('d/m/Y', strtotime($prs['waktu_pesanan'])) . '
+			<b>' . date('H:i', strtotime($prs['waktu_pesanan'])) . '</b>
 			</td>
 			<td class="text-center">
-			'.date('d/m/Y', strtotime($prs['waktu_pengambilan'])).'
-			<b>'.date('H:i', strtotime($prs['waktu_pengambilan'])).'</b>
+			' . date('d/m/Y', strtotime($prs['waktu_pengambilan'])) . '
+			<b>' . date('H:i', strtotime($prs['waktu_pengambilan'])) . '</b>
 			</td>
-			<td>'.$catatan.'</td>
+			<td>' . $catatan . '</td>
 			<td class="text-center p-0">
-			<a href="'.$file.'" class="btn btn-outline-primary btn-sm" '.$info.' download=""><i class="fa fa-download"></i> Download</a>
+			<a href="' . $file . '" class="btn btn-outline-primary btn-sm" ' . $info . ' download=""><i class="fa fa-download"></i> Download</a>
 			</td>
 			<td class="text-center p-0">
-			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail'.$prs['id'].'"><i class="fa fa-list"></i></button>
-			<button class="btn btn-outline-success btn-sm" '.$info.' style="font-size: 12px;" data-toggle="modal" data-target=".modal-selesai'.$prs['id'].'"><i class="fa fa-check-circle"></i></button>
-				<button class="btn btn-outline-danger btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-tolak'.$prs['id'].'"><i class="fa fa-times-circle"></i></button>
+			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail' . $prs['id'] . '"><i class="fa fa-list"></i></button>
+			<button class="btn btn-outline-success btn-sm" ' . $info . ' style="font-size: 12px;" data-toggle="modal" data-target=".modal-selesai' . $prs['id'] . '"><i class="fa fa-check-circle"></i></button>
+				<button class="btn btn-outline-danger btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-tolak' . $prs['id'] . '"><i class="fa fa-times-circle"></i></button>
 			</td>
 			</tr>
 			';
@@ -164,9 +164,9 @@ if (isset($_POST['req'])) {
 		// Get Pesanan Done
 		$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND status = 'done' ORDER BY id DESC");
 		$html_done = '';
-		$no=1;
+		$no = 1;
 		foreach ($pesanan as $dta) {
-			$users = mysqli_query($conn, "SELECT * FROM user WHERE id='".$dta["user_id"]."'");
+			$users = mysqli_query($conn, "SELECT * FROM user WHERE id='" . $dta["user_id"] . "'");
 			$usr = mysqli_fetch_assoc($users);
 			$nama_pelanggan = $usr ? $usr["nama_lengkap"] : '<i>Tidak tersedia lagi</i>';
 			$telepon = $usr ? $usr["hp"] : '<i>Tidak tersedia lagi</i>';
@@ -177,60 +177,60 @@ if (isset($_POST['req'])) {
 
 			$html_done .= '
 			<tr>
-			<td>'.$no.'</td>
-			<td>'.$nama_pelanggan.'</td>
-			<td>'.$telepon.'</td>
-			<td>'.ucwords($dta['jenis_layanan']).'</td>
-			<td>Rp.'.number_format($dta['harga']).'</td>
+			<td>' . $no . '</td>
+			<td>' . $nama_pelanggan . '</td>
+			<td>' . $telepon . '</td>
+			<td>' . ucwords($dta['jenis_layanan']) . '</td>
+			<td>Rp.' . number_format($dta['harga']) . '</td>
 			<td class="text-center">
-			<span class="'.$bayar[0].'" style="font-size: 12px;"><b>'.$bayar[1].'</b></span>
+			<span class="' . $bayar[0] . '" style="font-size: 12px;"><b>' . $bayar[1] . '</b></span>
 			</td>
 			<td class="text-center p-0">
-			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail'.$dta['id'].'"><i class="fa fa-list"></i> Detail</button>
-			<button class="btn btn-outline-success btn-sm" style="font-size: 12px;" data-id="'.$dta['id'].'"><i class="fa fa-comment"></i> Chat</button>
+			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail' . $dta['id'] . '"><i class="fa fa-list"></i> Detail</button>
+			<button class="btn btn-outline-success btn-sm show-chat" style="font-size: 12px;" data-id="' . $dta['id'] . '"><i class="fa fa-comment"></i> Chat</button>
 			</td>
 			</tr>
 			';
 			$no++;
 		}
-		if ($no==1) {
+		if ($no == 1) {
 			$html_done .= '<tr><td colspan="7" class="text-center"><i>Tidak ada data</i></td></tr>';
 		}
 
 		// Get Pesanan Panding
 		$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND status = 'panding' ORDER BY id DESC");
 		$html_panding = '';
-		$no=1;
+		$no = 1;
 		foreach ($pesanan as $dta) {
-			$users = mysqli_query($conn, "SELECT * FROM user WHERE id='".$dta["user_id"]."'");
+			$users = mysqli_query($conn, "SELECT * FROM user WHERE id='" . $dta["user_id"] . "'");
 			$usr = mysqli_fetch_assoc($users);
 			$nama_pelanggan = $usr ? $usr["nama_lengkap"] : '<i>Tidak tersedia lagi</i>';
 			$telepon = $usr ? $usr["hp"] : '<i>Tidak tersedia lagi</i>';
 
 			$html_panding .= '
 			<tr>
-			<td>'.$no.'</td>
-			<td>'.$nama_pelanggan.'</td>
-			<td>'.$telepon.'</td>
-			<td>'.ucwords($dta['jenis_layanan']).'</td>
+			<td>' . $no . '</td>
+			<td>' . $nama_pelanggan . '</td>
+			<td>' . $telepon . '</td>
+			<td>' . ucwords($dta['jenis_layanan']) . '</td>
 			<td class="text-center">
-			'.date('d/m/Y', strtotime($dta['waktu_pesanan'])).'
-			<b>'.date('H:i', strtotime($dta['waktu_pesanan'])).'</b>
+			' . date('d/m/Y', strtotime($dta['waktu_pesanan'])) . '
+			<b>' . date('H:i', strtotime($dta['waktu_pesanan'])) . '</b>
 			</td>
 			<td class="text-center">
-			'.date('d/m/Y', strtotime($dta['waktu_pengambilan'])).'
-			<b>'.date('H:i', strtotime($dta['waktu_pengambilan'])).'</b>
+			' . date('d/m/Y', strtotime($dta['waktu_pengambilan'])) . '
+			<b>' . date('H:i', strtotime($dta['waktu_pengambilan'])) . '</b>
 			</td>
-			<td>Rp.'.number_format($dta['harga']).'</td>
+			<td>Rp.' . number_format($dta['harga']) . '</td>
 			<td class="text-center p-0">
-			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail'.$dta['id'].'"><i class="fa fa-list"></i> Detail</button>
-			<button class="btn btn-outline-success btn-sm" style="font-size: 12px;" data-id="'.$dta['id'].'"><i class="fa fa-comment"></i> Chat</button>
+			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail' . $dta['id'] . '"><i class="fa fa-list"></i> Detail</button>
+			<button class="btn btn-outline-success btn-sm" style="font-size: 12px;" data-id="' . $dta['id'] . '"><i class="fa fa-comment"></i> Chat</button>
 			</td>
 			</tr>
 			';
 			$no++;
 		}
-		if ($no==1) {
+		if ($no == 1) {
 			$html_panding .= '<tr><td colspan="8" class="text-center"><i>Tidak ada data</i></td></tr>';
 		}
 
@@ -244,7 +244,7 @@ if (isset($_POST['req'])) {
 		echo json_encode($data);
 	}
 
-	if($_POST['req'] == 'updateStatus') {
+	if ($_POST['req'] == 'updateStatus') {
 		$id = $_POST['id'];
 		$status = $_POST['status'];
 
@@ -265,7 +265,7 @@ if (isset($_POST['req'])) {
 		echo json_encode($res);
 	}
 
-	if($_POST['req'] == 'countPesanan') {
+	if ($_POST['req'] == 'countPesanan') {
 		$id = $_POST['id'];
 		$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND (status != 'finish' AND status != 'cancel')");
 		$all = mysqli_num_rows($pesanan);
@@ -304,7 +304,7 @@ if (isset($_POST['req'])) {
 		echo json_encode($response);
 	}
 
-	if($_POST['req'] == 'getNotifPesan') {
+	if ($_POST['req'] == 'getNotifPesan') {
 		$id = $_POST['id'];
 
 		$notif = mysqli_query($conn, "SELECT * FROM notifikasi WHERE to_id='$id' AND type != 'message' ORDER BY status ASC, waktu DESC");
@@ -333,7 +333,7 @@ if (isset($_POST['req'])) {
 				$title = 'Pesanan Selesai';
 				$icon = '<div class="font-icon-wrapper font-icon-sm"><i class="pe-7s-check icon-gradient bg-grow-early"> </i></div>';
 				$href = 'riwayat.php';
-			} 
+			}
 
 			if (date('ymd') == date('ymd', strtotime($dta['waktu']))) {
 				$time = date('H.i', strtotime($dta['waktu']));
@@ -344,21 +344,21 @@ if (isset($_POST['req'])) {
 			$content_notif .= '
 			<tr>
                 <td>
-                    <a href="#" class="btn text-left updateNotif" data-id="'.$dta['id'].'" data-href="'.$href.'">
+                    <a href="#" class="btn text-left updateNotif" data-id="' . $dta['id'] . '" data-href="' . $href . '">
                         <div class="widget-content p-0">
                             <div class="widget-content-wrapper">
                                 <div class="widget-content-left mr-3">
                                     <div class="widget-content-left">
-                                        '.$icon.'
+                                        ' . $icon . '
                                     </div>
                                 </div>
                                 <div class="widget-content-left flex2 row">
                                     <div class="widget-heading  col-12">
-                                        '.$new.' '.$title.'
+                                        ' . $new . ' ' . $title . '
                                     </div>
                                     <div class="widget-subheading opacity-5 text-justify  col-12">
-                                    '.$dta['content'].'<br>
-                                    <small>'.$time.'</small>
+                                    ' . $dta['content'] . '<br>
+                                    <small>' . $time . '</small>
                                     </div>
                                 </div>
                             </div>
@@ -369,7 +369,80 @@ if (isset($_POST['req'])) {
 			';
 		}
 
+		$pesan = mysqli_query($conn, "SELECT * FROM notifikasi WHERE type = 'message' AND (to_id='$id' OR from_id='$id') ORDER BY
+		id DESC");
+		$jum_pesan = [];
+		foreach ($pesan as $msg) {
+			if ($msg['send_by'] == 'agen') $jum_pesan[] = $msg['to_id'];
+			else $jum_pesan[] = $msg['from_id'];
+		}
+
 		$content_pesan = '';
+		foreach (array_unique($jum_pesan) as $key) {
+			$pesan_ = mysqli_query($conn, "SELECT * FROM notifikasi WHERE type='message' AND ((from_id='$key' AND to_id='$id') OR
+			(from_id='$id' AND to_id='$key')) ORDER BY id DESC");
+			$pesan_new = mysqli_query($conn, "SELECT * FROM notifikasi WHERE from_id='$key' AND (status = 'new' AND type='message') ORDER BY id DESC");
+			$cnt = mysqli_num_rows($pesan_new);
+			$last = mysqli_fetch_assoc($pesan_);
+
+			if ($last['send_by'] == 'agen') {
+				$user_id = $last['to_id'];
+				$text = 'Anda: ' . $last['content'];
+			} else {
+				$user_id = $last['from_id'];
+				$text = $last['content'];
+			}
+
+			if (strlen($text) > 35) {
+				$cht_content = substr($text, 0, 35) . '...';
+			} else {
+				$cht_content = $text . "&nbsp;&nbsp;&nbsp;";
+			}
+
+			$user = mysqli_query($conn, "SELECT * FROM user WHERE id='$user_id'");
+			$usr = mysqli_fetch_assoc($user);
+
+			if (date('Ymd', strtotime($last['waktu'])) == date('Ymd')) $waktu = date('H.i', strtotime($last['waktu']));
+			else $waktu = date('d/m/y', strtotime($last['waktu']));
+
+			if ($cnt == 0) {
+				$cnt_view = '';
+				$time_color = 'secondary';
+			} else {
+				$cnt_view = '<span class="badge badge-success badge-pill pull-right px-0 py-1">' . $cnt . '</span>';
+				$time_color = 'success';
+			}
+
+			$photo = $usr['photo'] ? $usr['photo'] : 'default.png';
+
+			$content_pesan .= '
+			<tr>
+				<td>
+					<a href="#" class="btn text-left show-chat w-100" data-id="' . $usr['id'] . '">
+						<div class="widget-content p-0">
+							<div class="widget-content-wrapper">
+								<div class="widget-content-left mr-3">
+									<div class="widget-content-left">
+										<img width="40" height="40" class="rounded-circle" src="../user/img/' . $photo . '" alt="">
+									</div>
+								</div>
+								<div class="widget-content-left row w-100">
+									<div class="widget-heading col-12">
+										<small class="pull-right text-' . $time_color . ' ml-0">' . $waktu . '</small>
+										' . $usr['nama_lengkap'] . '
+									</div>
+									<div class="widget-subheading opacity-5 col-12">
+										' . $cnt_view . '
+										' . $cht_content . '
+									</div>
+								</div>
+							</div>
+						</div>
+					</a>
+				</td>
+			</tr>
+			';
+		}
 
 		$response = [
 			"notif" => $content_notif,
@@ -378,13 +451,73 @@ if (isset($_POST['req'])) {
 		echo json_encode($response);
 	}
 
-	if($_POST['req'] == 'updateNotif') {
+	if ($_POST['req'] == 'getChat') {
+		$agen_id = $_POST['agen_id'];
+		$user_id = $_POST['user_id'];
+
+		mysqli_query($conn, "UPDATE notifikasi SET status='read' WHERE from_id='$user_id' AND type='message'");
+
+		$user = mysqli_query($conn, "SELECT * FROM user WHERE id='$user_id'");
+		$usr = mysqli_fetch_assoc($user);
+		$photo = $usr['photo'] ? $usr['photo'] : 'default.png';
+		$chat_header = '
+		<img class="avatar mr-1" src="../user/img/' . $photo . '">
+        <b>' . $usr['nama_lengkap'] . '</b>
+		';
+
+		$get_chat = mysqli_query($conn, "SELECT * FROM notifikasi WHERE type='message' AND ((from_id='$user_id' AND
+		to_id='$agen_id') OR (from_id='$agen_id' AND to_id='$user_id')) ORDER BY id ASC");
+
+		$date = [];
+		foreach ($get_chat as $tgl) {
+			$date[] = date('d/m/Y', strtotime($tgl['waktu']));
+		}
+
+		$chat_content = '';
+		foreach (array_unique($date) as $dat) {
+			if ($dat == date('d/m/Y')) $chat_content .= '<div class="media media-meta-day">Hari ini</div>';
+			else $chat_content .= '<div class="media media-meta-day">' . $dat . '</div>';
+			foreach ($get_chat as $cht) {
+				if ($dat == date('d/m/Y', strtotime($cht['waktu']))) {
+					if ($cht['send_by'] == 'agen') $set = 'media-chat-reverse';
+					else $set = 'media-chat-in justify-content-end';
+
+					$chat_content .= '
+					<div class="media media-chat pb-0 pt-0 ' . $set . '">
+						<div class="media-body">
+							<p>
+								<span>' . $cht['content'] . '</span>
+								<small class="meta pull-right mt-2">&nbsp;<time>' . date('H.i', strtotime($cht['waktu'])) . '</time></small>
+							</p>
+						</div>
+					</div>
+					';
+				}
+			}
+		}
+
+		if ($chat_content == '') {
+			$chat_content = '
+			<div class="text-center mt-2">
+				<i>Belum ada chat. Silahkan mulai obrolan</i>
+			</div>
+			';
+		}
+
+		$response = [
+			"header" => $chat_header,
+			"content" => $chat_content,
+		];
+		echo json_encode($response);
+	}
+
+	if ($_POST['req'] == 'updateNotif') {
 		$id = $_POST['id'];
 		mysqli_query($conn, "UPDATE notifikasi SET status='read' WHERE id='$id'");
 		echo json_encode(true);
 	}
 
-	if($_POST['req'] == 'createMessage') {
+	if ($_POST['req'] == 'createMessage') {
 		$send_by = $_POST['send_by'];
 		$from_id = $_POST['from_id'];
 		$to_id = $_POST['to_id'];
@@ -397,12 +530,12 @@ if (isset($_POST['req'])) {
 
 		if ($type == 'order_start') {
 			$title = 'Pesanan Diproses';
-			$content = $agen." telah memproses pesanan anda";
+			$content = $agen . " telah memproses pesanan anda";
 		} else if ($type == 'order_refuse') {
 			$title = 'Pesanan Dibatalkan';
 		} else if ($type == 'order_done') {
 			$title = 'Selesai Diproses';
-			$content = $agen." telah menyelesaikan pesanan anda, silahkan dikonfirmasi";
+			$content = $agen . " telah menyelesaikan pesanan anda, silahkan dikonfirmasi";
 		} else if ($type == 'message') $title = 'Pesan Baru';
 
 		mysqli_query($conn, "INSERT INTO notifikasi VALUES(NULL, '$send_by', '$from_id', '$to_id', '$type', '$content', 'new', CURRENT_TIMESTAMP)");
@@ -413,4 +546,3 @@ if (isset($_POST['req'])) {
 		]);
 	}
 }
-?>

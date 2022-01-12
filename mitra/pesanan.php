@@ -159,17 +159,17 @@ require('template/footer.php');
 ?>
 
 <?php foreach ($pesanan as $dta) {
-    $user = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM user WHERE id='".$dta["user_id"]."'"));
-    $member = mysqli_query($conn, "SELECT * FROM member WHERE user_id='".$dta["user_id"]."'");
+    $user = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM user WHERE id='" . $dta["user_id"] . "'"));
+    $member = mysqli_query($conn, "SELECT * FROM member WHERE user_id='" . $dta["user_id"] . "'");
 
     $text = '';
-    if ($dta['status'] == 'panding') $text = 'text-warning';    
-    else if ($dta['status'] == 'review') $text = 'text-info';    
-    else if ($dta['status'] == 'proccess') $text = 'text-alternate';    
-    else if ($dta['status'] == 'done') $text = 'text-success'; 
+    if ($dta['status'] == 'panding') $text = 'text-warning';
+    else if ($dta['status'] == 'review') $text = 'text-info';
+    else if ($dta['status'] == 'proccess') $text = 'text-alternate';
+    else if ($dta['status'] == 'done') $text = 'text-success';
 
-    if ($dta['jenis_layanan'] == 'dokumen') $file = '../assets/files/dokumen/'.$dta['file'];
-    else $file = '../assets/files/foto/'.$dta['file']; ?>
+    if ($dta['jenis_layanan'] == 'dokumen') $file = '../assets/files/dokumen/' . $dta['file'];
+    else $file = '../assets/files/foto/' . $dta['file']; ?>
 
     <!-- MODAL DETAIL PESANAN -->
     <div class="modal fade modal-detail<?= $dta['id'] ?>" role="dialog" style="z-index: 9999;">
@@ -198,14 +198,14 @@ require('template/footer.php');
                                 <td width="200">Status Member</td>
                                 <td width="10">:</td>
                                 <td>
-                                    <?php 
-                                    if (mysqli_num_rows($member) > 0) 
+                                    <?php
+                                    if (mysqli_num_rows($member) > 0)
                                         echo '<span class="text-success">Member Premium</span>';
                                     else
                                         echo '<span class="text-warning">Member Biasa</span>';
                                     ?>
                                 </td>
-                            </tr>                     
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-bordered">
@@ -215,8 +215,8 @@ require('template/footer.php');
                                 <td width="10">:</td>
                                 <td>Cetak <?= ucwords($dta["jenis_layanan"]) ?></td>
                             </tr>
-                            <?php if ($dta["jenis_layanan"] == 'dokumen') { 
-                                $dokumen = mysqli_query($conn, "SELECT * FROM cetak_dokumen WHERE cetak_id='".$dta['id']."'");
+                            <?php if ($dta["jenis_layanan"] == 'dokumen') {
+                                $dokumen = mysqli_query($conn, "SELECT * FROM cetak_dokumen WHERE cetak_id='" . $dta['id'] . "'");
                                 $dkm = mysqli_fetch_assoc($dokumen);
                                 $jnk_id = $dkm ? $dkm['jenis_kertas'] : 0;
                                 $jld_id = $dkm ? $dkm['jilid'] : 0;
@@ -224,7 +224,7 @@ require('template/footer.php');
                                 $jilid = mysqli_query($conn, "SELECT * FROM jilid WHERE id='$jld_id'");
                                 $jnk = mysqli_fetch_assoc($jenis_kertas);
                                 $jld = mysqli_fetch_assoc($jilid);
-                                ?>
+                            ?>
                                 <tr>
                                     <td width="200">Warna Tulisan</td>
                                     <td width="10">:</td>
@@ -243,19 +243,19 @@ require('template/footer.php');
                                 <tr>
                                     <td width="200">Jumlah Halaman</td>
                                     <td width="10">:</td>
-                                    <td><?= $dkm ? $dkm["jumlah_halaman"].' Lembar' : '-' ?></td>
+                                    <td><?= $dkm ? $dkm["jumlah_halaman"] . ' Lembar' : '-' ?></td>
                                 </tr>
                                 <tr>
                                     <td width="200">Jumlah Rangkap</td>
                                     <td width="10">:</td>
-                                    <td><?= $dkm ? $dkm["jumlah_rangkap"].' Rangkap' : '-' ?></td>
+                                    <td><?= $dkm ? $dkm["jumlah_rangkap"] . ' Rangkap' : '-' ?></td>
                                 </tr>
-                            <?php } else { 
-                                $foto = mysqli_query($conn, "SELECT * FROM cetak_foto WHERE cetak_id='".$dta['id']."'");
-                                $fto = mysqli_fetch_assoc($foto); 
+                            <?php } else {
+                                $foto = mysqli_query($conn, "SELECT * FROM cetak_foto WHERE cetak_id='" . $dta['id'] . "'");
+                                $fto = mysqli_fetch_assoc($foto);
                                 $ukf_id = $fto ? $fto['ukuran_foto'] : 0;
                                 $ukuran_foto = mysqli_query($conn, "SELECT * FROM ukuran_foto WHERE id='$ukf_id'");
-                                $ukf = mysqli_fetch_assoc($ukuran_foto);?>
+                                $ukf = mysqli_fetch_assoc($ukuran_foto); ?>
                                 <tr>
                                     <td width="200">Ukuran Foto</td>
                                     <td width="10">:</td>
@@ -269,7 +269,7 @@ require('template/footer.php');
                                 <tr>
                                     <td width="200">Jumlah Rangkap</td>
                                     <td width="10">:</td>
-                                    <td><?= $fto ? $fto["jumlah_rangkap"].' Lembar' : '-' ?></td>
+                                    <td><?= $fto ? $fto["jumlah_rangkap"] . ' Lembar' : '-' ?></td>
                                 </tr>
                             <?php } ?>
                             <tr>
@@ -307,7 +307,7 @@ require('template/footer.php');
                                 <td width="200">Status</td>
                                 <td width="10">:</td>
                                 <td class="<?= $text ?>"><b><?= ucwords($dta["status"]) ?></b></td>
-                            </tr>                      
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -401,119 +401,121 @@ require('template/footer.php');
 <?php } ?>
 
 <script>
-    $(document).ready(function() {
-        <?php if (isset($_GET['virtual_pay'])) { ?>
-            $('#tab_antrian_link').removeClass('active show');
-            $('#tab_belum_bayar_link').addClass('active show');
-            $('#tab_antrian').removeClass('active show');
-            $('#tab_belum_bayar').addClass('active show');
-        <?php } ?>
+    <?php if (isset($_GET['virtual_pay'])) { ?>
+        $('#tab_antrian_link').removeClass('active show');
+        $('#tab_belum_bayar_link').addClass('active show');
+        $('#tab_antrian').removeClass('active show');
+        $('#tab_belum_bayar').addClass('active show');
+    <?php } ?>
 
-        $('#nv-pesanan').addClass('mm-active');
+    $('#nv-pesanan').addClass('mm-active');
 
-        var agen_id = '<?= $id ?>';
+    var agen_id = '<?= $id ?>';
 
-        getDataPesanan();
-        function getDataPesanan() {
-            $.ajax({
-                url     : 'controller.php',
-                method  : "POST",
-                data    : {
-                    req: 'getDataPesanan',
-                    id: agen_id
-                },
-                success : function(data) {
-                    $('#dataPesananAll').html(data.all);
-                    $('#dataPesananAntrian').html(data.review);
-                    $('#dataPesananProses').html(data.proccess);
-                    $('#dataPesananSelesai').html(data.done);
-                    $('#dataPesananPanding').html(data.panding);
-                }
-            });
-            countPesanan();
-        }
+    getDataPesanan();
 
-        $('.selesai').click(function(event) {
-            event.preventDefault();
-            var id = $(this).attr('data-id');
-            var agen_id = $(this).attr('data-user');
-            updateStatus(id, 'done');
-            createMessage(agen_id, 'order_done');
-        });
-
-        $('.proses').click(function(event) {
-            event.preventDefault();
-            var id = $(this).attr('data-id');
-            var agen_id = $(this).attr('data-user');
-            updateStatus(id, 'proccess');
-            createMessage(agen_id, 'order_start');
-        });
-
-        $('.tolak').submit(function(event) {
-            event.preventDefault();
-            var id = $(this).attr('data-id');
-            var agen_id = $(this).attr('data-user');
-            updateStatus(id, 'cancel');
-
-            var pesanTolak = $(this).find('.pesan-tolak').val();
-            createMessage(agen_id, 'order_refuse', pesanTolak);
-        });
-
-        $(document).on('click', '.selesaikan', function(event) {
-            event.preventDefault();
-            var infoKode = $(this).attr('data-info');
-            if (infoKode == 1) {
-                var title = 'Selesaikan Pesanan Sebelumnya';
-                var message = 'Terdapat pesanan yang belum selesai diproses. Selesaikan terlebih dahulu';
-            } else {
-                var title= 'Kerjakan Sesuai Antrian';
-                var message= 'Harap memproses pengerjaan sesuai antrian!';
+    function getDataPesanan() {
+        $.ajax({
+            url: 'controller.php',
+            method: "POST",
+            data: {
+                req: 'getDataPesanan',
+                id: agen_id
+            },
+            success: function(data) {
+                $('#dataPesananAll').html(data.all);
+                $('#dataPesananAntrian').html(data.review);
+                $('#dataPesananProses').html(data.proccess);
+                $('#dataPesananSelesai').html(data.done);
+                $('#dataPesananPanding').html(data.panding);
             }
-            iziToast.warning({
-                title: title,
-                message: message,
-                position: 'topRight'
-            });
         });
+    }
 
-        function updateStatus(id, status) {
-            $.ajax({
-                url     : 'controller.php',
-                method  : "POST",
-                data    : {
-                    req: 'updateStatus',
-                    status: status,
-                    id: id,
-                },
-                success : function(data) {
-                    iziToast.success({
-                        title: data.status,
-                        message: data.message,
-                        position: 'topRight'
-                    });
+    $('.selesai').click(function(event) {
+        event.preventDefault();
+        var id = $(this).attr('data-id');
+        var agen_id = $(this).attr('data-user');
+        updateStatus(id, 'done');
+        createMessage(agen_id, 'order_done');
+    });
 
-                    if (status == 'proccess' || status == 'cancel') {
-                        $('#tab_antrian_link').removeClass('active show');
-                        $('#tab_proses_link').addClass('active show');
-                        $('#tab_antrian').removeClass('active show');
-                        $('#tab_proses').addClass('active show');
-                    } else if(status == 'done') {
-                        $('#tab_antrian_link').addClass('active show');
-                        $('#tab_proses_link').removeClass('active show');
-                        $('#tab_antrian').addClass('active show');
-                        $('#tab_proses').removeClass('active show');
-                    }
+    $('.proses').click(function(event) {
+        event.preventDefault();
+        var id = $(this).attr('data-id');
+        var agen_id = $(this).attr('data-user');
+        updateStatus(id, 'proccess');
+        createMessage(agen_id, 'order_start');
+    });
 
-                    getDataPesanan();
-                    $('.modal').hide();
-                    $('body').removeClass('modal-open').removeAttr('style');
-                    $('.modal-backdrop ').remove();
-                }
-            });            
+    $('.tolak').submit(function(event) {
+        event.preventDefault();
+        var id = $(this).attr('data-id');
+        var agen_id = $(this).attr('data-user');
+        updateStatus(id, 'cancel');
+
+        var pesanTolak = $(this).find('.pesan-tolak').val();
+        createMessage(agen_id, 'order_refuse', pesanTolak);
+    });
+
+    $(document).on('click', '.selesaikan', function(event) {
+        event.preventDefault();
+        var infoKode = $(this).attr('data-info');
+        if (infoKode == 1) {
+            var title = 'Selesaikan Pesanan Sebelumnya';
+            var message = 'Terdapat pesanan yang belum selesai diproses. Selesaikan terlebih dahulu';
+        } else {
+            var title = 'Kerjakan Sesuai Antrian';
+            var message = 'Harap memproses pengerjaan sesuai antrian!';
         }
-        messaging.onMessage((payload) => {
-            getDataPesanan();
+        iziToast.warning({
+            title: title,
+            message: message,
+            position: 'topRight'
         });
     });
 
+    function updateStatus(id, status) {
+        $.ajax({
+            url: 'controller.php',
+            method: "POST",
+            data: {
+                req: 'updateStatus',
+                status: status,
+                id: id,
+            },
+            success: function(data) {
+                iziToast.success({
+                    title: data.status,
+                    message: data.message,
+                    position: 'topRight'
+                });
+
+                if (status == 'proccess' || status == 'cancel') {
+                    $('#tab_antrian_link').removeClass('active show');
+                    $('#tab_proses_link').addClass('active show');
+                    $('#tab_antrian').removeClass('active show');
+                    $('#tab_proses').addClass('active show');
+                } else if (status == 'done') {
+                    $('#tab_antrian_link').addClass('active show');
+                    $('#tab_proses_link').removeClass('active show');
+                    $('#tab_antrian').addClass('active show');
+                    $('#tab_proses').removeClass('active show');
+                }
+
+                getDataPesanan();
+                $('.modal').hide();
+                $('body').removeClass('modal-open').removeAttr('style');
+                $('.modal-backdrop ').remove();
+            }
+        });
+    }
+    // messaging.onMessage((payload) => {
+    //     getDataPesanan();
+    //     getNotifPesan();
+    //     if (!$('.chat-content').is(":hidden")) {
+    //         getChat(user_id, gl_agen_id);
+    //     }
+    //     console.log("ok");
+    // });
 </script>
