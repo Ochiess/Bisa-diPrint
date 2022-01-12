@@ -219,33 +219,54 @@ if (isset($_POST['req'])) {
 			';
 		}
 
-		$pesan = mysqli_query($conn, "SELECT * FROM notifikasi WHERE to_id='$id' AND type = 'message' ORDER BY id DESC");
+		$pesan = mysqli_query($conn, "SELECT * FROM notifikasi WHERE type = 'message' AND (to_id='$id' OR from_id='$id') ORDER BY
+		id DESC");
 		$jum_pesan = [];
 		foreach ($pesan as $msg) {
-			$jum_pesan[] = $msg['from_id'];
+			if ($msg['send_by'] == 'user') $jum_pesan[] = $msg['to_id'];
+			else $jum_pesan[] = $msg['from_id'];
 		}
 
-		$cht = count(array_unique($jum_pesan));
 		$content_pesan = '';
 		foreach (array_unique($jum_pesan) as $key) {
-			$pesan_ = mysqli_query($conn, "SELECT * FROM notifikasi WHERE from_id='$key' AND (status = 'new' AND type='message') ORDER BY id DESC");
-			$cnt = mysqli_num_rows($pesan_);
+			$pesan_ = mysqli_query($conn, "SELECT * FROM notifikasi WHERE type='message' AND ((from_id='$key' AND to_id='$id') OR
+			(from_id='$id' AND to_id='$key')) ORDER BY id DESC");
+			$pesan_new = mysqli_query($conn, "SELECT * FROM notifikasi WHERE from_id='$key' AND (status = 'new' AND type='message') ORDER BY id DESC");
+			$cnt = mysqli_num_rows($pesan_new);
 			$last = mysqli_fetch_assoc($pesan_);
 
-			if (strlen($last['content']) > 35) {
-				$cht_content = substr($last['content'], 0, 35) . '...';
+			if ($last['send_by'] == 'user') {
+				$agen_id = $last['to_id'];
+				$text = 'Anda: ' . $last['content'];
 			} else {
-				$cht_content = $last['content'] . "&nbsp;&nbsp;&nbsp;";
+				$agen_id = $last['from_id'];
+				$text = $last['content'];
 			}
 
-			$agen_id = $last['from_id'];
+			if (strlen($text) > 35) {
+				$cht_content = substr($text, 0, 35) . '...';
+			} else {
+				$cht_content = $text . "&nbsp;&nbsp;&nbsp;";
+			}
+
 			$agen = mysqli_query($conn, "SELECT * FROM agen WHERE id='$agen_id'");
 			$agn = mysqli_fetch_assoc($agen);
+
+			if (date('Ymd', strtotime($last['waktu'])) == date('Ymd')) $waktu = date('H.i', strtotime($last['waktu']));
+			else $waktu = date('d/m/y', strtotime($last['waktu']));
+
+			if ($cnt == 0) {
+				$cnt_view = '';
+				$time_color = 'secondary';
+			} else {
+				$cnt_view = '<span class="badge badge-success badge-pill pull-right px-0 py-1">' . $cnt . '</span>';
+				$time_color = 'success';
+			}
 
 			$content_pesan .= '
 			<tr>
 				<td>
-					<a href="#" class="btn text-left show-chat">
+					<a href="#" class="btn text-left show-chat w-100" data-id="' . $agn['id'] . '">
 						<div class="widget-content p-0">
 							<div class="widget-content-wrapper">
 								<div class="widget-content-left mr-3">
@@ -253,13 +274,13 @@ if (isset($_POST['req'])) {
 										<img width="40" height="40" class="rounded-circle" src="../mitra/img/daftar' . $agn['poto'] . '" alt="">
 									</div>
 								</div>
-								<div class="widget-content-left row">
+								<div class="widget-content-left row w-100">
 									<div class="widget-heading col-12">
-										<small class="pull-right text-success">' . date('H.i', strtotime($last['waktu'])) . '</small>
+										<small class="pull-right text-' . $time_color . ' ml-0">' . $waktu . '</small>
 										' . $agn['nama_percetakan'] . '
 									</div>
 									<div class="widget-subheading opacity-5 col-12">
-										<span class="badge badge-success badge-pill pull-right px-0 py-1">' . $cnt . '</span>
+										' . $cnt_view . '
 										' . $cht_content . '
 									</div>
 								</div>
@@ -271,11 +292,69 @@ if (isset($_POST['req'])) {
 			';
 		}
 
-		// $content_pesan = $cht;
-
 		$response = [
 			"notif" => $content_notif,
 			"pesan" => $content_pesan,
+		];
+		echo json_encode($response);
+	}
+
+	if ($_POST['req'] == 'getChat') {
+		$user_id = $_POST['user_id'];
+		$agen_id = $_POST['agen_id'];
+
+		mysqli_query($conn, "UPDATE notifikasi SET status='read' WHERE from_id='$agen_id' AND type='message'");
+
+		$agen = mysqli_query($conn, "SELECT * FROM agen WHERE id='$agen_id'");
+		$agn = mysqli_fetch_assoc($agen);
+
+		$chat_header = '
+		<img class="avatar mr-1" src="../mitra/img/daftar' . $agn['poto'] . '">
+        <b>' . $agn['nama_percetakan'] . '</b>
+		';
+
+		$get_chat = mysqli_query($conn, "SELECT * FROM notifikasi WHERE type='message' AND ((from_id='$agen_id' AND
+		to_id='$user_id') OR (from_id='$user_id' AND to_id='$agen_id')) ORDER BY id ASC");
+
+		$date = [];
+		foreach ($get_chat as $tgl) {
+			$date[] = date('d/m/Y', strtotime($tgl['waktu']));
+		}
+
+		$chat_content = '';
+		foreach (array_unique($date) as $dat) {
+			if ($dat == date('d/m/Y')) $chat_content .= '<div class="media media-meta-day">Hari ini</div>';
+			else $chat_content .= '<div class="media media-meta-day">' . $dat . '</div>';
+			foreach ($get_chat as $cht) {
+				if ($dat == date('d/m/Y', strtotime($cht['waktu']))) {
+					if ($cht['send_by'] == 'user') $set = 'media-chat-reverse';
+					else $set = 'media-chat-in justify-content-end';
+
+					$chat_content .= '
+					<div class="media media-chat pb-0 pt-0 ' . $set . '">
+						<div class="media-body">
+							<p>
+								<span>' . $cht['content'] . '</span>
+								<small class="meta pull-right mt-2">&nbsp;<time>' . date('H.i', strtotime($cht['waktu'])) . '</time></small>
+							</p>
+						</div>
+					</div>
+					';
+				}
+			}
+		}
+
+		if ($chat_content == '') {
+			$chat_content = '
+			<div class="text-center mt-2">
+				<i>Belum ada chat. Silahkan mulai obrolan</i>
+			</div>
+			';
+		}
+
+		$response = [
+			"header" => $chat_header,
+			"content" => $chat_content,
 		];
 		echo json_encode($response);
 	}

@@ -23,49 +23,13 @@
 <div class="chat-content" tabindex="-1" role="menu" aria-hidden="true" x-placement="bottom-end">
     <div class="card card-bordered border border-light shadow">
         <div class="card-header">
-            <div class="w-100">
+            <div class="w-100" id="chatHeader">
                 <img class="avatar mr-1" src="assets/images/avatars/4.jpg">
-                <b style="text-transform: capitalize; margin-right: -10px;;">Kamisama Peint</b>
+                <b style="text-transform: capitalize; margin-right: -10px;;">Example Agent</b>
             </div>
             <a class="text-secondary" id="close-chat" href="#" data-abc="true"><i class="fa fa-times-circle fa-lg"></i></a>
         </div>
-        <div class="scroll-area-lg">
-            <div class="scrollbar-container" id="chat-content">
-                <div class="media media-chat media-chat-in pb-0">
-                    <div class="media-body">
-                        <p>
-                            <span style="color: black;">Sorry I don't have. i changed my phone. but i save your number phone</span>
-                            <small class="meta pull-right mt-2">&nbsp;<time>00:12</time></small>
-                        </p>
-                        <p>
-                            <span style="color: black;">Okay then see you on sunday!!</span>
-                            <small class="meta pull-right mt-2">&nbsp;<time>00:20</time></small>
-                        </p>
-                        <p>
-                            <span style="color: black;">Okay..</span>
-                            <small class="meta pull-right mt-2">&nbsp;<time>00:20</time></small>
-                        </p>
-                    </div>
-                </div>
-                <div class="media media-chat media-chat-reverse pt-1">
-                    <div class="media-body">
-                        <p>
-                            <span>Do you have pictures of Matley Marriage? Okay then see you on sunday!!</span>
-                            <small class="meta pull-right mt-2">&nbsp;<time>00:30</time></small>
-                        </p>
-                        <p>
-                            <span>Okay..</span>
-                            <small class="meta pull-right mt-2">&nbsp;<time>00:20</time></small>
-                        </p>
-                    </div>
-                </div>
-                <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
-                    <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
-                </div>
-                <div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;">
-                    <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div>
-                </div>
-            </div>
+        <div class="scroll-chat" id="chatContent">
         </div>
         <div class="publisher bt-1 border-light">
             <?php if ($photo) { ?>
@@ -73,8 +37,8 @@
             <?php } else { ?>
                 <img class="avatar avatar-xs" src="../user/img/default.png" alt="">
             <?php } ?>
-            <input class="publisher-input" type="text" placeholder="Silahkan tulis pesan...">
-            <a class="publisher-btn text-info" href="#" data-abc="true"><i class="fa fa-paper-plane"></i></a>
+            <input class="publisher-input" id="chat-text" type="text" placeholder="Silahkan tulis pesan...">
+            <a class="publisher-btn text-info" id="send-chat" href="#" data-abc="true"><i class="fa fa-paper-plane"></i></a>
         </div>
     </div>
 </div>
@@ -92,20 +56,64 @@
 <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-messaging.js"></script>
 <script type="text/javascript">
     var user_id = '<?= $id ?>';
+    var gl_agen_id = 0;
 
     $('#dataTable').DataTable();
     $('.chat-content').hide();
 
+    $(document).mousedown(function(e) {
+        var container = $(".chat-content");
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+            container.hide('slow/400/fast');
+        }
+
+    });
+
     $(document).find('#messsageContent').on('click', '.show-chat', function(event) {
         event.preventDefault();
+        $('.chat-content').hide('slow/500/fast');
         $('.chat-content').show('slow/400/fast');
         $('.dropdown-menu').removeClass('show');
+
+        var agen_id = $(this).attr('data-id');
+        gl_agen_id = agen_id;
+        getChat(user_id, agen_id);
     });
 
     $(document).on('click', '.show-chat', function(event) {
         event.preventDefault();
+        $('.chat-content').hide('slow/500/fast');
         $('.chat-content').show('slow/400/fast');
         $('.dropdown-menu').removeClass('show');
+
+        var agen_id = $(this).attr('data-id');
+        gl_agen_id = agen_id;
+        getChat(user_id, agen_id);
+    });
+
+    $('#close-chat').click(function(event) {
+        event.preventDefault();
+        $('.chat-content').hide('slow/400/fast');
+    });
+
+    $('#send-chat').click(function(e) {
+        e.preventDefault();
+
+        var content = $('#chat-text').val();
+        if (content != '') {
+            createMessage(gl_agen_id, 'message', content);
+            $('#chat-text').val('').focus();
+        }
+    });
+
+    $('#chat-text').keyup(function(e) {
+        e.preventDefault();
+
+        var content = $('#chat-text').val();
+        if (content != '' && e.keyCode == 13) {
+            createMessage(gl_agen_id, 'message', content);
+            $('#chat-text').val('').focus();
+        }
     });
 
     $('.search-button').click(function(e) {
@@ -115,11 +123,6 @@
         if (keyword != '') {
             location.href = 'marchent.php?key=' + keyword;
         }
-    });
-
-    $('#close-chat').click(function(event) {
-        event.preventDefault();
-        $('.chat-content').hide('slow/400/fast');
     });
 
     $(document).find('#notifContent').on('click', '.updateNotif', function(event) {
@@ -138,6 +141,32 @@
             }
         });
     });
+
+    function getChat(user_id, agen_id) {
+        $.ajax({
+            url: 'controller.php',
+            method: "POST",
+            data: {
+                req: 'getChat',
+                user_id: user_id,
+                agen_id: agen_id,
+            },
+            success: function(data) {
+                countPesanan();
+                getNotifPesan();
+
+                $(document).find('#chatHeader').html(data.header);
+                $(document).find('#chatContent').html(data.content);
+
+                var v = $(document).find('#chatContent');
+                v.scroll();
+                if (v.scrollTop() + v.innerHeight() <= v[0].scrollHeight) {
+                    v.stop().scrollTop(v[0].scrollHeight);
+                }
+
+            }
+        });
+    }
 
     countPesanan();
 
@@ -178,7 +207,7 @@
             method: "POST",
             data: {
                 req: 'getNotifPesan',
-                id: user_id
+                id: user_id,
             },
             success: function(data) {
                 $(document).find('#notifContent').html(data.notif);
@@ -200,6 +229,7 @@
                 content: content,
             },
             success: function(data) {
+                getChat(user_id, gl_agen_id);
                 pushMessage(to, data.title, data.message);
             }
         });
@@ -263,6 +293,9 @@
     messaging.onMessage((payload) => {
         countPesanan();
         getNotifPesan();
+        if (!$('.chat-content').is(":hidden")) {
+            getChat(user_id, gl_agen_id);
+        }
         console.log("ok");
     });
 </script>

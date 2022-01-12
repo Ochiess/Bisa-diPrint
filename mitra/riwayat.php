@@ -4,7 +4,7 @@ require('template/header.php');
 $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND (status = 'finish' OR status = 'cancel') ORDER BY id DESC");
 $get_pelanggan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id'");
 $pelanggan = [];
-foreach ($get_pelanggan as $dta) {  
+foreach ($get_pelanggan as $dta) {
     $pelanggan[] = $dta["user_id"];
 }
 ?>
@@ -51,10 +51,10 @@ foreach ($get_pelanggan as $dta) {
                             </tr>
                         </thead>
                         <tbody>
-                            <?php 
-                            $no=1;
+                            <?php
+                            $no = 1;
                             foreach ($pesanan as $dta) {
-                                $user = mysqli_query($conn, "SELECT * FROM user WHERE id='".$dta["user_id"]."'");
+                                $user = mysqli_query($conn, "SELECT * FROM user WHERE id='" . $dta["user_id"] . "'");
                                 $usr = mysqli_fetch_assoc($user);
                                 $badge = '';
                                 if ($dta['status'] == 'cancel') $badge = 'badge-danger';
@@ -82,7 +82,7 @@ foreach ($get_pelanggan as $dta) {
                                         <button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target="#modal-detail<?= $dta['id'] ?>"><i class="fa fa-list"></i> Detail</button>
                                     </td>
                                 </tr>
-                                <?php 
+                            <?php
                                 $no++;
                             } ?>
                         </tbody>
@@ -104,11 +104,11 @@ foreach ($get_pelanggan as $dta) {
                             </tr>
                         </thead>
                         <tbody>
-                            <?php 
-                            $no=1;
+                            <?php
+                            $no = 1;
                             foreach (array_unique($pelanggan) as $usr_id) {
                                 $user = mysqli_query($conn, "SELECT * FROM user WHERE id='$usr_id'");
-                                $usr = mysqli_fetch_assoc($user); 
+                                $usr = mysqli_fetch_assoc($user);
                                 $member = mysqli_query($conn, "SELECT * FROM member WHERE user_id='$usr_id'"); ?>
                                 <tr>
                                     <td><?= $no ?></td>
@@ -123,18 +123,18 @@ foreach ($get_pelanggan as $dta) {
                                     <td><?= $usr ? $usr["hp"] : '<i>Tidak diketahui</i>' ?></td>
                                     <td><?= $usr ? $usr["email"] : '<i>Tidak diketahui</i>' ?></td>
                                     <td>
-                                        <?php 
-                                        if (mysqli_num_rows($member) > 0) 
+                                        <?php
+                                        if (mysqli_num_rows($member) > 0)
                                             echo '<span class="text-success">Member Premium</span>';
                                         else
                                             echo '<span class="text-warning">Member Biasa</span>';
                                         ?>
                                     </td>
                                     <td class="text-center">
-                                        <a href="#" class="btn btn-success"><i class="fa fa-comment"></i> Chat</a>
+                                        <a href="#" class="btn btn-success show-chat" data-id="<?= $usr["id"] ?>"><i class="fa fa-comment"></i> Chat</a>
                                     </td>
                                 </tr>
-                                <?php 
+                            <?php
                                 $no++;
                             } ?>
                         </tbody>
@@ -149,10 +149,10 @@ require('template/footer.php');
 ?>
 
 <?php foreach ($pesanan as $dta) {
-    $user = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM user WHERE id='".$dta["user_id"]."'")); 
+    $user = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM user WHERE id='" . $dta["user_id"] . "'"));
 
     $text = '';
-    if ($dta['status'] == 'cancel') $text = 'text-danger';  
+    if ($dta['status'] == 'cancel') $text = 'text-danger';
     else if ($dta['status'] == 'finish') $text = 'text-success'; ?>
 
     <!-- MODAL DETAIL PESANAN -->
@@ -177,7 +177,7 @@ require('template/footer.php');
                                 <td width="200">Telepon</td>
                                 <td width="10">:</td>
                                 <td><?= $user["hp"] ?></td>
-                            </tr>                              
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-bordered">
@@ -187,8 +187,8 @@ require('template/footer.php');
                                 <td width="10">:</td>
                                 <td>Cetak <?= ucwords($dta["jenis_layanan"]) ?></td>
                             </tr>
-                            <?php if ($dta["jenis_layanan"] == 'dokumen') { 
-                                $dokumen = mysqli_query($conn, "SELECT * FROM cetak_dokumen WHERE cetak_id='".$dta['id']."'");
+                            <?php if ($dta["jenis_layanan"] == 'dokumen') {
+                                $dokumen = mysqli_query($conn, "SELECT * FROM cetak_dokumen WHERE cetak_id='" . $dta['id'] . "'");
                                 $dkm = mysqli_fetch_assoc($dokumen);
                                 $jnk_id = $dkm ? $dkm['jenis_kertas'] : 0;
                                 $jld_id = $dkm ? $dkm['jilid'] : 0;
@@ -196,7 +196,7 @@ require('template/footer.php');
                                 $jilid = mysqli_query($conn, "SELECT * FROM jilid WHERE id='$jld_id'");
                                 $jnk = mysqli_fetch_assoc($jenis_kertas);
                                 $jld = mysqli_fetch_assoc($jilid);
-                                ?>
+                            ?>
                                 <tr>
                                     <td width="200">Warna Tulisan</td>
                                     <td width="10">:</td>
@@ -215,19 +215,19 @@ require('template/footer.php');
                                 <tr>
                                     <td width="200">Jumlah Halaman</td>
                                     <td width="10">:</td>
-                                    <td><?= $dkm ? $dkm["jumlah_halaman"].' Lembar' : '-' ?></td>
+                                    <td><?= $dkm ? $dkm["jumlah_halaman"] . ' Lembar' : '-' ?></td>
                                 </tr>
                                 <tr>
                                     <td width="200">Jumlah Rangkap</td>
                                     <td width="10">:</td>
-                                    <td><?= $dkm ? $dkm["jumlah_rangkap"].' Rangkap' : '-' ?></td>
+                                    <td><?= $dkm ? $dkm["jumlah_rangkap"] . ' Rangkap' : '-' ?></td>
                                 </tr>
-                            <?php } else { 
-                                $foto = mysqli_query($conn, "SELECT * FROM cetak_foto WHERE cetak_id='".$dta['id']."'");
-                                $fto = mysqli_fetch_assoc($foto); 
+                            <?php } else {
+                                $foto = mysqli_query($conn, "SELECT * FROM cetak_foto WHERE cetak_id='" . $dta['id'] . "'");
+                                $fto = mysqli_fetch_assoc($foto);
                                 $ukf_id = $fto ? $fto['ukuran_foto'] : 0;
                                 $ukuran_foto = mysqli_query($conn, "SELECT * FROM ukuran_foto WHERE id='$ukf_id'");
-                                $ukf = mysqli_fetch_assoc($ukuran_foto);?>
+                                $ukf = mysqli_fetch_assoc($ukuran_foto); ?>
                                 <tr>
                                     <td width="200">Ukuran Foto</td>
                                     <td width="10">:</td>
@@ -241,7 +241,7 @@ require('template/footer.php');
                                 <tr>
                                     <td width="200">Jumlah Rangkap</td>
                                     <td width="10">:</td>
-                                    <td><?= $fto ? $fto["jumlah_rangkap"].' Lembar' : '-' ?></td>
+                                    <td><?= $fto ? $fto["jumlah_rangkap"] . ' Lembar' : '-' ?></td>
                                 </tr>
                             <?php } ?>
                             <tr>
@@ -279,7 +279,7 @@ require('template/footer.php');
                                 <td width="200">Status</td>
                                 <td width="10">:</td>
                                 <td class="<?= $text ?>"><b><?= ucwords($dta["status"]) ?></b></td>
-                            </tr>                      
+                            </tr>
                         </tbody>
                     </table>
                 </div>

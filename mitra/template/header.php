@@ -152,57 +152,7 @@ $cfg = mysqli_fetch_assoc($config);
                                         <div class="scroll-area-md" style="margin-bottom: -10px;">
                                             <div class="scrollbar-container">
                                                 <table class="align-middle mb-0 table table-border table-hover">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <a href="#" class="btn text-left show-chat">
-                                                                    <div class="widget-content p-0">
-                                                                        <div class="widget-content-wrapper">
-                                                                            <div class="widget-content-left mr-3">
-                                                                                <div class="widget-content-left">
-                                                                                    <img width="40" class="rounded-circle" src="assets/images/avatars/4.jpg" alt="">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="widget-content-left row">
-                                                                                <div class="widget-heading col-12">
-                                                                                    <small class="pull-right text-success">13.00</small>
-                                                                                    Kamisama Print
-                                                                                </div>
-                                                                                <div class="widget-subheading opacity-5 col-12">
-                                                                                    <span class="badge badge-success badge-pill pull-right px-0 py-1">3</span>
-                                                                                    Apaji kali manami pesananta
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <a href="#" class="btn text-left show-chat">
-                                                                    <div class="widget-content p-0">
-                                                                        <div class="widget-content-wrapper">
-                                                                            <div class="widget-content-left mr-3">
-                                                                                <div class="widget-content-left">
-                                                                                    <img width="40" class="rounded-circle" src="assets/images/avatars/4.jpg" alt="">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="widget-content-left row">
-                                                                                <div class="widget-heading col-12">
-                                                                                    <small class="pull-right text-success">13.00</small>
-                                                                                    Kamisama Print
-                                                                                </div>
-                                                                                <div class="widget-subheading opacity-5 col-12">
-                                                                                    <span class="badge badge-success badge-pill pull-right px-0 py-1">3</span>
-                                                                                    Apaji kali manami pesananta
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
+                                                    <tbody id="messsageContent">
                                                     </tbody>
                                                 </table>
                                             </div>

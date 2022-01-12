@@ -1,4 +1,3 @@
-
 <div class="app-wrapper-footer">
     <div class="app-footer">
         <div class="app-footer__inner">
@@ -34,7 +33,7 @@
                         <div class="form-group">
                             <label>Jenis Rekening</label>
                             <?php
-                            $bank = ["Bank BRI", "Bank BNI", "Bank Syariah", "GoPay", "Dana", "OVO"]; 
+                            $bank = ["Bank BRI", "Bank BNI", "Bank Syariah", "GoPay", "Dana", "OVO"];
                             ?>
                             <select class="form-control" name="rekening" required="">
                                 <option value="">.::Pilih Rekening::.</option>
@@ -58,6 +57,31 @@
     </div>
 </div>
 
+<link href="./../assets/css/chat.css" rel="stylesheet">
+
+<div class="chat-content" tabindex="-1" role="menu" aria-hidden="true" x-placement="bottom-end">
+    <div class="card card-bordered border border-light shadow">
+        <div class="card-header">
+            <div class="w-100" id="chatHeader">
+                <img class="avatar mr-1" src="assets/images/avatars/4.jpg">
+                <b style="text-transform: capitalize; margin-right: -10px;;">Example Agent</b>
+            </div>
+            <a class="text-secondary" id="close-chat" href="#" data-abc="true"><i class="fa fa-times-circle fa-lg"></i></a>
+        </div>
+        <div class="scroll-chat" id="chatContent">
+        </div>
+        <div class="publisher bt-1 border-light">
+            <?php if ($poto) { ?>
+                <img class="avatar avatar-xs" src="../mitra/img/daftar<?php echo $poto ?>" alt="">
+            <?php } else { ?>
+                <img class="avatar avatar-xs" src="../user/img/default.png" alt="">
+            <?php } ?>
+            <input class="publisher-input" id="chat-text" type="text" placeholder="Silahkan tulis pesan...">
+            <a class="publisher-btn text-info" id="send-chat" href="#" data-abc="true"><i class="fa fa-paper-plane"></i></a>
+        </div>
+    </div>
+</div>
+
 <script src="./../layout/vendor/jquery/jquery.min.js"></script>
 <script src="./assets/scripts/main.js"></script>
 <script src="./assets/sweetalert2/sweetalert2.min.js"></script>
@@ -70,45 +94,102 @@
 <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-messaging.js"></script>
 <script>
-    $(document).ready(function() {
-        $('.dataTable').DataTable();
+    var agen_id = '<?= $id ?>';
+    var gl_user_id = 0;
 
-        $('#jumlah_penarikan').keyup(function(event) {
-            var saldo = $('#this_saldo').val();
-            var jumlah = $(this).val();
+    $('.dataTable').DataTable();
+    $('.chat-content').hide();
 
-            if (parseInt(jumlah) > parseInt(saldo)) {
-                $(this).val('');
-                iziToast.warning({
-                    title: 'Saldo Tidak Mencukupi',
-                    message: 'Jumlah Saldo yang ada milik tidak mencukupi. Silahkan input sesuai saldo anda!',
-                    position: 'topRight'
-                });
-            }
-        });
+    $(document).mousedown(function(e) {
+        var container = $(".chat-content");
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+            container.hide('slow/400/fast');
+        }
 
-        <?php if ($res_tarik_saldo == true) { ?>
-            Swal.fire({
-                icon: 'success',
-                title: 'Penarikan Berhasil',
-                text: 'Penarikan saldo anda telah berhasil dilakukan. Silahkan cek rekening yang anda kaitkan'
-            }).then(function() {
-                location.href=window.location.href;
-            });
-        <?php } ?>
     });
 
-    var agen_id = '<?= $id ?>';
+    $(document).find('#messsageContent').on('click', '.show-chat', function(event) {
+        event.preventDefault();
+        $('.chat-content').hide('slow/500/fast');
+        $('.chat-content').show('slow/400/fast');
+        $('.dropdown-menu').removeClass('show');
+
+        var user_id = $(this).attr('data-id');
+        gl_user_id = user_id;
+        getChat(agen_id, user_id);
+    });
+
+    $(document).on('click', '.show-chat', function(event) {
+        event.preventDefault();
+        $('.chat-content').hide('slow/500/fast');
+        $('.chat-content').show('slow/400/fast');
+        $('.dropdown-menu').removeClass('show');
+
+        var user_id = $(this).attr('data-id');
+        gl_user_id = user_id;
+        getChat(agen_id, user_id);
+    });
+
+    $('#close-chat').click(function(event) {
+        event.preventDefault();
+        $('.chat-content').hide('slow/400/fast');
+    });
+
+    $('#send-chat').click(function(e) {
+        e.preventDefault();
+
+        var content = $('#chat-text').val();
+        if (content != '') {
+            createMessage(gl_user_id, 'message', content);
+            $('#chat-text').val('').focus();
+        }
+    });
+
+    $('#chat-text').keyup(function(e) {
+        e.preventDefault();
+
+        var content = $('#chat-text').val();
+        if (content != '' && e.keyCode == 13) {
+            createMessage(gl_user_id, 'message', content);
+            $('#chat-text').val('').focus();
+        }
+    });
+
+    $('#jumlah_penarikan').keyup(function(event) {
+        var saldo = $('#this_saldo').val();
+        var jumlah = $(this).val();
+
+        if (parseInt(jumlah) > parseInt(saldo)) {
+            $(this).val('');
+            iziToast.warning({
+                title: 'Saldo Tidak Mencukupi',
+                message: 'Jumlah Saldo yang ada milik tidak mencukupi. Silahkan input sesuai saldo anda!',
+                position: 'topRight'
+            });
+        }
+    });
+
+    <?php if ($res_tarik_saldo == true) { ?>
+        Swal.fire({
+            icon: 'success',
+            title: 'Penarikan Berhasil',
+            text: 'Penarikan saldo anda telah berhasil dilakukan. Silahkan cek rekening yang anda kaitkan'
+        }).then(function() {
+            location.href = window.location.href;
+        });
+    <?php } ?>
+
     countPesanan();
+
     function countPesanan() {
         $.ajax({
-            url     : 'controller.php',
-            method  : "POST",
-            data    : {
+            url: 'controller.php',
+            method: "POST",
+            data: {
                 req: 'countPesanan',
                 id: agen_id
             },
-            success : function(data) {
+            success: function(data) {
                 if (data.all <= 0) $('.countPesanan').attr('hidden', '').text(data.all);
                 else $('.countPesanan').removeAttr('hidden').text(data.all);
 
@@ -126,34 +207,60 @@
 
                 if (data.notif <= 0) {
                     $('.countNotif, .new-notif').attr('hidden', '').text(data.notif);
-                }
-                else {
+                } else {
                     $('.countNotif').removeAttr('hidden').text(data.notif);
-                    $('.new-notif').removeAttr('hidden').text('New '+data.notif);
+                    $('.new-notif').removeAttr('hidden').text('New ' + data.notif);
                 }
 
                 if (data.pesan <= 0) {
                     $('.countMessage, .new-message').attr('hidden', '').text(data.pesan);
-                }
-                else {
+                } else {
                     $('.countMessage').removeAttr('hidden').text(data.pesan);
-                    $('.new-message').removeAttr('hidden').text('New '+data.pesan);
+                    $('.new-message').removeAttr('hidden').text('New ' + data.pesan);
                 }
             }
         });
     }
 
+    function getChat(agen_id, user_id) {
+        $.ajax({
+            url: 'controller.php',
+            method: "POST",
+            data: {
+                req: 'getChat',
+                agen_id: agen_id,
+                user_id: user_id,
+            },
+            success: function(data) {
+                countPesanan();
+                getNotifPesan();
+
+                $(document).find('#chatHeader').html(data.header);
+                $(document).find('#chatContent').html(data.content);
+
+                var v = $(document).find('#chatContent');
+                v.scroll();
+                if (v.scrollTop() + v.innerHeight() <= v[0].scrollHeight) {
+                    v.stop().scrollTop(v[0].scrollHeight);
+                }
+
+            }
+        });
+    }
+
     getNotifPesan()
+
     function getNotifPesan() {
         $.ajax({
-            url     : 'controller.php',
-            method  : "POST",
-            data    : {
+            url: 'controller.php',
+            method: "POST",
+            data: {
                 req: 'getNotifPesan',
                 id: agen_id
             },
-            success : function(data) {
+            success: function(data) {
                 $(document).find('#notifContent').html(data.notif);
+                $(document).find('#messsageContent').html(data.pesan);
             }
         });
     }
@@ -163,23 +270,23 @@
         var id = $(this).attr('data-id');
         var href = $(this).attr('data-href');
         $.ajax({
-            url     : 'controller.php',
-            method  : "POST",
-            data    : {
+            url: 'controller.php',
+            method: "POST",
+            data: {
                 req: 'updateNotif',
                 id: id
             },
-            success : function(data) {
+            success: function(data) {
                 window.location.href = href
             }
         });
     });
 
-    function createMessage(to, type, content=null) {
+    function createMessage(to, type, content = null) {
         $.ajax({
-            url     : 'controller.php',
-            method  : "POST",
-            data    : {
+            url: 'controller.php',
+            method: "POST",
+            data: {
                 req: 'createMessage',
                 send_by: 'agen',
                 from_id: agen_id,
@@ -187,7 +294,8 @@
                 type: type,
                 content: content,
             },
-            success : function(data) {
+            success: function(data) {
+                getChat(agen_id, gl_user_id);
                 pushMessage(to, data.title, data.message);
             }
         });
@@ -208,51 +316,55 @@
     const messaging = firebase.messaging();
     const database = firebase.database();
 
-    messaging.requestPermission().then(function () {
+    messaging.requestPermission().then(function() {
         return messaging.getToken()
     }).then(function(token) {
-        database.ref('device_token/agen_token/'+agen_id).set({
-            agen_id : agen_id,
-            token : token
+        database.ref('device_token/agen_token/' + agen_id).set({
+            agen_id: agen_id,
+            token: token
         });
-    }).catch(function (err) {
+    }).catch(function(err) {
         console.log("Unable to get permission to notify.", err);
     });
 
     function pushMessage(to, title, message) {
-        database.ref('device_token/user_token/'+to).on('value', function(item) {
+        database.ref('device_token/user_token/' + to).on('value', function(item) {
             if (item.val()) {
                 var token = item.val().token;
                 $.ajax({
-                    url     : 'https://fcm.googleapis.com/fcm/send',
-                    method  : "POST",
-                    headers  : {
-                        "Content-Type"  : "application/json",
-                        "Authorization" : "key=AAAAm4k47aE:APA91bG5NZXK7QtR7wddVbiyRSgA-drKMVtUcUOPzP_qxdJMbfs_3kAU23Nfir93NcPlU7BBRCqPWT1yYcMXK8HO0ryPZ2DD61a9mDCWYslqFH9bzWbI8G1Kd1c4_6R96uU30BNHETru",
+                    url: 'https://fcm.googleapis.com/fcm/send',
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "key=AAAAm4k47aE:APA91bG5NZXK7QtR7wddVbiyRSgA-drKMVtUcUOPzP_qxdJMbfs_3kAU23Nfir93NcPlU7BBRCqPWT1yYcMXK8HO0ryPZ2DD61a9mDCWYslqFH9bzWbI8G1Kd1c4_6R96uU30BNHETru",
                     },
-                    data    : JSON.stringify({
-                        "registration_ids" : [token],
-                        "notification" : {
+                    data: JSON.stringify({
+                        "registration_ids": [token],
+                        "notification": {
                             "title": title,
-                            "body": message, 
+                            "body": message,
                         },
-                        "webpush" : {
-                            "headers" : {
-                                "Urgency" : "high"
+                        "webpush": {
+                            "headers": {
+                                "Urgency": "high"
                             }
                         },
-                        "webpush" : 10
+                        "webpush": 10
                     })
                 });
             }
         });
     }
-    
+
     messaging.onMessage((payload) => {
         countPesanan();
         getNotifPesan();
+        if (!$('.chat-content').is(":hidden")) {
+            getChat(agen_id, gl_user_id);
+        }
         console.log("ok");
     });
 </script>
 </body>
+
 </html>
