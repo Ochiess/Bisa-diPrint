@@ -359,11 +359,16 @@
     messaging.onMessage((payload) => {
         countPesanan();
         getNotifPesan();
+        getDataPesanan();
         if (!$('.chat-content').is(":hidden")) {
             getChat(agen_id, gl_user_id);
         }
         console.log("ok");
     });
+
+    function getDataPesanan() {
+        return 0;
+    }
 </script>
 </body>
 
