@@ -142,7 +142,7 @@ h4.card-title {
 .media-chat .media-body p.meta {
     background-color: transparent !important;
     padding: 0;
-    opacity: .8
+    opacity: .8;
 }
 
 .media-meta-day {
@@ -185,6 +185,14 @@ h4.card-title {
     margin-left: 16px
 }
 
+.media-chat.media-chat-in {
+    padding-left: 12px;
+    padding-right: 64px;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+    flex-direction: row-reverse
+}
+
 .media-chat.media-chat-reverse {
     padding-right: 12px;
     padding-left: 64px;
@@ -202,6 +210,12 @@ h4.card-title {
     padding: 16px 12px;
     -webkit-transition: background-color .2s linear;
     transition: background-color .2s linear
+}
+
+.media-chat.media-chat-in .media-body p {
+    float: left;
+    clear: left;
+    background-color: #f5f6f7;
 }
 
 .media-chat.media-chat-reverse .media-body p {
