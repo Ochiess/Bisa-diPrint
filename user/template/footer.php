@@ -74,6 +74,7 @@
         $('.chat-content').hide('slow/500/fast');
         $('.chat-content').show('slow/400/fast');
         $('.dropdown-menu').removeClass('show');
+        $('#chat-text').val('').focus();
 
         var agen_id = $(this).attr('data-id');
         gl_agen_id = agen_id;
@@ -85,6 +86,7 @@
         $('.chat-content').hide('slow/500/fast');
         $('.chat-content').show('slow/400/fast');
         $('.dropdown-menu').removeClass('show');
+        $('#chat-text').val('').focus();
 
         var agen_id = $(this).attr('data-id');
         gl_agen_id = agen_id;
