@@ -22,12 +22,12 @@
             </div>
             <form method="POST">
                 <div class="modal-body">
-                    <h4 class="text-center text-success">Saldo: Rp.<?= number_format($sld['jumlah_saldo']) ?></h4>
+                    <h4 class="text-center text-success">Saldo: Rp.<?= number_format($sld['saldo_akun']) ?></h4>
                     <hr>
                     <div class="px-3">
                         <div class="form-group">
                             <label>Jumlah Penarikan (Rp)</label>
-                            <input type="hidden" id="this_saldo" value="<?= $sld['jumlah_saldo'] ?>">
+                            <input type="hidden" id="this_saldo" value="<?= $sld['saldo_akun'] ?>">
                             <input type="number" name="jumlah" id="jumlah_penarikan" class="form-control" placeholder="Jumlah Penarikan.." required="" autocomplete="off">
                         </div>
                         <div class="form-group">

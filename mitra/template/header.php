@@ -32,10 +32,18 @@ if (isset($_POST['tarik_saldo'])) {
     $jumlah = $_POST['jumlah'];
     $my_saldo = mysqli_query($conn, "SELECT * FROM virtual_payment WHERE agen_id='$id'");
     $sld = mysqli_fetch_assoc($my_saldo);
-    $jumlah_saldo = $sld['jumlah_saldo'] - $jumlah;
+    $saldo_akun = $sld['saldo_akun'] - $jumlah;
     $saldo_diambil = $sld['saldo_diambil'] + $jumlah;
 
-    mysqli_query($conn, "UPDATE virtual_payment SET jumlah_saldo='$jumlah_saldo', saldo_diambil='$saldo_diambil' WHERE agen_id='$id'");
+    if ($saldo_akun > $jumlah || $jumlah == 0) {
+        echo "<script>
+        alert('Maaf, Saldo anda tidak mencukupi atau nominal salah.');
+        window.location.href=window.location.href;
+        </script>";
+        exit();
+    }
+
+    mysqli_query($conn, "UPDATE virtual_payment SET saldo_akun='$saldo_akun', saldo_diambil='$saldo_diambil' WHERE agen_id='$id'");
     $res_tarik_saldo = true;
 }
 
@@ -165,18 +173,18 @@ $cfg = mysqli_fetch_assoc($config);
                             <li class="nav-item">
                                 <div class="d-inline-block dropdown">
                                     <a href="#" class="nav-link text-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="nav-link-icon fa fa-credit-card text-success"></i> <b>Rp.<?= number_format($sld['jumlah_saldo']) ?></b>
+                                        <i class="nav-link-icon fa fa-credit-card text-success"></i> <b>Rp.<?= number_format($sld['saldo_akun']) ?></b>
                                     </a>
                                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-131px, 33px, 0px); width: 350px;">
                                         <div class="px-3 py-2">
-                                            <span class="badge badge-success pull-right">Rp.<?= number_format($sld['jumlah_saldo']) ?></span>
+                                            <span class="badge badge-success pull-right">Rp.<?= number_format($sld['saldo_akun']) ?></span>
                                             <b>DETAIL SALDO ANDA</b>
                                         </div>
                                         <div tabindex="-1" class="dropdown-divider"></div>
                                         <div class="p-2" style="margin-top: -10px;">
                                             <small>Info: Semua pembayaran yang dilakukan pelanggan secara virtual atau menggunakan saldo member akan masuk disini!</small>
                                             <div class="p-2">
-                                                <b>Total Saldo : </b> <span class="text-success">Rp.<?= number_format($sld['jumlah_saldo']) ?></span><br>
+                                                <b>Total Saldo : </b> <span class="text-success">Rp.<?= number_format($sld['saldo_akun']) ?></span><br>
                                                 <b>Saldo Ditarik : </b> <span class="text-danger">Rp.<?= number_format($sld['saldo_diambil']) ?></span><br>
 
                                                 <button class="btn btn-success btn-block btn-pill mt-3" data-toggle="modal" data-target=".modal-tarik-saldo"><i class="fa fa-credit-card"></i> Lakuan Penarikan</button>
