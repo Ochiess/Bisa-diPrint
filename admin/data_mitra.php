@@ -25,6 +25,7 @@ $res_transfer_saldo = false;
 if (isset($_POST['transfer_saldo'])) {
     $agen_id = $_POST['agen_id'];
     $this_saldo = $_POST['this_saldo'];
+    $saldo_akun = $_POST['saldo_akun'];
     $jumlah = $_POST['jumlah'];
     $potongan = $_POST['potongan'];
     $set_potongan = $jumlah * $potongan / 100;
@@ -37,7 +38,7 @@ if (isset($_POST['transfer_saldo'])) {
     }
 
     $jumlah_saldo = $this_saldo - $jumlah;
-    $saldo_akun = $jumlah - $set_potongan;
+    $saldo_akun = $saldo_akun + ($jumlah - $set_potongan);
 
     mysqli_query($conn, "UPDATE virtual_payment SET jumlah_saldo='$jumlah_saldo', saldo_akun='$saldo_akun' WHERE agen_id='$agen_id'");
     $res_transfer_saldo = true;
@@ -241,6 +242,7 @@ foreach ($mitra as $dta) {
                                 <div class="form-group">
                                     <label>Jumlah Transfer (Rp)</label>
                                     <input type="hidden" name="agen_id" value="<?= $dta['id'] ?>">
+                                    <input type="hidden" name="saldo_akun" value="<?= $pay['saldo_akun'] ?>">
                                     <input type="hidden" name="this_saldo" class="this_saldo" value="<?= $pay['jumlah_saldo'] ?>">
                                     <input type="number" name="jumlah" class="form-control jumlah_transfer" placeholder="Jumlah Transfer.." required="" autocomplete="off" value="<?= $set_value ?>">
                                     <small class="text-danger info-danger" hidden></small>
