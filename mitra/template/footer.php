@@ -113,6 +113,7 @@
         $('.chat-content').hide('slow/500/fast');
         $('.chat-content').show('slow/400/fast');
         $('.dropdown-menu').removeClass('show');
+        $('#chat-text').val('').focus();
 
         var user_id = $(this).attr('data-id');
         gl_user_id = user_id;
@@ -124,6 +125,7 @@
         $('.chat-content').hide('slow/500/fast');
         $('.chat-content').show('slow/400/fast');
         $('.dropdown-menu').removeClass('show');
+        $('#chat-text').val('').focus();
 
         var user_id = $(this).attr('data-id');
         gl_user_id = user_id;
