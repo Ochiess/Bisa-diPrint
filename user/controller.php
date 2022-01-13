@@ -171,6 +171,10 @@ if (isset($_POST['req'])) {
 			if ($dta['status'] == 'new') $new = '<small><span class="badge badge-danger badge-pill pull-right">New</span></small>';
 			else $new = '';
 
+			$title = '';
+			$icon = '';
+			$href = '';
+
 			if ($dta['type'] == 'order_start') {
 				$title = 'Pesanan Diproses';
 				$icon = '<div class="font-icon-wrapper font-icon-sm"><i class="pe-7s-print icon-gradient bg-malibu-beach"> </i></div>';
@@ -219,6 +223,10 @@ if (isset($_POST['req'])) {
 			';
 		}
 
+		if ($content_notif == '') {
+			$content_notif = '<h6 class="text-center mt-3"><i>Belum ada notifikasi</i></h6>';
+		}
+
 		$pesan = mysqli_query($conn, "SELECT * FROM notifikasi WHERE type = 'message' AND (to_id='$id' OR from_id='$id') ORDER BY
 		id DESC");
 		$jum_pesan = [];
@@ -235,61 +243,67 @@ if (isset($_POST['req'])) {
 			$cnt = mysqli_num_rows($pesan_new);
 			$last = mysqli_fetch_assoc($pesan_);
 
-			if ($last['send_by'] == 'user') {
-				$agen_id = $last['to_id'];
-				$text = 'Anda: ' . $last['content'];
-			} else {
-				$agen_id = $last['from_id'];
-				$text = $last['content'];
-			}
+			if (isset($last['id'])) {
+				if ($last['send_by'] == 'user') {
+					$agen_id = $last['to_id'];
+					$text = 'Anda: ' . $last['content'];
+				} else {
+					$agen_id = $last['from_id'];
+					$text = $last['content'];
+				}
 
-			if (strlen($text) > 35) {
-				$cht_content = substr($text, 0, 35) . '...';
-			} else {
-				$cht_content = $text . "&nbsp;&nbsp;&nbsp;";
-			}
+				if (strlen($text) > 35) {
+					$cht_content = substr($text, 0, 35) . '...';
+				} else {
+					$cht_content = $text . "&nbsp;&nbsp;&nbsp;";
+				}
 
-			$agen = mysqli_query($conn, "SELECT * FROM agen WHERE id='$agen_id'");
-			$agn = mysqli_fetch_assoc($agen);
+				$agen = mysqli_query($conn, "SELECT * FROM agen WHERE id='$agen_id'");
+				$agn = mysqli_fetch_assoc($agen);
 
-			if (date('Ymd', strtotime($last['waktu'])) == date('Ymd')) $waktu = date('H.i', strtotime($last['waktu']));
-			else $waktu = date('d/m/y', strtotime($last['waktu']));
+				if (date('Ymd', strtotime($last['waktu'])) == date('Ymd')) $waktu = date('H.i', strtotime($last['waktu']));
+				else $waktu = date('d/m/y', strtotime($last['waktu']));
 
-			if ($cnt == 0) {
-				$cnt_view = '';
-				$time_color = 'secondary';
-			} else {
-				$cnt_view = '<span class="badge badge-success badge-pill pull-right px-0 py-1">' . $cnt . '</span>';
-				$time_color = 'success';
-			}
+				if ($cnt == 0) {
+					$cnt_view = '';
+					$time_color = 'secondary';
+				} else {
+					$cnt_view = '<span class="badge badge-success badge-pill pull-right px-0 py-1">' . $cnt . '</span>';
+					$time_color = 'success';
+				}
 
-			$content_pesan .= '
-			<tr>
-				<td>
-					<a href="#" class="btn text-left show-chat w-100" data-id="' . $agn['id'] . '">
-						<div class="widget-content p-0">
-							<div class="widget-content-wrapper">
-								<div class="widget-content-left mr-3">
-									<div class="widget-content-left">
-										<img width="40" height="40" class="rounded-circle" src="../mitra/img/daftar' . $agn['poto'] . '" alt="">
+				$content_pesan .= '
+				<tr>
+					<td>
+						<a href="#" class="btn text-left show-chat w-100" data-id="' . $agn['id'] . '">
+							<div class="widget-content p-0">
+								<div class="widget-content-wrapper">
+									<div class="widget-content-left mr-3">
+										<div class="widget-content-left">
+											<img width="40" height="40" class="rounded-circle" src="../mitra/img/daftar' . $agn['poto'] . '" alt="">
+										</div>
 									</div>
-								</div>
-								<div class="widget-content-left row w-100">
-									<div class="widget-heading col-12">
-										<small class="pull-right text-' . $time_color . ' ml-0">' . $waktu . '</small>
-										' . $agn['nama_percetakan'] . '
-									</div>
-									<div class="widget-subheading opacity-5 col-12">
-										' . $cnt_view . '
-										' . $cht_content . '
+									<div class="widget-content-left row w-100">
+										<div class="widget-heading col-12">
+											<small class="pull-right text-' . $time_color . ' ml-0">' . $waktu . '</small>
+											' . $agn['nama_percetakan'] . '
+										</div>
+										<div class="widget-subheading opacity-5 col-12">
+											' . $cnt_view . '
+											' . $cht_content . '
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					</a>
-				</td>
-			</tr>
-			';
+						</a>
+					</td>
+				</tr>
+				';
+			}
+		}
+
+		if ($content_pesan == '') {
+			$content_pesan = '<h6 class="text-center mt-3"><i>Belum ada pesan</i></h6>';
 		}
 
 		$response = [
