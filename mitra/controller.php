@@ -61,7 +61,7 @@ if (isset($_POST['req'])) {
 
 		// Get Pesanan Review
 		// rumus untuk logika prioritas
-		$pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND status = 'review' ORDER BY waktu_pengambilan ASC");
+		$pesanan = mysqli_query($conn, "SELECT cetak.*, member.status as is_member FROM cetak LEFT JOIN member USING(user_id) WHERE agen_id='$id' AND cetak.status = 'review' ORDER BY is_member='active' DESC, metode_pembayaran='member' DESC, metode_pembayaran='virtual' DESC, waktu_pengambilan ASC");
 		$html_review = '';
 		$no = 1;
 		foreach ($pesanan as $dta) {
@@ -313,6 +313,10 @@ if (isset($_POST['req'])) {
 			if ($dta['status'] == 'new') $new = '<small><span class="badge badge-danger badge-pill pull-right">New</span></small>';
 			else $new = '';
 
+			$title = '';
+			$icon = '';
+			$href = '';
+
 			if ($dta['type'] == 'live_pay') {
 				$title = 'Pesanan Baru';
 				$icon = '<div class="font-icon-wrapper font-icon-sm"><i class="pe-7s-print icon-gradient bg-malibu-beach"> </i></div>';
@@ -369,6 +373,10 @@ if (isset($_POST['req'])) {
 			';
 		}
 
+		if ($content_notif == '') {
+			$content_notif = '<h6 class="text-center mt-3"><i>Belum ada notifikasi</i></h6>';
+		}
+
 		$pesan = mysqli_query($conn, "SELECT * FROM notifikasi WHERE type = 'message' AND (to_id='$id' OR from_id='$id') ORDER BY
 		id DESC");
 		$jum_pesan = [];
@@ -385,63 +393,69 @@ if (isset($_POST['req'])) {
 			$cnt = mysqli_num_rows($pesan_new);
 			$last = mysqli_fetch_assoc($pesan_);
 
-			if ($last['send_by'] == 'agen') {
-				$user_id = $last['to_id'];
-				$text = 'Anda: ' . $last['content'];
-			} else {
-				$user_id = $last['from_id'];
-				$text = $last['content'];
-			}
+			if (isset($last['id'])) {
+				if ($last['send_by'] == 'agen') {
+					$user_id = $last['to_id'];
+					$text = 'Anda: ' . $last['content'];
+				} else {
+					$user_id = $last['from_id'];
+					$text = $last['content'];
+				}
 
-			if (strlen($text) > 35) {
-				$cht_content = substr($text, 0, 35) . '...';
-			} else {
-				$cht_content = $text . "&nbsp;&nbsp;&nbsp;";
-			}
+				if (strlen($text) > 35) {
+					$cht_content = substr($text, 0, 35) . '...';
+				} else {
+					$cht_content = $text . "&nbsp;&nbsp;&nbsp;";
+				}
 
-			$user = mysqli_query($conn, "SELECT * FROM user WHERE id='$user_id'");
-			$usr = mysqli_fetch_assoc($user);
+				$user = mysqli_query($conn, "SELECT * FROM user WHERE id='$user_id'");
+				$usr = mysqli_fetch_assoc($user);
 
-			if (date('Ymd', strtotime($last['waktu'])) == date('Ymd')) $waktu = date('H.i', strtotime($last['waktu']));
-			else $waktu = date('d/m/y', strtotime($last['waktu']));
+				if (date('Ymd', strtotime($last['waktu'])) == date('Ymd')) $waktu = date('H.i', strtotime($last['waktu']));
+				else $waktu = date('d/m/y', strtotime($last['waktu']));
 
-			if ($cnt == 0) {
-				$cnt_view = '';
-				$time_color = 'secondary';
-			} else {
-				$cnt_view = '<span class="badge badge-success badge-pill pull-right px-0 py-1">' . $cnt . '</span>';
-				$time_color = 'success';
-			}
+				if ($cnt == 0) {
+					$cnt_view = '';
+					$time_color = 'secondary';
+				} else {
+					$cnt_view = '<span class="badge badge-success badge-pill pull-right px-0 py-1">' . $cnt . '</span>';
+					$time_color = 'success';
+				}
 
-			$photo = $usr['photo'] ? $usr['photo'] : 'default.png';
+				$photo = $usr['photo'] ? $usr['photo'] : 'default.png';
 
-			$content_pesan .= '
-			<tr>
-				<td>
-					<a href="#" class="btn text-left show-chat w-100" data-id="' . $usr['id'] . '">
-						<div class="widget-content p-0">
-							<div class="widget-content-wrapper">
-								<div class="widget-content-left mr-3">
-									<div class="widget-content-left">
-										<img width="40" height="40" class="rounded-circle" src="../user/img/' . $photo . '" alt="">
+				$content_pesan .= '
+				<tr>
+					<td>
+						<a href="#" class="btn text-left show-chat w-100" data-id="' . $usr['id'] . '">
+							<div class="widget-content p-0">
+								<div class="widget-content-wrapper">
+									<div class="widget-content-left mr-3">
+										<div class="widget-content-left">
+											<img width="40" height="40" class="rounded-circle" src="../user/img/' . $photo . '" alt="">
+										</div>
 									</div>
-								</div>
-								<div class="widget-content-left row w-100">
-									<div class="widget-heading col-12">
-										<small class="pull-right text-' . $time_color . ' ml-0">' . $waktu . '</small>
-										' . $usr['nama_lengkap'] . '
-									</div>
-									<div class="widget-subheading opacity-5 col-12">
-										' . $cnt_view . '
-										' . $cht_content . '
+									<div class="widget-content-left row w-100">
+										<div class="widget-heading col-12">
+											<small class="pull-right text-' . $time_color . ' ml-0">' . $waktu . '</small>
+											' . $usr['nama_lengkap'] . '
+										</div>
+										<div class="widget-subheading opacity-5 col-12">
+											' . $cnt_view . '
+											' . $cht_content . '
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					</a>
-				</td>
-			</tr>
-			';
+						</a>
+					</td>
+				</tr>
+				';
+			}
+		}
+
+		if ($content_pesan == '') {
+			$content_pesan = '<h6 class="text-center mt-3"><i>Belum ada pesan</i></h6>';
 		}
 
 		$response = [
