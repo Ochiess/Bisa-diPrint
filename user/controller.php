@@ -124,7 +124,7 @@ if (isset($_POST['req'])) {
 						mysqli_query($conn, "UPDATE virtual_payment SET jumlah_saldo='$saldo' WHERE agen_id='$agen_id'");
 					} else {
 						$saldo = $psn['harga'];
-						mysqli_query($conn, "INSERT INTO virtual_payment VALUES(NULL, '$agen_id', '$saldo', '0')");
+						mysqli_query($conn, "INSERT INTO virtual_payment VALUES(NULL, '$agen_id', '$saldo', '0', '0')");
 					}
 				}
 			}

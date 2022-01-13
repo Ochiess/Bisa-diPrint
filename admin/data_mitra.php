@@ -50,20 +50,25 @@ $mitra = mysqli_query($conn, "SELECT * FROM agen WHERE status='active' OR status
                                 <th>Email</th>
                                 <th>Alamat</th>
                                 <th>Status</th>
-                                <th>Aksi</th>
+                                <th width="100">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $no=1; foreach ($mitra as $dta) { 
-                                if ($dta['status'] == 'active') $color ='success';
+                            <?php $no = 1;
+                            foreach ($mitra as $dta) {
+                                if ($dta['status'] == 'active') $color = 'success';
                                 else if ($dta['status'] == 'nonactive') $color = 'warning';
                                 else if ($dta['status'] == 'banned') $color = 'danger';
-                                ?>
+
+                                $agen_id = $dta['id'];
+                                $get_payment = mysqli_query($conn, "SELECT * FROM virtual_payment WHERE agen_id='$agen_id'");
+                                $pay = mysqli_fetch_assoc($get_payment);
+                            ?>
                                 <tr>
                                     <th><?= $no ?></th>
                                     <td>
                                         <?php if ($dta["poto"]) { ?>
-                                            <img width="60" class="rounded-circle" src="../mitra/img/daftar<?= $dta['poto'] ?>" alt="" height="60">
+                                            <img width=" 60" class="rounded-circle" src="../mitra/img/daftar<?= $dta['poto'] ?>" alt="" height="60">
                                         <?php } else { ?>
                                             <img width="60" class="rounded-circle" src="../user/img/default.png" alt="" height="60">
                                         <?php } ?>
@@ -74,16 +79,29 @@ $mitra = mysqli_query($conn, "SELECT * FROM agen WHERE status='active' OR status
                                     <td><?= $dta['email'] ?></td>
                                     <td><?= $dta['alamat'] ?></td>
                                     <td><span class="badge badge-pill badge-<?= $color ?>"><?= $dta['status'] ?></span></td>
-                                    <td>
-                                        <button class="mb-2 mr-2 btn btn-primary" data-toggle="modal" data-target=".modal-restpass<?= $dta['id'] ?>"><i class="fa fa-key"></i> Reset Password</button>
-                                        <?php if ($dta['status'] != 'banned') { ?>
-                                            <button class="mb-2 mr-2 btn btn-danger" data-toggle="modal" data-target=".modal-banned<?= $dta['id'] ?>"><i class="fa fa-times-circle"></i> Banned</button>
+                                    <td class="text-center">
+                                        <?php if ($dta['status'] != 'banned' && isset($pay['agen_id'])) { ?>
+                                            <span data-toggle="modal" data-target=".modal-transfer-saldo<?= $dta['id'] ?>">
+                                                <button class="btn btn-sm btn-primary" data-toggle="tooltip" data-original-title="Transfer Saldo Pemasukan"><i class="fas fa-credit-card"></i></button>
+                                            </span>
                                         <?php } else { ?>
-                                            <button class="mb-2 mr-2 btn btn-success" data-toggle="modal" data-target=".modal-aktifkan<?= $dta['id'] ?>"><i class="fa fa-check-circle"></i> Aktifkan</button>
+                                            <button class="btn btn-sm btn-primary disabled pay-not-found" data-toggle="tooltip" data-original-title="Transfer Saldo Pemasukan"><i class="fas fa-credit-card"></i></button>
+                                        <?php } ?>
+                                        <span data-toggle="modal" data-target=".modal-restpass<?= $dta['id'] ?>">
+                                            <button class="btn btn-sm btn-secondary" data-toggle="tooltip" data-original-title="Reset Password"><i class="fa fa-key"></i></button>
+                                        </span>
+                                        <?php if ($dta['status'] != 'banned') { ?>
+                                            <span data-toggle="modal" data-target=".modal-banned<?= $dta['id'] ?>">
+                                                <button class="btn btn-sm btn-danger" data-toggle="tooltip" data-original-title="Banned"><i class="fa fa-times-circle"></i></button>
+                                            </span>
+                                        <?php } else { ?>
+                                            <span data-toggle="modal" data-target=".modal-aktifkan<?= $dta['id'] ?>">
+                                                <button class="btn btn-sm btn-success" data-toggle="tooltip" data-original-title="Aktifkan"><i class="fa fa-check-circle"></i></button>
+                                            </span>
                                         <?php } ?>
                                     </td>
                                 </tr>
-                                <?php $no++;
+                            <?php $no++;
                             } ?>
                         </tbody>
                     </table>
@@ -96,7 +114,10 @@ $mitra = mysqli_query($conn, "SELECT * FROM agen WHERE status='active' OR status
 <?php
 require('template/footer.php');
 
-foreach ($mitra as $dta) { ?>
+foreach ($mitra as $dta) {
+    $agen_id = $dta['id'];
+    $get_payment = mysqli_query($conn, "SELECT * FROM virtual_payment WHERE agen_id='$agen_id'");
+    $pay = mysqli_fetch_assoc($get_payment); ?>
     <!-- MODAL GANTI PASSWORD -->
     <div class="modal fade modal-restpass<?= $dta['id'] ?>" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -169,11 +190,66 @@ foreach ($mitra as $dta) { ?>
             </div>
         </div>
     </div>
+
+    <!-- MODAL TRANSFER SALDO -->
+    <div class="modal fade modal-transfer-saldo<?= $dta['id'] ?>" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Penarikan Saldo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST">
+                    <div class="modal-body">
+                        <h4 class="text-center text-success">Saldo: Rp.<?= number_format($pay['saldo_akun']) ?></h4>
+                        <hr>
+                        <div class="px-3">
+                            <div class="form-group">
+                                <label>Jumlah Penarikan (Rp)</label>
+                                <input type="hidden" id="this_saldo" value="<?= $pay['saldo_akun'] ?>">
+                                <input type="number" name="jumlah" id="jumlah_penarikan" class="form-control" placeholder="Jumlah Penarikan.." required="" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label>Jenis Rekening</label>
+                                <?php
+                                $bank = ["Bank BRI", "Bank BNI", "Bank Syariah", "GoPay", "Dana", "OVO"];
+                                ?>
+                                <select class="form-control" name="rekening" required="">
+                                    <option value="">.::Pilih Rekening::.</option>
+                                    <?php foreach ($bank as $bnk) { ?>
+                                        <option value="<?= $bnk ?>" <?php if ($bnk == $cfg['rekening']) echo 'selected' ?>><?= $bnk ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Nomor Rekening</label>
+                                <input type="text" name="no_rekening" class="form-control" placeholder="Nomor Rekening.." value="<?= $cfg['no_rekening'] ?>" required="" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-whitesmoke">
+                        <button type="submit" class="btn btn-success" name="tarik_saldo">Lanjutkan Transfer</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak Jadi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 <?php } ?>
 
 <script>
     $(document).ready(function() {
         $('#nv-mitra').addClass('mm-active');
+
+        $('.pay-not-found').click(function(event) {
+            iziToast.warning({
+                title: 'Tidak Tersedia',
+                message: 'Pembayaran Virtual tidak diaktifkan atau akun sedang dikunci!',
+                position: 'topRight'
+            });
+        });
 
         <?php if ($success == true) { ?>
             Swal.fire({
@@ -181,7 +257,7 @@ foreach ($mitra as $dta) { ?>
                 title: 'Berhasil Diproses',
                 text: 'Data telah telah diperbarui'
             }).then(function() {
-                window.location.href='data_mitra.php';
+                window.location.href = 'data_mitra.php';
             });
         <?php } ?>
     });

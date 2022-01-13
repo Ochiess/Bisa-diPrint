@@ -73,7 +73,7 @@
                 title: 'Berhasil Diproses',
                 text: 'Data telah telah diperbarui'
             }).then(function() {
-                window.location.href=location.href;
+                window.location.href = location.href;
             });
         <?php } ?>
     });
