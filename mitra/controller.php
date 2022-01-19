@@ -422,35 +422,37 @@ if (isset($_POST['req'])) {
 					$time_color = 'success';
 				}
 
-				$photo = $usr['photo'] ? $usr['photo'] : 'default.png';
+				if (isset($usr['id'])) {
+					$photo = $usr['photo'] ? $usr['photo'] : 'default.png';
 
-				$content_pesan .= '
-				<tr>
-					<td>
-						<a href="#" class="btn text-left show-chat w-100" data-id="' . $usr['id'] . '">
-							<div class="widget-content p-0">
-								<div class="widget-content-wrapper">
-									<div class="widget-content-left mr-3">
-										<div class="widget-content-left">
-											<img width="40" height="40" class="rounded-circle" src="../user/img/' . $photo . '" alt="">
+					$content_pesan .= '
+					<tr>
+						<td>
+							<a href="#" class="btn text-left show-chat w-100" data-id="' . $usr['id'] . '">
+								<div class="widget-content p-0">
+									<div class="widget-content-wrapper">
+										<div class="widget-content-left mr-3">
+											<div class="widget-content-left">
+												<img width="40" height="40" class="rounded-circle" src="../user/img/' . $photo . '" alt="">
+											</div>
 										</div>
-									</div>
-									<div class="widget-content-left row w-100">
-										<div class="widget-heading col-12">
-											<small class="pull-right text-' . $time_color . ' ml-0">' . $waktu . '</small>
-											' . $usr['nama_lengkap'] . '
-										</div>
-										<div class="widget-subheading opacity-5 col-12">
-											' . $cnt_view . '
-											' . $cht_content . '
+										<div class="widget-content-left row w-100">
+											<div class="widget-heading col-12">
+												<small class="pull-right text-' . $time_color . ' ml-0">' . $waktu . '</small>
+												' . $usr['nama_lengkap'] . '
+											</div>
+											<div class="widget-subheading opacity-5 col-12">
+												' . $cnt_view . '
+												' . $cht_content . '
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</a>
-					</td>
-				</tr>
-				';
+							</a>
+						</td>
+					</tr>
+					';
+				}
 			}
 		}
 

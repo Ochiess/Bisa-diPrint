@@ -272,33 +272,35 @@ if (isset($_POST['req'])) {
 					$time_color = 'success';
 				}
 
-				$content_pesan .= '
-				<tr>
-					<td>
-						<a href="#" class="btn text-left show-chat w-100" data-id="' . $agn['id'] . '">
-							<div class="widget-content p-0">
-								<div class="widget-content-wrapper">
-									<div class="widget-content-left mr-3">
-										<div class="widget-content-left">
-											<img width="40" height="40" class="rounded-circle" src="../mitra/img/daftar' . $agn['poto'] . '" alt="">
+				if (isset($agn['id'])) {
+					$content_pesan .= '
+					<tr>
+						<td>
+							<a href="#" class="btn text-left show-chat w-100" data-id="' . $agn['id'] . '">
+								<div class="widget-content p-0">
+									<div class="widget-content-wrapper">
+										<div class="widget-content-left mr-3">
+											<div class="widget-content-left">
+												<img width="40" height="40" class="rounded-circle" src="../mitra/img/daftar' . $agn['poto'] . '" alt="">
+											</div>
 										</div>
-									</div>
-									<div class="widget-content-left row w-100">
-										<div class="widget-heading col-12">
-											<small class="pull-right text-' . $time_color . ' ml-0">' . $waktu . '</small>
-											' . $agn['nama_percetakan'] . '
-										</div>
-										<div class="widget-subheading opacity-5 col-12">
-											' . $cnt_view . '
-											' . $cht_content . '
+										<div class="widget-content-left row w-100">
+											<div class="widget-heading col-12">
+												<small class="pull-right text-' . $time_color . ' ml-0">' . $waktu . '</small>
+												' . $agn['nama_percetakan'] . '
+											</div>
+											<div class="widget-subheading opacity-5 col-12">
+												' . $cnt_view . '
+												' . $cht_content . '
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						</a>
-					</td>
-				</tr>
-				';
+							</a>
+						</td>
+					</tr>
+					';
+				}
 			}
 		}
 
