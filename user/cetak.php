@@ -1,8 +1,8 @@
 <?php
 
-require ('template/header.php');
+require('template/header.php');
 
-$id_agen= $_GET['id_agen'];
+$id_agen = $_GET['id_agen'];
 
 $jenis_kertas = mysqli_query($conn, "SELECT * FROM jenis_kertas WHERE agen_id='$id_agen'");
 $jilid = mysqli_query($conn, "SELECT * FROM jilid WHERE agen_id='$id_agen'");
@@ -43,7 +43,7 @@ $cfg = mysqli_fetch_assoc($config);
                                             <option value="">.::Pilih Layanan::.</option>
                                             <?php if ($cfg['cetak_dokumen'] == '1') { ?>
                                                 <option value="dokumen">Cetak Dokumen</option>
-                                            <?php } 
+                                            <?php }
                                             if ($cfg['cetak_foto'] == '1') { ?>
                                                 <option value="foto">Cetak Foto</option>
                                             <?php } ?>
@@ -182,7 +182,7 @@ $cfg = mysqli_fetch_assoc($config);
                                             <label class="col-sm-6">Warna Tulisan (<span id="warnaTulisan">Hitam-Putih</span>)</label>
                                             <label class="col-sm-6 pl-0">
                                                 <div class="mb-2">
-                                                    = Rp.<span id="hargaWrt"><?= $wrt['hitam_putih'] ?></span> 
+                                                    = Rp.<span id="hargaWrt"><?= $wrt['hitam_putih'] ?></span>
                                                     x <span class="jumHalaman">0</span> lembar<br>
                                                 </div>
                                                 <div>
@@ -190,7 +190,7 @@ $cfg = mysqli_fetch_assoc($config);
                                                 </div>
                                             </label>
 
-                                            <label class="col-sm-6">Jenis Kertas <span id="jenisKertas"></span></label> 
+                                            <label class="col-sm-6">Jenis Kertas <span id="jenisKertas"></span></label>
                                             <label class="col-sm-6 pl-0">
                                                 <div class="mb-2">
                                                     = Rp.<span id="hargaKertas">0</span> x <span class="jumHalaman">0</span> lembar
@@ -225,7 +225,7 @@ $cfg = mysqli_fetch_assoc($config);
                                     <h4 class="text-success"><b><i>RP.<span class="totalHarga">0</span></i></b></h4>
                                     <input type="hidden" name="harga" class="totalHarga">
                                 </div>
-                                <?php 
+                                <?php
                                 $is_member = '';
                                 $non_member = '';
                                 $is_member_name = '';
@@ -233,7 +233,7 @@ $cfg = mysqli_fetch_assoc($config);
                                 if ($mbr && $mbr['status'] != 'regist') {
                                     $non_member = 'hidden';
                                     $is_member_name = 'metode_pembayaran';
-                                } else { 
+                                } else {
                                     $is_member = 'hidden';
                                     $non_member_name = 'metode_pembayaran';
                                 }
@@ -243,7 +243,7 @@ $cfg = mysqli_fetch_assoc($config);
                                 <?php } ?>
                                 <div class="position-relative form-group" <?= $is_member ?> id="is_memeber_content">
                                     <div class="alert alert-success">
-                                        Anda terdaftar sebagai member premium. Anda dapat melakukan transaksi sesuai saldo yang anda miliki.<br> 
+                                        Anda terdaftar sebagai member premium. Anda dapat melakukan transaksi sesuai saldo yang anda miliki.<br>
                                         Saldo anda saat ini: <b>Rp. <?= number_format($mbr['saldo']) ?></b>
                                     </div>
                                     <input type="hidden" name="<?= $is_member_name ?>" value="member" id="is_memeber">
@@ -251,12 +251,12 @@ $cfg = mysqli_fetch_assoc($config);
 
                                 <div class="position-relative form-group" id="renew_memeber" hidden="">
                                     <div class="alert alert-warning">
-                                        Saldo member anda tidak mencukupi, silahkan lakukan topup dan pilih paket member yang kami sediakan atau pilih metode pembayaran di bawah.<br> 
+                                        Saldo member anda tidak mencukupi, silahkan lakukan topup dan pilih paket member yang kami sediakan atau pilih metode pembayaran di bawah.<br>
                                         Sias saldo anda: <b>Rp. <?= number_format($mbr['saldo']) ?></b>
                                         <a href="member_premium.php">Top Up Sekarag</a>
                                     </div>
                                 </div>
-                                
+
                                 <div class="position-relative form-group" <?= $non_member ?> id="non_memeber_content">
                                     <?php
                                     $cek_pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE user_id='$id' AND status='finish'");
@@ -302,12 +302,12 @@ require('template/footer.php');
 
         $('#layanan').change(function(event) {
             val = $(this).val();
-            if (val=='dokumen') {
+            if (val == 'dokumen') {
                 $('.not-pick').hide();
                 $('.cetak-foto').hide();
                 $('.cetak-dokumen').show();
                 $('.form-added').show();
-            } else if (val=='foto') {
+            } else if (val == 'foto') {
                 $('.not-pick').hide();
                 $('.cetak-dokumen').hide();
                 $('.cetak-foto').show();
@@ -322,8 +322,10 @@ require('template/footer.php');
         });
 
         // Change Warna Tulisan
+        var gl_harga = "<?= $wrt['hitam_putih'] ?>";
         $('.warna_tulisan').change(function(event) {
             var harga = $(this).attr('data-harga');
+            gl_harga = harga;
             $('#hargaWrt').text(harga);
             countPriceDokumen();
         });
@@ -332,14 +334,14 @@ require('template/footer.php');
         $('#jenis_kertas').change(function(event) {
             var id = $(this).val();
             $.ajax({
-                url     : 'controller.php',
-                method  : "POST",
-                data    : {
+                url: 'controller.php',
+                method: "POST",
+                data: {
                     req: 'getJenisKertas',
                     id: id
                 },
-                success : function(data) {
-                    $('#jenisKertas').text('('+data.jenis_kertas+')');
+                success: function(data) {
+                    $('#jenisKertas').text('(' + data.jenis_kertas + ')');
                     $('#hargaKertas').text(data.harga);
                     countPriceDokumen();
                 }
@@ -350,14 +352,14 @@ require('template/footer.php');
         $('#jilid').change(function(event) {
             var id = $(this).val();
             $.ajax({
-                url     : 'controller.php',
-                method  : "POST",
-                data    : {
+                url: 'controller.php',
+                method: "POST",
+                data: {
                     req: 'getJenisJilid',
                     id: id
                 },
-                success : function(data) {
-                    $('#jenisJilid').text('('+data.item+')');
+                success: function(data) {
+                    $('#jenisJilid').text('(' + data.item + ')');
                     $('#hargaJilid').text(data.harga);
                     countPriceDokumen();
                 }
@@ -374,14 +376,14 @@ require('template/footer.php');
         $('#ukuran_foto').change(function(event) {
             var id = $(this).val();
             $.ajax({
-                url     : 'controller.php',
-                method  : "POST",
-                data    : {
+                url: 'controller.php',
+                method: "POST",
+                data: {
                     req: 'getUkuranFoto',
                     id: id
                 },
-                success : function(data) {
-                    $('#ukuranFoto').text('('+data.ukuran+')');
+                success: function(data) {
+                    $('#ukuranFoto').text('(' + data.ukuran + ')');
                     $('#hargaUkuran').text(data.harga);
                     countPriceFoto();
                 }
@@ -437,7 +439,7 @@ require('template/footer.php');
                 alert('Format file tidak dibolehkan, pilih file berekstensi .docx, .doc, atau .pdf');
                 $(this).val('');
                 return;
-            } 
+            }
         });
 
         // Upload Foto
@@ -477,25 +479,25 @@ require('template/footer.php');
 
             var data = new FormData($(this)[0]);
             $.ajax({
-                url     : 'store.php',
-                method  : "POST",
-                data    : data,
-                contentType : false,
+                url: 'store.php',
+                method: "POST",
+                data: data,
+                contentType: false,
                 processData: false,
-                success : function(data) {
+                success: function(data) {
                     if (data.token) {
                         createMessage(data.agen_id, 'virtual_pay');
                         snap.pay(data.token, {
-                            onSuccess: function(result){
+                            onSuccess: function(result) {
                                 alert_payment();
                             },
-                            onPending: function(result){
+                            onPending: function(result) {
                                 alert_payment();
                             },
-                            onError: function(result){
+                            onError: function(result) {
                                 alert_payment();
                             },
-                            onClose: function(result){
+                            onClose: function(result) {
                                 alert_payment();
                             }
                         });
@@ -528,13 +530,13 @@ require('template/footer.php');
             form_data.append('file', file);
             form_data.append('req', 'getNumberPage');
             $.ajax({
-                url     : 'controller.php',
-                method  : "POST",
+                url: 'controller.php',
+                method: "POST",
                 cache: false,
                 contentType: false,
                 processData: false,
-                data    : form_data,
-                success : function(data) {
+                data: form_data,
+                success: function(data) {
                     $('#jumlah_halaman').val(data);
                     $('.jumHalaman').text(data);
                     countPriceDokumen();
@@ -548,31 +550,38 @@ require('template/footer.php');
 
             // warna tulisan
             var hargawrt = $('#hargaWrt').text();
-            var totalhargawrt = hargawrt*jumhalaman;
+            if (jumhalaman > 0 && jumhalaman <= 5) {
+                hargawrt = 500;
+                $('#hargaWrt').text('500');
+            } else {
+                hargawrt = gl_harga;
+                $('#hargaWrt').text(gl_harga);
+            }
+            var totalhargawrt = hargawrt * jumhalaman;
             $('#totalHargaWrt').text(totalhargawrt);
 
             // jenis kertas
             var hargakertas = $('#hargaKertas').text();
-            var totalhargakertas = hargakertas*jumhalaman;
+            var totalhargakertas = hargakertas * jumhalaman;
             $('#totalHargaKertas').text(totalhargakertas);
 
             // jenis jilid
             var hargajilid = parseInt($('#hargaJilid').text());
 
-            var subtotal = totalhargawrt+totalhargakertas+hargajilid;
+            var subtotal = totalhargawrt + totalhargakertas + hargajilid;
             $('#subTotal').text(subtotal);
 
-            $('.totalHarga').text(subtotal*jumlahrangkap);
-            $('.totalHarga').val(subtotal*jumlahrangkap);
+            $('.totalHarga').text(subtotal * jumlahrangkap);
+            $('.totalHarga').val(subtotal * jumlahrangkap);
 
-            cekSaldoMemeber(subtotal*jumlahrangkap)
+            cekSaldoMemeber(subtotal * jumlahrangkap)
         }
 
         function countPriceFoto() {
             var jumlahrangkap = $('#jumlah_rangkap').val() ? $('#jumlah_rangkap').val() : 1;
             // ukuran foto
             var hargaukuran = $('#hargaUkuran').text();
-            var totalhargaukuran = hargaukuran*jumlahrangkap;
+            var totalhargaukuran = hargaukuran * jumlahrangkap;
             $('#totalHargaUkuran').text(totalhargaukuran);
             $('.totalHarga').text(totalhargaukuran);
             $('.totalHarga').val(totalhargaukuran);
