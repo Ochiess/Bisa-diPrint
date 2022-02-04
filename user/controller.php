@@ -165,7 +165,7 @@ if (isset($_POST['req'])) {
 	if ($_POST['req'] == 'getNotifPesan') {
 		$id = $_POST['id'];
 
-		$notif = mysqli_query($conn, "SELECT * FROM notifikasi WHERE to_id='$id' AND type != 'message' ORDER BY status ASC, waktu DESC");
+		$notif = mysqli_query($conn, "SELECT * FROM notifikasi WHERE to_id='$id' AND (send_by='agen' AND type != 'message') ORDER BY status ASC, waktu DESC");
 		$content_notif = '';
 		foreach ($notif as $dta) {
 			if ($dta['status'] == 'new') $new = '<small><span class="badge badge-danger badge-pill pull-right">New</span></small>';
