@@ -61,7 +61,13 @@ if (isset($_POST['req'])) {
 
 		// Get Pesanan Review
 		// rumus untuk logika prioritas
-		$pesanan = mysqli_query($conn, "SELECT cetak.*, member.status as is_member FROM cetak LEFT JOIN member USING(user_id) WHERE agen_id='$id' AND cetak.status = 'review' ORDER BY is_member='active' DESC, metode_pembayaran='member' DESC, metode_pembayaran='virtual' DESC, waktu_pengambilan ASC");
+
+		// OLD
+		// $pesanan = mysqli_query($conn, "SELECT cetak.*, member.status as is_member FROM cetak LEFT JOIN member USING(user_id) WHERE agen_id='$id' AND cetak.status = 'review' ORDER BY is_member='active' DESC, metode_pembayaran='member' DESC, metode_pembayaran='virtual' DESC, waktu_pengambilan ASC");
+
+		// NEW
+		$pesanan = mysqli_query($conn, "SELECT cetak.*, member.status, cetak_dokumen.jumlah_halaman as jum_hal, cetak_dokumen.jumlah_rangkap as jum_rangkap, cetak_foto.jumlah_rangkap as ft_rangkap FROM cetak LEFT JOIN member ON cetak.user_id=member.user_id LEFT JOIN cetak_dokumen ON cetak_dokumen.cetak_id=cetak.id LEFT JOIN cetak_foto ON cetak_foto.cetak_id = cetak.id WHERE agen_id='$id' AND cetak.status = 'review' ORDER BY member.status='active' DESC, cetak.metode_pembayaran='member' DESC, cetak.metode_pembayaran='virtual' DESC, jum_hal*jum_rangkap DESC, ft_rangkap DESC, cetak.waktu_pengambilan ASC");
+
 		$html_review = '';
 		$no = 1;
 		foreach ($pesanan as $dta) {
@@ -175,6 +181,9 @@ if (isset($_POST['req'])) {
 			if ($dta['metode_pembayaran'] == 'langsung') $bayar = ['text-primary', 'Bayar Langsung'];
 			else $bayar = ['text-success', 'Pembayaran Virtual'];
 
+			if ($dta['delivery'] == 1) $delivery = '<b class="text-info">DIANTAR</b>';
+			else $delivery = '<b class="text-secondary">TIDAK</b>';
+
 			$html_done .= '
 			<tr>
 			<td>' . $no . '</td>
@@ -185,6 +194,7 @@ if (isset($_POST['req'])) {
 			<td class="text-center">
 			<span class="' . $bayar[0] . '" style="font-size: 12px;"><b>' . $bayar[1] . '</b></span>
 			</td>
+			<td class="text-center">' . $delivery . '</td>
 			<td class="text-center p-0">
 			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail' . $dta['id'] . '"><i class="fa fa-list"></i> Detail</button>
 			<button class="btn btn-outline-success btn-sm show-chat" style="font-size: 12px;" data-id="' . $usr['id'] . '"><i class="fa fa-comment"></i> Chat</button>

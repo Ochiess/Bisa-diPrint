@@ -21,8 +21,9 @@ if (isset($_POST['req'])) {
 		$waktu_pengambilan = $_POST['waktu_pengambilan'];
 		$harga = $_POST['harga'];
 		$metode_pembayaran = $_POST['metode_pembayaran'];
+		$delivery = $_POST['delivery'];
 
-		mysqli_query($conn, "INSERT INTO cetak VALUES(NULL, '$user_id', '$agen_id', '$layanan', '', '$catatan', '$waktu_pesanan', '$waktu_pengambilan', '$harga', '$metode_pembayaran', '', '')");
+		mysqli_query($conn, "INSERT INTO cetak VALUES(NULL, '$user_id', '$agen_id', '$layanan', '', '$catatan', '$waktu_pesanan', '$waktu_pengambilan', '$harga', '$metode_pembayaran', '', '$delivery', '')");
 		$cetak_id = mysqli_insert_id($conn);
 		$users = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM user WHERE id='$user_id'"));
 		$nama_user = str_replace(' ', '-', $users['nama_lengkap']);

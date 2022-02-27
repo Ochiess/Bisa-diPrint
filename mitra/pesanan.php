@@ -120,6 +120,7 @@ $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id' AND (sta
                                 <th width="90">Tipe File</th>
                                 <th>Harga</th>
                                 <th width="120">Metode Bayar</th>
+                                <th width="120">Pengantaran</th>
                                 <th width="120">Aksi</th>
                             </tr>
                         </thead>

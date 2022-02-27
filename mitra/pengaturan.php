@@ -10,10 +10,11 @@ if (isset($_GET['update_status'])) {
     $set = mysqli_fetch_assoc($setting_agen);
     $pembayaran_virtual = isset($_GET['pembayaran_virtual']) ? $_GET['pembayaran_virtual'] : $set['pembayaran_virtual'];
     $pembayaran_langsung = isset($_GET['pembayaran_langsung']) ? $_GET['pembayaran_langsung'] : $set['pembayaran_langsung'];
+    $delivery = isset($_GET['delivery']) ? $_GET['delivery'] : $set['delivery'];
     $cetak_dokumen = isset($_GET['cetak_dokumen']) ? $_GET['cetak_dokumen'] : $set['cetak_dokumen'];
     $cetak_foto = isset($_GET['cetak_foto']) ? $_GET['cetak_foto'] : $set['cetak_foto'];
 
-    mysqli_query($conn, "UPDATE setting_agen SET pembayaran_virtual='$pembayaran_virtual', pembayaran_langsung='$pembayaran_langsung', cetak_dokumen='$cetak_dokumen', cetak_foto='$cetak_foto' WHERE agen_id='$agen_id'");
+    mysqli_query($conn, "UPDATE setting_agen SET pembayaran_virtual='$pembayaran_virtual', pembayaran_langsung='$pembayaran_langsung', cetak_dokumen='$cetak_dokumen', cetak_foto='$cetak_foto', delivery='$delivery' WHERE agen_id='$agen_id'");
     $success = true;
 }
 
@@ -32,6 +33,18 @@ if (isset($_POST['set_rekening'])) {
     $rekening = $_POST['rekening'];
     $no_rekening = $_POST['no_rekening'];
     mysqli_query($conn, "UPDATE setting_agen SET rekening='$rekening', no_rekening='$no_rekening' WHERE agen_id='$agen_id'");
+    $success = true;
+}
+
+if (isset($_POST['set_ongkir'])) {
+    $jarak = $_POST['jarak'];
+    $ket = '';
+    foreach ($jarak as $i => $jrk) {
+        $hrg = $_POST['ongkir'][$i];
+        $ket .= $jrk . '|- ' . $hrg . '|+';
+    }
+
+    mysqli_query($conn, "UPDATE setting_agen SET ket_delivery='$ket' WHERE agen_id='$agen_id'");
     $success = true;
 }
 
@@ -64,13 +77,13 @@ $cfg = mysqli_fetch_assoc($config);
                         </div>
                         <div class="col-sm-1">
                             <div class="custom-radio custom-control">
-                                <input type="radio" id="dokumen_aktif" name="cetak_dokumen" class="custom-control-input cetak_dokumen" value="1" <?= ($cfg['cetak_dokumen']==1) ? 'checked' : '' ?>>
+                                <input type="radio" id="dokumen_aktif" name="cetak_dokumen" class="custom-control-input cetak_dokumen" value="1" <?= ($cfg['cetak_dokumen'] == 1) ? 'checked' : '' ?>>
                                 <label class="custom-control-label" for="dokumen_aktif">Aktif</label>
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="custom-radio custom-control">
-                                <input type="radio" id="dokumen_nonaktif" name="cetak_dokumen" class="custom-control-input cetak_dokumen" value="0" <?= ($cfg['cetak_dokumen']==0) ? 'checked' : '' ?>>
+                                <input type="radio" id="dokumen_nonaktif" name="cetak_dokumen" class="custom-control-input cetak_dokumen" value="0" <?= ($cfg['cetak_dokumen'] == 0) ? 'checked' : '' ?>>
                                 <label class="custom-control-label" for="dokumen_nonaktif">Tidak Aktif</label>
                             </div>
                         </div>
@@ -81,84 +94,137 @@ $cfg = mysqli_fetch_assoc($config);
                         </div>
                         <div class="col-sm-1">
                             <div class="custom-radio custom-control">
-                                <input type="radio" id="foto_aktif" name="cetak_foto" class="custom-control-input cetak_foto" value="1" <?= ($cfg['cetak_foto']==1) ? 'checked' : '' ?>>
+                                <input type="radio" id="foto_aktif" name="cetak_foto" class="custom-control-input cetak_foto" value="1" <?= ($cfg['cetak_foto'] == 1) ? 'checked' : '' ?>>
                                 <label class="custom-control-label" for="foto_aktif">Aktif</label>
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="custom-radio custom-control">
-                                <input type="radio" id="foto_nonaktif" name="cetak_foto" class="custom-control-input cetak_foto" value="0" <?= ($cfg['cetak_foto']==0) ? 'checked' : '' ?>>
+                                <input type="radio" id="foto_nonaktif" name="cetak_foto" class="custom-control-input cetak_foto" value="0" <?= ($cfg['cetak_foto'] == 0) ? 'checked' : '' ?>>
                                 <label class="custom-control-label" for="foto_nonaktif">Tidak Aktif</label>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="main-card mb-3 card border">
-                <div class="card-header">Metode Pembayaran</div>
+                <div class="card-header">
+                    Rekening Penarikan Dana
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label><b>Atur Rekening Penarikan Dana</b></label>
+                            <div class="mb-2 text-justify">
+                                <small class="text-muted">Jika anda mengaktifkan metode pembayaran virtual, anda diharuskan megisi data rekening penarikan dana. kami akan mengirimkan dana ke rekening yang anda atur dibawah apabila anda ingin melakukan penarikan dana dari sistem. Pastikan anda megisi data yang valid</small>
+                            </div>
+                            <form method="POST">
+                                <div class="form-group">
+                                    <label>Jenis Rekening</label>
+                                    <?php
+                                    $bank = ["Bank BRI", "Bank BNI", "Bank Syariah", "GoPay", "Dana", "OVO"];
+                                    ?>
+                                    <select class="form-control" name="rekening" required="">
+                                        <option value="">.::Pilih Rekening::.</option>
+                                        <?php foreach ($bank as $bnk) { ?>
+                                            <option value="<?= $bnk ?>" <?php if ($bnk == $cfg['rekening']) echo 'selected' ?>><?= $bnk ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nomor Rekening</label>
+                                    <input type="text" name="no_rekening" class="form-control" placeholder="Nomor Rekening.." value="<?= $cfg['no_rekening'] ?>" required="" autocomplete="off">
+                                </div>
+                                <button class="btn btn-primary btn-sm" type="submit" name="set_rekening"><i class="fa fa-save"></i> Simpan Pembaruan</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-card mb-3 card border">
+                <div class="card-header">Layanan Pengantaran</div>
                 <div class="card-body">
                     <div class="row mb-4">
                         <div class="col-sm-12">
-                            <label><b>Pembayaran Langsung</b></label>
+                            <label><b>Atur Status Layanan</b></label>
                         </div>
                         <div class="col-sm-1">
                             <div class="custom-radio custom-control">
-                                <input type="radio" id="langsung_aktif" name="pembayaran_langsung" class="custom-control-input pembayaran_langsung" value="1" <?= ($cfg['pembayaran_langsung']==1) ? 'checked' : '' ?>>
-                                <label class="custom-control-label" for="langsung_aktif">Aktif</label>
+                                <input type="radio" id="delivery_aktif" name="delivery" class="custom-control-input delivery" value="1" <?= ($cfg['delivery'] == 1) ? 'checked' : '' ?>>
+                                <label class="custom-control-label" for="delivery_aktif">Aktif</label>
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="custom-radio custom-control">
-                                <input type="radio" id="langsung_nonaktif" name="pembayaran_langsung" class="custom-control-input pembayaran_langsung" value="0" <?= ($cfg['pembayaran_langsung']==0) ? 'checked' : '' ?>>
-                                <label class="custom-control-label" for="langsung_nonaktif">Tidak Aktif</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-12">
-                            <label><b>Pembayaran Virtual</b></label>
-                        </div>
-                        <div class="col-sm-1">
-                            <div class="custom-radio custom-control">
-                                <input type="radio" id="virtual_aktif" name="pembayaran_virtual" class="custom-control-input pembayaran_virtual" value="1" <?= ($cfg['pembayaran_virtual']==1) ? 'checked' : '' ?>>
-                                <label class="custom-control-label" for="virtual_aktif">Aktif</label>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="custom-radio custom-control">
-                                <input type="radio" id="virtual_nonaktif" name="pembayaran_virtual" class="custom-control-input pembayaran_virtual" value="0" <?= ($cfg['pembayaran_virtual']==0) ? 'checked' : '' ?>>
-                                <label class="custom-control-label" for="virtual_nonaktif">Tidak Aktif</label>
+                                <input type="radio" id="delivery_nonaktif" name="delivery" class="custom-control-input delivery" value="0" <?= ($cfg['delivery'] == 0) ? 'checked' : '' ?>>
+                                <label class="custom-control-label" for="delivery_nonaktif">Tidak Aktif</label>
                             </div>
                         </div>
                     </div>
 
-                    <?php if ($cfg['pembayaran_virtual']==1) { ?>
+                    <?php if ($cfg['delivery'] == 1) {
+                        $get_ongkir = $cfg['ket_delivery'];
+                        $jarak = [];
+                        $ongkir = [];
+                        if ($get_ongkir) {
+                            $get_a = explode('|+', $get_ongkir);
+
+                            for ($i = 0; $i < count($get_a) - 1; $i++) {
+                                $get_b = explode('|-', $get_a[$i]);
+                                $jarak[$i] = $get_b[0];
+                                $ongkir[$i] = str_replace(' ', '', $get_b[1]);
+                            }
+                        }
+                    ?>
                         <hr>
                         <div class="row mt-2">
                             <div class="col-sm-6">
-                                <label><b>Atur Rekening Penarikan Dana</b></label>
+                                <label><b>Atur Keterangan Biaya Pengiriman</b></label>
                                 <div class="mb-2 text-justify">
                                     <small class="text-muted">Jika anda mengaktifkan metode pembayaran virtual, anda diharuskan megisi data rekening penarikan dana. kami akan mengirimkan dana ke rekening yang anda atur dibawah apabila anda ingin melakukan penarikan dana dari sistem. Pastikan anda megisi data yang valid</small>
                                 </div>
                                 <form method="POST">
-                                    <div class="form-group">
-                                        <label>Jenis Rekening</label>
-                                        <?php
-                                        $bank = ["Bank BRI", "Bank BNI", "Bank Syariah", "GoPay", "Dana", "OVO"]; 
-                                        ?>
-                                        <select class="form-control" name="rekening" required="">
-                                            <option value="">.::Pilih Rekening::.</option>
-                                            <?php foreach ($bank as $bnk) { ?>
-                                                <option value="<?= $bnk ?>" <?php if ($bnk == $cfg['rekening']) echo 'selected' ?>><?= $bnk ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Nomor Rekening</label>
-                                        <input type="text" name="no_rekening" class="form-control" placeholder="Nomor Rekening.." value="<?= $cfg['no_rekening'] ?>" required="" autocomplete="off">
-                                    </div>
-                                    <button class="btn btn-primary btn-sm" type="submit" name="set_rekening"><i class="fa fa-save"></i> Simpan Pembaruan</button>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th width="10">No</th>
+                                                <th>Keterangan Jarak</th>
+                                                <th>Keterangan Ongkir</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>
+                                                    <input type="text" name="jarak[]" class="form-control" placeholder="Jarak.." value="<?= isset($jarak[0]) ? $jarak[0] : '' ?>" autocomplete="off">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="ongkir[]" class="form-control" placeholder="Ongkir.." value="<?= isset($ongkir[0]) ? $ongkir[0] : '' ?>" autocomplete="off">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>
+                                                    <input type="text" name="jarak[]" class="form-control" placeholder="Jarak.." value="<?= isset($jarak[1]) ? $jarak[1] : '' ?>" autocomplete="off">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="ongkir[]" class="form-control" placeholder="Ongkir.." value="<?= isset($ongkir[1]) ? $ongkir[1] : '' ?>" autocomplete="off">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>
+                                                    <input type="text" name="jarak[]" class="form-control" placeholder="Jarak.." value="<?= isset($jarak[2]) ? $jarak[2] : '' ?>" autocomplete="off">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="ongkir[]" class="form-control" placeholder="Ongkir.." value="<?= isset($ongkir[2]) ? $ongkir[2] : '' ?>" autocomplete="off">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <button class="btn btn-primary btn-sm" type="submit" name="set_ongkir"><i class="fa fa-save"></i> Simpan</button>
                                 </form>
                             </div>
                         </div>
@@ -183,27 +249,27 @@ $cfg = mysqli_fetch_assoc($config);
                             </tr>
                             <tr>
                                 <td>Nama Percetakan</td>
-                                <td><?= $row["nama_percetakan"];?></td>
+                                <td><?= $row["nama_percetakan"]; ?></td>
                             </tr>
                             <tr>
                                 <td>Nama Pemilik</td>
-                                <td><?= $row["nama_pemilik"];?></td>
+                                <td><?= $row["nama_pemilik"]; ?></td>
                             </tr>
                             <tr>
                                 <td>No. HP</td>
-                                <td><?= $row["telpon"];?></td>
+                                <td><?= $row["telpon"]; ?></td>
                             </tr>
                             <tr>
                                 <td>Email</td>
-                                <td><?= $row["email"];?></td>
+                                <td><?= $row["email"]; ?></td>
                             </tr>
                             <tr>
                                 <td>Alamat</td>
-                                <td><?= $row["alamat"];?></td>
+                                <td><?= $row["alamat"]; ?></td>
                             </tr>
                         </tbody>
                     </table>
-                    <a href="edit_profil.php?id=<?=$row["id"]; ?>" type="Submit" name="submit" class="mb-2 mt-2 btn btn-primary">Edit Profil</a>
+                    <a href="edit_profil.php?id=<?= $row["id"]; ?>" type="Submit" name="submit" class="mb-2 mt-2 btn btn-primary">Edit Profil</a>
                 </div>
             </div>
 
@@ -216,13 +282,13 @@ $cfg = mysqli_fetch_assoc($config);
                         </div>
                         <div class="col-sm-1">
                             <div class="custom-radio custom-control">
-                                <input type="radio" id="status_aktif" name="status" class="custom-control-input status_lyn" value="active" <?= ($row['status']=='active') ? 'checked' : '' ?>>
+                                <input type="radio" id="status_aktif" name="status" class="custom-control-input status_lyn" value="active" <?= ($row['status'] == 'active') ? 'checked' : '' ?>>
                                 <label class="custom-control-label" for="status_aktif">Aktif</label>
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="custom-radio custom-control">
-                                <input type="radio" id="status_nonaktif" name="status" class="custom-control-input status_lyn" value="nonactive" <?= ($row['status']=='nonactive') ? 'checked' : '' ?>>
+                                <input type="radio" id="status_nonaktif" name="status" class="custom-control-input status_lyn" value="nonactive" <?= ($row['status'] == 'nonactive') ? 'checked' : '' ?>>
                                 <label class="custom-control-label" for="status_nonaktif">Tidak Aktif</label>
                             </div>
                         </div>
@@ -269,7 +335,7 @@ require('template/footer.php');
                 showCancelButton: true,
                 confirmButtonText: 'Lanjutkan',
                 preConfirm: () => {
-                    window.location.href='pengaturan.php?update_status=true&cetak_dokumen='+val;
+                    window.location.href = 'pengaturan.php?update_status=true&cetak_dokumen=' + val;
                 }
             });
         });
@@ -302,7 +368,31 @@ require('template/footer.php');
                 showCancelButton: true,
                 confirmButtonText: 'Lanjutkan',
                 preConfirm: () => {
-                    window.location.href='pengaturan.php?update_status=true&cetak_foto='+val;
+                    window.location.href = 'pengaturan.php?update_status=true&cetak_foto=' + val;
+                }
+            });
+        });
+
+        $('.delivery').change(function(event) {
+            var val = $(this).val();
+            if (val == '1') {
+                $('#delivery_nonaktif').prop('checked', true);
+                var title = 'Aktifkan Layanan Pengantaran?';
+                var text = 'Klik "Lanjutkan" untuk mengaktifkan layanan pengantaran!';
+            } else {
+                $('#delivery_aktif').prop('checked', true);
+                var title = 'Nonaktifkan Layanan Pengantaran?';
+                var text = 'Klik "Lanjutkan" untuk menonaktifkan layanan pengantaran!';
+            }
+
+            Swal.fire({
+                icon: 'info',
+                title: title,
+                text: text,
+                showCancelButton: true,
+                confirmButtonText: 'Lanjutkan',
+                preConfirm: () => {
+                    window.location.href = 'pengaturan.php?update_status=true&delivery=' + val;
                 }
             });
         });
@@ -335,7 +425,7 @@ require('template/footer.php');
                 showCancelButton: true,
                 confirmButtonText: 'Lanjutkan',
                 preConfirm: () => {
-                    window.location.href='pengaturan.php?update_status=true&pembayaran_langsung='+val;
+                    window.location.href = 'pengaturan.php?update_status=true&pembayaran_langsung=' + val;
                 }
             });
         });
@@ -368,7 +458,7 @@ require('template/footer.php');
                 showCancelButton: true,
                 confirmButtonText: 'Lanjutkan',
                 preConfirm: () => {
-                    window.location.href='pengaturan.php?update_status=true&pembayaran_virtual='+val;
+                    window.location.href = 'pengaturan.php?update_status=true&pembayaran_virtual=' + val;
                 }
             });
         });
@@ -392,7 +482,7 @@ require('template/footer.php');
                 showCancelButton: true,
                 confirmButtonText: 'Lanjutkan',
                 preConfirm: () => {
-                    window.location.href='pengaturan.php?status_layanan=true&value='+val;
+                    window.location.href = 'pengaturan.php?status_layanan=true&value=' + val;
                 }
             });
         });
@@ -404,17 +494,17 @@ require('template/footer.php');
                 title: 'Berhasil Diproses',
                 text: 'Data telah telah diperbarui',
                 preConfirm: () => {
-                    window.location.href='pengaturan.php';
+                    window.location.href = 'pengaturan.php';
                 }
             });
-        <?php } 
-        if (isset($antrian)) {?>
+        <?php }
+        if (isset($antrian)) { ?>
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal Diproses',
                 text: 'Saat ini anda tidak dapat menonaktifkan status layanan. Selesaikan semua pesanan terlebih dahulu!',
                 preConfirm: () => {
-                    window.location.href='pengaturan.php';
+                    window.location.href = 'pengaturan.php';
                 }
             });
         <?php } ?>

@@ -1,7 +1,7 @@
 <?php
 require('template/header.php');
 $id_agen = $_GET['id'];
-$result = panggil_produk($id_agen);
+// $result = panggil_produk($id_agen);
 $agent = mysqli_query($conn, "SELECT * FROM agen WHERE id='$id_agen'");
 $agn = mysqli_fetch_assoc($agent);
 $config = mysqli_query($conn, "SELECT * FROM setting_agen WHERE agen_id='$id_agen'");
@@ -30,7 +30,7 @@ $antrian = mysqli_num_rows($pesanan);
                     <h6 class="card-subtitle" style="color: green; font-size: 12px;">Online</h6>
                     <p><i><?= $agn['keterangan'] ?></i></p>
                     <hr>
-                    <div class="row"> 
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="mb-2 ml-1 row">
                                 <span class="col-sm-1 p-0">
@@ -73,7 +73,7 @@ $antrian = mysqli_num_rows($pesanan);
                         </div>
                         <div class="col-md-8 pl-1">
                             <a href="cetak.php?id_agen=<?= $id_agen ?>" class="mb-2 mt-2 btn btn-block btn-lg btn-success"><b><i class="fa fa-print"></i>&nbsp; Cetak Disini</b></a>
-                        </div>                        
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,7 +82,7 @@ $antrian = mysqli_num_rows($pesanan);
             <div class="main-card card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Daftar Layanan</h5>
-                    
+
                     <?php if ($cfg['cetak_dokumen'] == '1') { ?>
                         <table class="mb-2 table table-bordered">
                             <thead>
@@ -105,65 +105,65 @@ $antrian = mysqli_num_rows($pesanan);
                                         2. Berwarna<br>
                                     </td>
                                     <td>
-                                        <?php 
+                                        <?php
                                         $warna_tulisan = mysqli_query($conn, "SELECT * FROM warna_tulisan WHERE agen_id='$id_agen'");
                                         $wrt = mysqli_fetch_assoc($warna_tulisan);
-                                        echo 'Rp.'.number_format($wrt['hitam_putih']).'/lembar<br>';
-                                        echo 'Rp.'.number_format($wrt['berwarna']).'/lembar<br>';
+                                        echo 'Rp.' . number_format($wrt['hitam_putih']) . '/lembar<br>';
+                                        echo 'Rp.' . number_format($wrt['berwarna']) . '/lembar<br>';
                                         ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <?php 
+                                    <?php
                                     $jenis_kertas = mysqli_query($conn, "SELECT * FROM jenis_kertas WHERE agen_id='$id_agen'");
                                     ?>
                                     <td>Jenis Kertas</td>
                                     <td>
-                                        <?php 
-                                        $no=1;
+                                        <?php
+                                        $no = 1;
                                         foreach ($jenis_kertas as $jnk) {
-                                            echo $no.'. '.$jnk['jenis_kertas'].'<br>';
+                                            echo $no . '. ' . $jnk['jenis_kertas'] . '<br>';
                                             $no++;
                                         } ?>
                                     </td>
                                     <td>
-                                        <?php 
-                                        $no=1;
+                                        <?php
+                                        $no = 1;
                                         foreach ($jenis_kertas as $jnk) {
-                                            echo $jnk['harga'] ? 'Rp.'.number_format($jnk['harga']).'/lembar' : '-';
+                                            echo $jnk['harga'] ? 'Rp.' . number_format($jnk['harga']) . '/lembar' : '-';
                                             echo '<br>';
                                             $no++;
                                         } ?>
                                     </td>
                                 </tr>
                                 <?php if ($cfg['jilid'] == '1') {
-                                    $jilid = mysqli_query($conn, "SELECT * FROM jilid WHERE agen_id='$id_agen'"); 
+                                    $jilid = mysqli_query($conn, "SELECT * FROM jilid WHERE agen_id='$id_agen'");
                                     if (mysqli_num_rows($jilid) > 0) { ?>
                                         <tr>
                                             <td>Jilid</td>
                                             <td>
-                                                <?php 
-                                                $no=1;
+                                                <?php
+                                                $no = 1;
                                                 foreach ($jilid as $jld) {
-                                                    echo $no.'. '.$jld['item'].'<br>';
+                                                    echo $no . '. ' . $jld['item'] . '<br>';
                                                     $no++;
                                                 } ?>
                                             </td>
                                             <td>
-                                                <?php 
-                                                $no=1;
+                                                <?php
+                                                $no = 1;
                                                 foreach ($jilid as $jld) {
-                                                    echo $jld['harga'] ? 'Rp.'.number_format($jld['harga']) : '-';
+                                                    echo $jld['harga'] ? 'Rp.' . number_format($jld['harga']) : '-';
                                                     echo '<br>';
                                                     $no++;
                                                 } ?>
                                             </td>
                                         </tr>
-                                    <?php }
+                                <?php }
                                 } ?>
                             </tbody>
                         </table>
-                    <?php } 
+                    <?php }
                     if ($cfg['cetak_foto'] == '1') { ?>
                         <table class="mb-2 table table-bordered">
                             <thead>
@@ -180,23 +180,23 @@ $antrian = mysqli_num_rows($pesanan);
                             </thead>
                             <tbody>
                                 <tr>
-                                    <?php 
+                                    <?php
                                     $ukuran_foto = mysqli_query($conn, "SELECT * FROM ukuran_foto WHERE agen_id='$id_agen'");
                                     ?>
                                     <td>Ukuran Foto</td>
                                     <td>
-                                        <?php 
-                                        $no=1;
+                                        <?php
+                                        $no = 1;
                                         foreach ($ukuran_foto as $jnk) {
-                                            echo $no.'. '.$jnk['ukuran'].'<br>';
+                                            echo $no . '. ' . $jnk['ukuran'] . '<br>';
                                             $no++;
                                         } ?>
                                     </td>
                                     <td>
-                                        <?php 
-                                        $no=1;
+                                        <?php
+                                        $no = 1;
                                         foreach ($ukuran_foto as $jnk) {
-                                            echo $jnk['harga'] ? 'Rp.'.number_format($jnk['harga']).'/lembar' : '-';
+                                            echo $jnk['harga'] ? 'Rp.' . number_format($jnk['harga']) . '/lembar' : '-';
                                             echo '<br>';
                                             $no++;
                                         } ?>
@@ -211,7 +211,44 @@ $antrian = mysqli_num_rows($pesanan);
                                 <?php } ?>
                             </tbody>
                         </table>
-                    <?php } 
+                    <?php }
+                    if ($cfg['delivery'] == '1' && $cfg['ket_delivery'] != null) { ?>
+                        <table class="mb-2 table table-bordered">
+                            <thead>
+                                <tr class="bg-secondary text-white">
+                                    <td colspan="3">
+                                        <h6><b>Layanan Pengantaran</b></h6>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Jarak</th>
+                                    <th>Ongkos Kirim</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $get_ongkir = $cfg['ket_delivery'];
+                                $jarak = [];
+                                $ongkir = [];
+                                if ($get_ongkir) {
+                                    $get_a = explode('|+', $get_ongkir);
+
+                                    for ($i = 0; $i < count($get_a) - 1; $i++) {
+                                        $get_b = explode('|-', $get_a[$i]);
+                                        $jarak[$i] = $get_b[0];
+                                        $ongkir[$i] = str_replace(' ', '', $get_b[1]);
+                                ?>
+                                        <tr>
+                                            <td><?= $jarak[$i] ?></td>
+                                            <td><?= $ongkir[$i] ?></td>
+                                        </tr>
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    <?php }
                     if ($cfg['cetak_dokumen'] == '0' && $cfg['cetak_foto'] == '0') { ?>
                         <div class="text-center">
                             <h6 class="text-center mt-4"><i>Tidak ada layanan di, silahkan pilih tempat lain!</i></h6>
