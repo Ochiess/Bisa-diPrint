@@ -8,6 +8,16 @@ $config = mysqli_query($conn, "SELECT * FROM setting_agen WHERE agen_id='$id_age
 $cfg = mysqli_fetch_assoc($config);
 $pesanan = mysqli_query($conn, "SELECT * FROM cetak WHERE agen_id='$id_agen' AND (status != 'finish' AND status != 'cancel')");
 $antrian = mysqli_num_rows($pesanan);
+
+$get_rating = mysqli_query($conn, "SELECT * FROM rating WHERE agen_id='$id_agen'");
+$count_rat = mysqli_num_rows($get_rating);
+$get_rat = 0;
+foreach ($get_rating as $rat) {
+    $get_rat = $get_rat + $rat['rating'];
+}
+
+if ($get_rat > 0) $rating = $get_rat / $count_rat;
+else $rating = 0;
 ?>
 
 <div class="app-main__inner">
@@ -26,8 +36,29 @@ $antrian = mysqli_num_rows($pesanan);
             <div class="main-card mb-3 card">
                 <img class="card-img-top d-block w-100" height="250" src="../mitra/img/daftar<?= $agn["poto"] ?>" alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title"><?= $agn['nama_percetakan'] ?></h5>
-                    <h6 class="card-subtitle" style="color: green; font-size: 12px;">Online</h6>
+                    <h5 class="card-title">
+                        <?= $agn['nama_percetakan'] ?>
+                        <div style="margin-bottom: -10px; font-size: 11px;">
+                            <?php
+                            for ($i = 1; $i <= $rating; $i++) {
+                            ?>
+                                <span class="text-warning"><i class="fa fa-star fa-sm"></i></span>
+                                <?php }
+                            if ($rating != 0 && $rating != 1 && $rating != 2 && $rating != 3 && $rating != 4 && $rating != 5) {
+                                if (round($rating) == $rating) { ?>
+                                    <span class="text-light"><i class="fa fa-star fa-sm"></i></span>
+                                <?php } else { ?>
+                                    <span class="text-warning"><i class="fa fa-star-half-alt fa-sm"></i></span>
+                                <?php }
+                            }
+                            for ($i = $rating + 1; $i <= 5; $i++) {
+                                ?>
+                                <span class="text-light"><i class="fa fa-star fa-sm"></i></span>
+                            <?php } ?>
+                            <span style="text-transform: lowercase;"><?= ($rating == round($rating) ? round($rating, 1) . '.0' : round($rating, 1)) . ' (' . $count_rat . ')' ?></span>
+                        </div>
+                    </h5>
+                    <h6 class="card-subtitle mt-2" style="color: green; font-size: 12px;">Online</h6>
                     <p><i><?= $agn['keterangan'] ?></i></p>
                     <hr>
                     <div class="row">
