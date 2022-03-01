@@ -277,7 +277,7 @@ require('template/footer.php');
                         <div class="mb-4">
                             <input type="hidden" name="rating" class="val-rating">
                             <input type="hidden" name="user_id" value="<?= $id ?>">
-                            <input type="hidden" name="agen_id" value="<?= $dta['id'] ?>">
+                            <input type="hidden" name="agen_id" value="<?= $dta['agen_id'] ?>">
                             <button type="submit" name="set_rating" class="btn btn-success btn-lg"><i class="fa fa-paper-plane"></i> Kirim Rating</button>
                         </div>
                     </form>
