@@ -269,7 +269,7 @@ $cfg = mysqli_fetch_assoc($config);
                                     ?>
                                     <label for="exampleSelect">Metode Pembayaran</label>
                                     <select name="<?= $non_member_name ?>" id="non_memeber" class="form-control">
-                                        <option value="langsung" <?= $d_pl ? 'disabled' : '' ?>>Bayar Langsung</option>
+                                        <!-- <option value="langsung" <?= $d_pl ? 'disabled' : '' ?>>Bayar Langsung</option> -->
                                         <option value="virtual" <?= $d_pv ? 'disabled' : '' ?>>Pembayaran Virtual</option>
                                     </select>
                                     <?php if ($first) { ?>
@@ -278,6 +278,59 @@ $cfg = mysqli_fetch_assoc($config);
                                         </div>
                                     <?php } ?>
                                 </div>
+                                <?php
+                                if ($cfg['delivery'] == '1' && $cfg['ket_delivery'] != null) { ?>
+                                    <div class="position-relative form-group">
+                                        <hr>
+                                        <label>Layanan Pengantaran</label>
+                                        <div>
+                                            <input type="radio" name="delivery" class="delivery" id="delivery_on" value="1"> <label for="delivery_on">Ya&nbsp;&nbsp;</label>
+                                            <input type="radio" checked="" name="delivery" class="delivery" id="delivery_off" value="0">
+                                            <label for="delivery_off">Tidak</label>
+                                        </div>
+                                        <div id="ket_delivery" hidden>
+                                            <small>
+                                                Ongkos kirim yang harus anda bayarakan sesuai dengan jarak yang di lalui driver dan dibayarkan saat barang telah sampai di tujuan.<br>
+                                                <div class="mb-2 text-center">
+                                                    <b><u>Keteranagn Ongir</u></b>
+                                                </div>
+                                                <table class="mb-2 table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Jarak</th>
+                                                            <th>Ongkos Kirim</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php
+                                                        $get_ongkir = $cfg['ket_delivery'];
+                                                        $jarak = [];
+                                                        $ongkir = [];
+                                                        if ($get_ongkir) {
+                                                            $get_a = explode('|+', $get_ongkir);
+
+                                                            for ($i = 0; $i < count($get_a) - 1; $i++) {
+                                                                $get_b = explode('|-', $get_a[$i]);
+                                                                $jarak[$i] = $get_b[0];
+                                                                $ongkir[$i] = str_replace(' ', '', $get_b[1]);
+                                                        ?>
+                                                                <tr>
+                                                                    <td><?= $jarak[$i] ?></td>
+                                                                    <td><?= $ongkir[$i] ?></td>
+                                                                </tr>
+                                                        <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </tbody>
+                                                </table>
+                                            </small>
+                                        </div>
+                                    </div>
+                                <?php
+                                } else { ?>
+                                    <input type="hidden" name="delivery" value="0">
+                                <?php } ?>
                                 <input type="hidden" name="user_id" value="<?= $id ?>">
                                 <input type="hidden" name="agen_id" value="<?= $id_agen ?>">
                                 <input type="hidden" name="req" value="storeData">
@@ -319,6 +372,13 @@ require('template/footer.php');
                 $('.form-added').hide();
             }
             resetForm(val);
+        });
+
+        // Keterangan Ongkir
+        $('.delivery').click(function(e) {
+            var val = $(this).val();
+            if (val == 1) $('#ket_delivery').removeAttr('hidden');
+            else $('#ket_delivery').attr('hidden', '');
         });
 
         // Change Warna Tulisan
