@@ -441,6 +441,12 @@ require('template/footer.php');
         createMessage(agen_id, 'order_done');
     });
 
+    $(document).on('click', '.telah-diambil', function(event) {
+        event.preventDefault();
+        var id = $(this).attr('data-id');
+        updateStatus(id, 'finish');
+    });
+
     $('.proses').click(function(event) {
         event.preventDefault();
         var id = $(this).attr('data-id');
