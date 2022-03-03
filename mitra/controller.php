@@ -197,14 +197,15 @@ if (isset($_POST['req'])) {
 			<td class="text-center">' . $delivery . '</td>
 			<td class="text-center p-0">
 			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail' . $dta['id'] . '"><i class="fa fa-list"></i> Detail</button>
-			<button class="btn btn-outline-success btn-sm show-chat" style="font-size: 12px;" data-id="' . $usr['id'] . '"><i class="fa fa-comment"></i> Chat</button>
+			<button class="btn btn-outline-primary btn-sm show-chat" style="font-size: 12px;" data-id="' . $usr['id'] . '"><i class="fa fa-comment"></i> Chat</button>
+			<button class="btn btn-outline-success btn-sm mt-1 telah-diambil" style="font-size: 12px;" data-id="' . $dta['id'] . '"><i class="fa fa-check"></i> Telah Diambil</button>
 			</td>
 			</tr>
 			';
 			$no++;
 		}
 		if ($no == 1) {
-			$html_done .= '<tr><td colspan="7" class="text-center"><i>Tidak ada data</i></td></tr>';
+			$html_done .= '<tr><td colspan="8" class="text-center"><i>Tidak ada data</i></td></tr>';
 		}
 
 		// Get Pesanan Panding
@@ -264,6 +265,7 @@ if (isset($_POST['req'])) {
 			if ($status == 'proccess') $message = 'Pesanan telah diterima, silahkan diproses sesuai detail pesanan';
 			else if ($status == 'done') $message = 'Pesanan telah selesai diproses, harap tunggu pelanggan mengkonfirmasi pesanannya';
 			else if ($status == 'cancel') $message = 'Pesanan telah dibatalkan, anda tidak dapat memprosesnya lagi';
+			else if ($status == 'finish') $message = 'Pesanan telah diambil oleh pelanggan';
 		} else {
 			$statusRes = "Gagal";
 			$message = 'Terjadi kesalahan, permintaan anda gagal diproses';
