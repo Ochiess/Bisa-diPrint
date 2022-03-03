@@ -196,9 +196,9 @@ if (isset($_POST['req'])) {
 			</td>
 			<td class="text-center">' . $delivery . '</td>
 			<td class="text-center p-0">
-			<button class="btn btn-outline-info btn-sm" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail' . $dta['id'] . '"><i class="fa fa-list"></i> Detail</button>
-			<button class="btn btn-outline-primary btn-sm show-chat" style="font-size: 12px;" data-id="' . $usr['id'] . '"><i class="fa fa-comment"></i> Chat</button>
-			<button class="btn btn-outline-success btn-sm mt-1 telah-diambil" style="font-size: 12px;" data-id="' . $dta['id'] . '"><i class="fa fa-check"></i> Telah Diambil</button>
+			<button class="btn btn-outline-info btn-sm mt-1" style="font-size: 12px;" data-toggle="modal" data-target=".modal-detail' . $dta['id'] . '"><i class="fa fa-list"></i> Detail</button>
+			<button class="btn btn-outline-primary btn-sm mt-1 show-chat" style="font-size: 12px;" data-id="' . $usr['id'] . '"><i class="fa fa-comment"></i> Chat</button>
+			<button class="btn btn-outline-success btn-sm mt-1 mb-1 telah-diambil" style="font-size: 12px;" data-id="' . $dta['id'] . '"><i class="fa fa-check"></i> Telah Diambil</button>
 			</td>
 			</tr>
 			';
