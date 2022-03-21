@@ -292,7 +292,7 @@ $cfg = mysqli_fetch_assoc($config);
                                             <small>
                                                 Ongkos kirim yang harus anda bayarakan sesuai dengan jarak yang di lalui driver dan dibayarkan saat barang telah sampai di tujuan.<br>
                                                 <div class="mb-2 text-center">
-                                                    <b><u>Keteranagn Ongir</u></b>
+                                                    <b><u>Keterangan Ongkir</u></b>
                                                 </div>
                                                 <table class="mb-2 table table-bordered">
                                                     <thead>
